@@ -48,40 +48,12 @@
 Найдем переходную функцию:
 \begin{multline}
     y_{\text{s.r.}}(t) = L^{-1}\left\{ \frac{1}{s}\cdot\frac{1/k_e}{T^2s^2 + 2\beta Ts + 1} \right\} = 1/k_eL^{-1}\left\{ \frac{1}{s(T^2s^2 + 2\beta Ts + 1)} \right\} =  \\
-    1/k_eL^{-1}\left\{ \frac{1}{s} - \frac{T^2s^2 +2T\beta s}{T^2s^2 +2T\beta s + 1} \right\} = 1/k_eL^{-1}\left\{ \frac{1}{s} - \frac{1}{T^2}\cdot\frac{T^2s^2 +2T\beta s}{(s + \lambda)^2+\delta^2} \right\} = \\
-    1/k_e L^{-1} \left\{ \frac{1}{s} - \frac{s + \lambda}{(s + \lambda)^2 + \delta^2} -\frac{\lambda}{\delta} \cdot \frac{\delta}{(s + \lambda)^2 + \delta^2} \right\} = 1/k_e(1 - e^{\lambda t}\cos(\delta t) - \frac{\lambda}{\delta} e^{-\lambda t} \sin(\delta t)) = \\
-    1/k_e(1 - e^{-\lambda t}(\cos(\delta t) -\frac{\lambda}{\delta}\sin(\delta t)))
+    1/k_eL^{-1}\left\{ \frac{1}{s} - \frac{T^2s +2T\beta}{T^2s^2 +2T\beta s + 1} \right\} = 1/k_eL^{-1}\left\{ \frac{1}{s} - \frac{1}{T^2}\cdot\frac{T^2s +2T\beta}{(s + \lambda)^2+\delta^2} \right\} = \\
+    1/k_e L^{-1} \left\{ \frac{1}{s} - \frac{s + \lambda}{(s + \lambda)^2 + \delta^2} -\frac{\lambda}{\delta} \cdot \frac{\delta}{(s + \lambda)^2 + \delta^2} \right\} = 1/k_e(1 - e^{-\lambda t}\cos(\delta t) - \frac{\lambda}{\delta} e^{-\lambda t} \sin(\delta t)) = \\
+    1/k_e(1 - e^{-\lambda t}(\cos(\delta t) +\frac{\lambda}{\delta}\sin(\delta t)))
 \end{multline}
 
-Построим графики весовой (см. рис. \ref{fig:task2_impulse_response_eq}) и переходной (см. рис. \ref{fig:task2_step_response_eq}) функций.
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\textwidth]{media/plots/task2_impulse_response_eq.png}
-    \caption{Весовая функция двигателя постоянного тока 2.0 (теоретически)}
-    \label{fig:task2_impulse_response_eq}
-\end{figure}
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\textwidth]{media/plots/task2_step_response_eq.png}
-    \caption{Переходная функция двигателя постоянного тока 2.0 (теоретически)}
-    \label{fig:task2_step_response_eq}
-\end{figure}
-
-Весовая (см. рис. \ref{fig:task2_impulse_response_exp}) и переходная (см. рис. \ref{fig:task2_step_response_exp}) функции, полученные в результате моделирования:
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\textwidth]{media/plots/task2_impulse_response_exp.png}
-    \caption{Весовая функция двигателя постоянного тока 2.0 (экспериментально)}
-    \label{fig:task2_impulse_response_exp}
-\end{figure}
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\textwidth]{media/plots/task2_step_response_exp.png}
-    \caption{Переходная функция двигателя постоянного тока 2.0 (экспериментально)}
-    \label{fig:task2_step_response_exp}
-\end{figure}
-
-Сравнительные графики приведены на рис. \ref{fig:task2_impulse_response_cmp} и рис. \ref{fig:task2_step_response_cmp}.
+Сравнительные графики весовой и переходной функций, полученных аналитически и в ходе эксперимента  приведены на рис. \ref{fig:task2_impulse_response_cmp} и рис. \ref{fig:task2_step_response_cmp}.
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=\textwidth]{media/plots/task2_impulse_response_cmp.png}
@@ -110,36 +82,8 @@
     \varphi = -\text{atan2}\left(2T\beta\omega,~1 - T^2\omega^2\right)
 \end{eqnarray}
 
-Построим графики АЧХ, ФЧХ (см. рис. \ref{fig:task2_freq_resp_eq_lin}) и логарифмическую АЧХ (см. рис. \ref{fig:task2_freq_resp_eq_loglog}).
 
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\textwidth]{media/plots/task2_freq_resp_eq_lin.png}
-    \caption{АЧХ и ФЧХ двигателя постоянного тока 2.0 (теоретически)}
-    \label{fig:task2_freq_resp_eq_lin}
-\end{figure}
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\textwidth]{media/plots/task2_freq_resp_eq_loglog.png}
-    \caption{Логарифмическая АЧХ двигателя постоянного тока 2.0 (теоретически)}
-    \label{fig:task2_freq_resp_eq_loglog}
-\end{figure}
-
-AЧХ, ФЧХ и логарифмическая АЧХ, полученные в результате моделирования приведены на рис. \ref{fig:task2_freq_resp_exp_lin} и рис. \ref{fig:task2_freq_resp_exp_loglog}.
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\textwidth]{media/plots/task2_freq_resp_exp_lin.png}
-    \caption{АЧХ и ФЧХ двигателя постоянного тока 2.0 (экспериментально)}
-    \label{fig:task2_freq_resp_exp_lin}
-\end{figure}
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\textwidth]{media/plots/task2_freq_resp_exp_loglog.png}
-    \caption{Логарифмическая АЧХ двигателя постоянного тока 2.0 (экспериментально)}
-    \label{fig:task2_freq_resp_exp_loglog}
-\end{figure}
-
-Сравнительные графики приведены на рис. \ref{fig:task2_freq_resp_cmp_lin} и рис. \ref{fig:task2_freq_resp_cmp_loglog}.
+Сравнительные графики АЧХ, ФЧХ, ЛАЧХ, полученных аналитически и в ходе эксперимента, приведены на рис. \ref{fig:task2_freq_resp_cmp_lin} и рис. \ref{fig:task2_freq_resp_cmp_loglog}.
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=\textwidth]{media/plots/task2_freq_resp_cmp_lin.png}

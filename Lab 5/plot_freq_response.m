@@ -78,9 +78,7 @@ function plot_freq_response(plots, path, mode)
             end
         end
 
-        if mode == "loglog"
-            loglog(omega, phase, 'LineWidth', 1.8, 'LineStyle', style, 'Color', color);
-        elseif mode == "log"
+        if mode == "loglog" || mode == "log"
             semilogx(omega, phase, 'LineWidth', 1.8, 'LineStyle', style, 'Color', color);
         elseif mode == "lin"
             plot(omega, phase, 'LineWidth', 1.8, 'LineStyle', style, 'Color', color);

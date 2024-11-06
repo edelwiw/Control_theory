@@ -23,35 +23,7 @@
     y_{\text{s.r.}}(t) = L^{-1}\left\{\frac{T_2s + 1}{T_1s}\cdot\frac{1}{s}\right\} = \frac{T_2 + t}{T_1}
 \end{equation}
 
-Построим графики весовой (см. рис. \ref{fig:task5_impulse_response_eq}) и переходной (см. рис. \ref{fig:task5_step_response_eq}) функций.
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\textwidth]{media/plots/task5_impulse_response_eq.png}
-    \caption{Весовая функция регулятора на операционном усилителе (теоретически)}
-    \label{fig:task5_impulse_response_eq}
-\end{figure}
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\textwidth]{media/plots/task5_step_response_eq.png}
-    \caption{Переходная функция регулятора на операционном усилителе (теоретически)}
-    \label{fig:task5_step_response_eq}
-\end{figure}
-
-Весовая (см. рис. \ref{fig:task5_impulse_response_exp}) и переходная (см. рис. \ref{fig:task5_step_response_exp}) функции, полученные в результате моделирования:
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\textwidth]{media/plots/task5_impulse_response_exp.png}
-    \caption{Весовая функция регулятора на операционном усилителе (экспериментально)}
-    \label{fig:task5_impulse_response_exp}
-\end{figure}
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\textwidth]{media/plots/task5_step_response_exp.png}
-    \caption{Переходная функция регулятора на операционном усилителе (экспериментально)}
-    \label{fig:task5_step_response_exp}
-\end{figure}
-
-Сравнительные графики приведены на рис. \ref{fig:task5_impulse_response_cmp} и рис. \ref{fig:task5_step_response_cmp}.
+Сравнительные графики весовой и переходной функций, полученных аналитически и в ходе эксперимента  приведены на рис. \ref{fig:task5_impulse_response_cmp} и рис. \ref{fig:task5_step_response_cmp}.
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=\textwidth]{media/plots/task5_impulse_response_cmp.png}
@@ -80,35 +52,7 @@
     \varphi(\omega) = \text{atan2}\left(\frac{-1}{T_1\omega},~\frac{T_2}{T_1}\right)
 \end{equation}
 
-Построим графики АЧХ, ФЧХ (см. рис. \ref{fig:task5_freq_resp_eq_lin}) и логарифмическую АЧХ (см. рис. \ref{fig:task5_freq_resp_eq_loglog}).
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\textwidth]{media/plots/task5_freq_resp_eq_lin.png}
-    \caption{АЧХ и ФЧХ регулятора на операционном усилителе}
-    \label{fig:task5_freq_resp_eq_lin}
-\end{figure}
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\textwidth]{media/plots/task5_freq_resp_eq_loglog.png}
-    \caption{Логарифмическая АЧХ регулятора на операционном усилителе}
-    \label{fig:task5_freq_resp_eq_loglog}
-\end{figure}
-
-AЧХ, ФЧХ и логарифмическая АЧХ, полученные в результате моделирования приведены на рис. \ref{fig:task5_freq_resp_exp_lin} и рис. \ref{fig:task5_freq_resp_exp_loglog}.
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\textwidth]{media/plots/task5_freq_resp_exp_lin.png}
-    \caption{АЧХ и ФЧХ регулятора на операционном усилителе (экспериментально)}
-    \label{fig:task5_freq_resp_exp_lin}
-\end{figure}
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\textwidth]{media/plots/task5_freq_resp_exp_loglog.png}
-    \caption{Логарифмическая АЧХ регулятора на операционном усилителе (экспериментально)}
-    \label{fig:task5_freq_resp_exp_loglog}
-\end{figure}
-
-Сравнительные графики приведены на рис. \ref{fig:task5_freq_resp_cmp_lin} и рис. \ref{fig:task5_freq_resp_cmp_loglog}.
+Сравнительные графики АЧХ, ФЧХ, ЛАЧХ, полученных аналитически и в ходе эксперимента, приведены на рис. \ref{fig:task5_freq_resp_cmp_lin} и рис. \ref{fig:task5_freq_resp_cmp_loglog}.
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=\textwidth]{media/plots/task5_freq_resp_cmp_lin.png}

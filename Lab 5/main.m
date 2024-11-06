@@ -172,7 +172,7 @@ delta = sqrt(1 - beta^2) / T;
 
 
 impulse_response_func = @(t) ((1/ke) / (delta * T^2)) * exp(-lambda * t) * sin(delta * t);
-step_response_func = @(t) (1/ke) * (1 - exp(-lambda * t) * (cos(delta * t) - (lambda / delta) * sin(delta * t)));
+step_response_func = @(t) (1/ke) * (1 - exp(-lambda * t) * (cos(delta * t) + (lambda / delta) * sin(delta * t)));
 
 mag_function = @(omega) 1/ke / sqrt((1 - omega^2 * T^2)^2 + (2 * beta * omega * T)^2);
 phase_function = @(omega) -atan2(2 * beta * omega * T, 1 - omega^2 * T^2);
@@ -202,9 +202,9 @@ impulse_response_func = @(t) 1 / (k * T) * sin(t / T);
 step_response_func = @(t) 1 / k * (1 - cos(t / T));
 
 mag_function = @(omega) (1/ k) / abs(1 - T^2 * omega^2);
-phase_function = @(omega) pi  + (omega * 0);
+phase_function = @(omega) atan2(0, 1 / k / (1 - T^2 * omega^2));
 
-% solve(transfer_function, mag_function, phase_function, 3, impulse_response_func, step_response_func, 3, "task4");
+solve(transfer_function, mag_function, phase_function, 3, impulse_response_func, step_response_func, 3, "task4");
 
 %% task5
 R1 = 1296;
@@ -222,4 +222,4 @@ step_response_func = @(t) (T2 + t) / T1;
 mag_function = @(omega) sqrt((T2 / T1)^2 + 1/(T1^2 * omega^2));
 phase_function = @(omega) atan2(-1 / (T1 * omega), T2 / T1);
 
-solve(transfer_function, mag_function, phase_function, 3, impulse_response_func, step_response_func, 3, "task5");
+% solve(transfer_function, mag_function, phase_function, 3, impulse_response_func, step_response_func, 3, "task5");

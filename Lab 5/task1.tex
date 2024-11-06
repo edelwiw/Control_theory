@@ -27,35 +27,8 @@
     y_{\text{s.r.}}(t) = L^{-1}\left\{\frac{1}{Ts + 1}\cdot\frac{1}{k_e}\cdot\frac{1}{s}\right\} = \frac{1}{k_e} \left(1 - e^{-\dfrac{t}{T}}\right)
 \end{equation}
 
-Построим графики весовой (см. рис. \ref{fig:task1_impulse_response_eq}) и переходной (см. рис. \ref{fig:task1_step_response_eq}) функций.
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\textwidth]{media/plots/task1_impulse_response_eq.png}
-    \caption{Весовая функция двигателя постоянного тока (теоретически)}
-    \label{fig:task1_impulse_response_eq}
-\end{figure}
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\textwidth]{media/plots/task1_step_response_eq.png}
-    \caption{Переходная функция двигателя постоянного тока (теоретически)}
-    \label{fig:task1_step_response_eq}
-\end{figure}
 
-Весовая (см. рис. \ref{fig:task1_impulse_response_exp}) и переходная (см. рис. \ref{fig:task1_step_response_exp}) функции, полученные в результате моделирования: 
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\textwidth]{media/plots/task1_impulse_response_exp.png}
-    \caption{Весовая функция двигателя постоянного тока (экспериментально)}
-    \label{fig:task1_impulse_response_exp}
-\end{figure}
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\textwidth]{media/plots/task1_step_response_exp.png}
-    \caption{Переходная функция двигателя постоянного тока (экспериментально)}
-    \label{fig:task1_step_response_exp}
-\end{figure}
-
-Сравнительные графики приведены на рис. \ref{fig:task1_impulse_response_cmp} и рис. \ref{fig:task1_step_response_cmp}.
+Сравнительные графики весовой и переходной функций, полученных аналитически и в ходе эксперимента приведены на рис. \ref{fig:task1_impulse_response_cmp} и рис. \ref{fig:task1_step_response_cmp}.
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=\textwidth]{media/plots/task1_impulse_response_cmp.png}
@@ -91,35 +64,7 @@
     L(\omega) = 20\lg(A) = -20\lg(k_e) - 10\lg(\omega^2T^2 + 1)
 \end{equation}
 
-Построим графики АЧХ, ФЧХ (см. рис. \ref{fig:task1_freq_resp_eq_lin}) и логарифмическую АЧХ (см. рис. \ref{fig:task1_freq_resp_eq_loglog}).
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\textwidth]{media/plots/task1_freq_resp_eq_lin.png}
-    \caption{АЧХ и ФЧХ двигателя постоянного тока (теоретически)}
-    \label{fig:task1_freq_resp_eq_lin}
-\end{figure}
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\textwidth]{media/plots/task1_freq_resp_eq_loglog.png}
-    \caption{Логарифмическая АЧХ двигателя постоянного тока (теоретически)}
-    \label{fig:task1_freq_resp_eq_loglog}
-\end{figure}
-
-AXH, ФЧХ и логарифмическая АЧХ, полученные в результате моделирования приведены на рис. \ref{fig:task1_freq_resp_exp_lin} и рис. \ref{fig:task1_freq_resp_exp_loglog}.
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\textwidth]{media/plots/task1_freq_resp_exp_lin.png}
-    \caption{АЧХ и ФЧХ двигателя постоянного тока (экспериментально)}
-    \label{fig:task1_freq_resp_exp_lin}
-\end{figure}
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\textwidth]{media/plots/task1_freq_resp_exp_loglog.png}
-    \caption{Логарифмическая АЧХ двигателя постоянного тока (экспериментально)}
-    \label{fig:task1_freq_resp_exp_loglog}
-\end{figure}
-
-Сравнительные графики приведены на рис. \ref{fig:task1_freq_resp_cmp_lin} и рис. \ref{fig:task1_freq_resp_cmp_loglog}.
+Сравнительные графики АЧХ, ФЧХ, ЛАЧХ, полученных аналитически и в ходе эксперимента, приведены на рис. \ref{fig:task1_freq_resp_cmp_lin} и рис. \ref{fig:task1_freq_resp_cmp_loglog}.
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=\textwidth]{media/plots/task1_freq_resp_cmp_lin.png}
