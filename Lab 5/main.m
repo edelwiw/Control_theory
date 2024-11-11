@@ -90,46 +90,49 @@ end
 % fprintf("Amplitudes: %s\n", strjoin(cellfun(@num2str, amp_arr, 'UniformOutput', false), ", "));
 % fprintf("Phases: %s\n", strjoin(cellfun(@num2str, phase_arr, 'UniformOutput', false), ", "));
 
-function solve(transfer_function, mag_func, phase_func, time_domain_time, impulse_response_func, step_response_func, freq_domain_time_power, path)
+function solve(transfer_function, mag_func, phase_func, time_domain_time, impulse_response_func, step_response_func, freq_domain_time, path)
     % find impuls and step response 
-    time = linspace(0.000001, time_domain_time, 1000);
+    time = linspace(0, time_domain_time, 1000);
 
     % by matlab function
     impulse_response_exp = impulse(transfer_function, time);
     step_response_exp = step(transfer_function, time);
 
-    plotter({{time, impulse_response_exp, "Impulse response"}}, sprintf("media/plots/%s_impulse_response_exp.png", path), "t", "y", "");
-    plotter({{time, step_response_exp, "Step response"}}, sprintf("media/plots/%s_step_response_exp.png", path), "t", "y", "");
+    % plotter({{time, impulse_response_exp, "Impulse response"}}, sprintf("media/plots/%s_impulse_response_exp.png", path), "t", "y", "");
+    % plotter({{time, step_response_exp, "Step response"}}, sprintf("media/plots/%s_step_response_exp.png", path), "t", "y", "");
 
     % by equations
     impulse_response_eq = arrayfun(impulse_response_func, time);
     step_response_eq = arrayfun(step_response_func, time);
 
-    plotter({{time, impulse_response_eq, "Impulse response"}}, sprintf("media/plots/%s_impulse_response_eq.png", path), "t", "y", "");
-    plotter({{time, step_response_eq, "Step response"}}, sprintf("media/plots/%s_step_response_eq.png", path), "t", "y", "");
+    % plotter({{time, impulse_response_eq, "Impulse response"}}, sprintf("media/plots/%s_impulse_response_eq.png", path), "t", "y", "");
+    % plotter({{time, step_response_eq, "Step response"}}, sprintf("media/plots/%s_step_response_eq.png", path), "t", "y", "");
 
     % compare 
     plotter({{time, impulse_response_exp, "Experemental"}, {time, impulse_response_eq, "Theoretical"}}, sprintf("media/plots/%s_impulse_response_cmp.png", path), "t", "y", "");
     plotter({{time, step_response_exp, "Experemental"}, {time, step_response_eq, "Theoretical"}}, sprintf("media/plots/%s_step_response_cmp.png", path), "t", "y", "");
 
-    % find freq response
+    %% find freq response
     
-    omega = logspace(0.000001, freq_domain_time_power, 1000);
+    omega = logspace(-3, log10(freq_domain_time), 1000);
 
     % by matlab function
-    h = freqresp(transfer_function, omega);
-    mag_exp = abs(h(1, :));
-    phase_exp = angle(h(1, :));
+    numerator = transfer_function.Numerator{1};
+    denominator = transfer_function.Denominator{1};
 
-    plot_freq_response({{mag_exp, phase_exp, omega, "Experemental"}},  sprintf("media/plots/%s_freq_resp_exp_loglog.png", path), "loglog");
-    plot_freq_response({{mag_exp, phase_exp, omega, "Experemental"}},  sprintf("media/plots/%s_freq_resp_exp_lin.png", path), "lin");
+    h = freqs(numerator, denominator, omega);
+    mag_exp = abs(h);
+    phase_exp = angle(h);
+
+    % plot_freq_response({{mag_exp, phase_exp, omega, "Experemental"}},  sprintf("media/plots/%s_freq_resp_exp_loglog.png", path), "loglog");
+    % plot_freq_response({{mag_exp, phase_exp, omega_lin, "Experemental"}},  sprintf("media/plots/%s_freq_resp_exp_lin.png", path), "lin");
 
     % by equations
     mag_eq = arrayfun(mag_func, omega);
     phase_eq = arrayfun(phase_func, omega);
 
-    plot_freq_response({{mag_eq, phase_eq, omega, "Theoretical"}}, sprintf("media/plots/%s_freq_resp_eq_lin.png", path), "lin");
-    plot_freq_response({{mag_eq, phase_eq, omega, "Theoretical"}}, sprintf("media/plots/%s_freq_resp_eq_loglog.png", path), "loglog");
+    % plot_freq_response({{mag_eq, phase_eq, omega_lin, "Theoretical"}}, sprintf("media/plots/%s_freq_resp_eq_lin.png", path), "lin");
+    % plot_freq_response({{mag_eq, phase_eq, omega, "Theoretical"}}, sprintf("media/plots/%s_freq_resp_eq_loglog.png", path), "loglog");
 
     % compare
     plot_freq_response({{mag_eq, phase_eq, omega, "Theoretical"}, {mag_exp, phase_exp, omega, "Experemental"}}, sprintf("media/plots/%s_freq_resp_cmp_lin.png", path), "lin");
@@ -201,25 +204,26 @@ T = sqrt(m / k);
 impulse_response_func = @(t) 1 / (k * T) * sin(t / T);
 step_response_func = @(t) 1 / k * (1 - cos(t / T));
 
-mag_function = @(omega) (1/ k) / abs(1 - T^2 * omega^2);
-phase_function = @(omega) atan2(0, 1 / k / (1 - T^2 * omega^2));
+mag_function = @(omega) (1 / k) / abs(1 - T^2 * omega^2);
+phase_function = @(omega) -atan2(0, (1 / k) / (1 - T^2 * omega^2));
 
-solve(transfer_function, mag_function, phase_function, 3, impulse_response_func, step_response_func, 3, "task4");
+% solve(transfer_function, mag_function, phase_function, 3, impulse_response_func, step_response_func, 3, "task4");
 
 %% task5
 R1 = 1296;
 R2 = 16853;
-C = 419;
+C = 419 * 10^-6;
 
 T1 = R1 * C;
 T2 = R2 * C;
 
 transfer_function = tf([T2, 1], [T1, 0]);
 
-impulse_response_func = @(t) (T2 * dirac(t)) / T1;
-step_response_func = @(t) (T2 + t) / T1;
+delta = @(x) double(x==0);
+impulse_response_func = @(t) 1 / T1 - T2 * delta(t) / T1;
+step_response_func = @(t) 1 * (T2 + t) / T1;
 
 mag_function = @(omega) sqrt((T2 / T1)^2 + 1/(T1^2 * omega^2));
-phase_function = @(omega) atan2(-1 / (T1 * omega), T2 / T1);
+phase_function = @(omega) -atan2(1 / (T1 * omega), 1 * T2 / T1);
 
-% solve(transfer_function, mag_function, phase_function, 3, impulse_response_func, step_response_func, 3, "task5");
+solve(transfer_function, mag_function, phase_function, 3, impulse_response_func, step_response_func, 10, "task5");

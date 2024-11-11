@@ -8,7 +8,7 @@
 \end{figure}
 Его передаточная функция:
 \begin{equation}
-    W(s) = \frac{T_2s + 1}{T_1s}, \quad T_1 = R_1C, \quad T_2 = R_2C
+    W(s) = -\frac{T_2s + 1}{T_1s}, \quad T_1 = R_1C, \quad T_2 = R_2C
 \end{equation}
 
 Данный регулятор соответствует стандартной структуре ПИ-регулятора, где $\frac{T_2}{T_1}$ -- пропорциональный коэффициент, а $\frac{1}{T_1}$ -- интегральный коэффициент.
@@ -41,7 +41,7 @@
 \subsection{Частотные характеристики}
 \noindent Найдем амплитудно-частотную характеристику и фазо-частотную характеристику,
 \begin{equation}
-    W(j\omega) = \frac{T_2j\omega + 1}{T_1j\omega} = \frac{T_2}{T_1} + \frac{j}{-T_1\omega}
+    W(j\omega) = \frac{T_2j\omega + 1}{T_1j\omega} = \frac{T_2}{T_1} - \frac{j}{T_1\omega}
 \end{equation}
 Амплитудная характеристика:
 \begin{equation}
@@ -49,7 +49,11 @@
 \end{equation}
 Фазовая характеристика:
 \begin{equation}
-    \varphi(\omega) = \text{atan2}\left(\frac{-1}{T_1\omega},~\frac{T_2}{T_1}\right)
+    \varphi(\omega) = \text{atan2}\left(\frac{1}{T_1\omega},~\frac{T_2}{T_1}\right)
+\end{equation}
+Найдем логарифмическую АЧХ: 
+\begin{equation}
+    L(\omega) = 20\lg(A) = 20\lg\left(\sqrt{\left(\frac{T_2}{T_1}\right)^2 + \frac{1}{T_1^2\omega^2}}\right)
 \end{equation}
 
 Сравнительные графики АЧХ, ФЧХ, ЛАЧХ, полученных аналитически и в ходе эксперимента, приведены на рис. \ref{fig:task5_freq_resp_cmp_lin} и рис. \ref{fig:task5_freq_resp_cmp_loglog}.

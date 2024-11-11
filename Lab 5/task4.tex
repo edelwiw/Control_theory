@@ -48,7 +48,11 @@
 \end{equation}
 ФЧХ:
 \begin{equation}
-    \varphi(\omega) = \text{atan2}\left(0,~1 - T^2\omega^2\right)
+    \varphi(\omega) = -\text{atan2}\left(0,~1 - T^2\omega^2\right)
+\end{equation}
+Найдем логарифмическую АЧХ: 
+\begin{equation}
+    L(\omega) = 20\lg(A) = -20\lg(k) - 20\lg(|1 - T^2\omega^2|)
 \end{equation}
 
 Сравнительные графики АЧХ, ФЧХ, ЛАЧХ, полученных аналитически и в ходе эксперимента, приведены на рис. \ref{fig:task4_freq_resp_cmp_lin} и рис. \ref{fig:task4_freq_resp_cmp_loglog}.
