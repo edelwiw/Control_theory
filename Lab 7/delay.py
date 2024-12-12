@@ -2,7 +2,7 @@ from ev3dev.ev3 import LargeMotor
 import time 
 	 
 motorA = LargeMotor('outA') 
-measurement_time = 5
+measurement_time = 10
 
 capturing_period = 0.05 # s 
 
@@ -15,7 +15,7 @@ class Controller (object):
         pass
     
     def constrain_control(self, control):
-        return max(-self.control_constrains, min(self.control_constrains, control))
+        return max(-1, min(1, control))
     
     
 class P_controller(Controller):
@@ -24,12 +24,13 @@ class P_controller(Controller):
         self.buffer = [0] * delay_cycles
         
     def control_func(self, error, time_delta):
-        self.buffer.append(error)
-        temp = self.buffer.pop(0)
+        # self.buffer.append(error)
+        # temp = self.buffer.pop(0)
+        temp = error
         return self.constrain_control(self.Kp * temp)
     
     
-def test(target_func, controller, measurement_time, file_path):
+def test(target_func, controller, measurement_time, file_path, delay):
     time_start = time.time()
     start_pos = motorA.position
     file = open(file_path, "w")
@@ -45,31 +46,22 @@ def test(target_func, controller, measurement_time, file_path):
         
         time_delta = time.time() - timer
         timer = time.time() - time_start
-        file.write(f"{timer} {pos} {target_func(timer)} {error} {control}\n")
+        file.write(str(timer) + " " + str(pos) + " " + str(target_func(timer)) + " " + str(error) + " " + str(control) + "\n")
+        time.sleep(delay)
     file.close()
     motorA.stop(stop_action='brake')
     
-    
+A = 5
 const_target = lambda time: A 
 
-delay_time = 0
-delay_cycles = int(delay_time / capturing_period)
-test(const_target, P_controller(1, delay_cycles), measurement_time, f"P_controller_delayed_{delay_time}.txt")
-time.sleep(2)
 
-delay_time = 0.1
-delay_cycles = int(delay_time / capturing_period) 
-test(const_target, P_controller(1, delay_cycles), measurement_time, f"P_controller_delayed_{delay_time}.txt")
-time.sleep(2)
+delay_arr = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
 
-delay_time = 0.2
-delay_cycles = int(delay_time / capturing_period)
-test(const_target, P_controller(1, delay_cycles), measurement_time, f"P_controller_delayed_{delay_time}.txt")
-time.sleep(2)
+for delay_time in delay_arr:
+    delay_cycles = int(delay_time / capturing_period)
+    test(const_target, P_controller(1, delay_cycles), measurement_time, "P_controller_delayed_" + str(delay_time) + ".txt", delay_time)
+    time.sleep(2)
 
-delay_time = 0.3
-delay_cycles = int(delay_time / capturing_period)
-test(const_target, P_controller(1, delay_cycles), measurement_time, f"P_controller_delayed_{delay_time}.txt")
 
 motorA.stop(stop_action='brake')
     

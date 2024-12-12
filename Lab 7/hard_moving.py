@@ -1,10 +1,11 @@
 from ev3dev.ev3 import LargeMotor 
 import time 
+from math import sin, cos
 	 
 motorA = LargeMotor('outA') 
-measurement_time = 5
+measurement_time = 30
 
-G = lambda A1, A2, w1, w2: lambda t: max(min(1, A1 * sin(w1 * t) + A2 * cos(w2 * t)), -1)
+G = lambda A1, A2, w1, w2: lambda t: max(min(1, A1 * cos(w1 * t) + A2 * sin(w2 * t)), -1)
 
 
 def test(control, measurement_time, file_path):
@@ -20,11 +21,11 @@ def test(control, measurement_time, file_path):
         
         time_delta = time.time() - timer
         timer = time.time() - time_start
-        file.write(f"{timer} {pos} {control}\n")
+        file.write(str(timer) + " " + str(pos) + " " + str(control) + "\n")
     file.close()
     motorA.stop(stop_action='brake')
     
 
-test(G(3, 0, 2, 0), measurement_time, f"hard_moving_1.txt")
+test(G(0.2, 0, 0.4, 0), measurement_time, "hard_moving_1.txt")
 time.sleep(2)
-test(G(3, 2, 1, 0.5), measurement_time, f"hard_moving_2.txt")
+test(G(0.1, 0.8, 0.5, 0.4), measurement_time, "hard_moving_2.txt")

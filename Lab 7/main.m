@@ -97,7 +97,7 @@ omega_arr = [0.1, 0.3, 0.5, 0.7, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]; % frequenci
 freq_response_results = zeros(length(omega_arr), 2); % store results
 
 for test_num = 1:length(omega_arr)
-    [amp, phase] = get_freq_response(sprintf("freq_response_%d.txt", test_num), omega_arr(test_num));
+    [amp, phase] = get_freq_response(sprintf("freq_response_%d.txt", test_num - 1), omega_arr(test_num));
     freq_response_results(test_num, 1) = amp;
     freq_response_results(test_num, 2) = phase;
 end
@@ -109,8 +109,8 @@ mag_theory = abs(h);
 phase_theory = angle(h);
 
 plot_freq_response({{mag_theory, phase_theory, omega, "Theory"}}, "plots/task3_freq_response_theory.png", "lin");
-plot_freq_response({{freq_response_results(:, 2), freq_response_results(:, 1), omega_arr, "Experiment"}}, "plots/task3_freq_response_experimental.png", "points");
-plot_freq_response({{freq_response_results(:, 2), freq_response_results(:, 1), omega_arr, "Experiment"}, {mag_theory, phase_theory, omega, "Theory"}}, "plots/task3_freq_response_cmp.png", "lin");
+plot_freq_response({{freq_response_results(:, 1), freq_response_results(:, 2), omega_arr, "Experiment"}}, "plots/task3_freq_response_experimental.png", "points");
+plot_freq_response({{freq_response_results(:, 1), freq_response_results(:, 2), omega_arr, "Experiment"}, {mag_theory, phase_theory, omega, "Theory"}}, "plots/task3_freq_response_cmp.png", "lin");
 
 
 
@@ -138,18 +138,38 @@ function tau_critical = bode_plotter(transfer_function, freq_domain_power, filen
     % close(gcf);
 end
 
+
+function printusik(delay)
+    data = readmatrix(sprintf("P_controller_delayed_%.1f.txt", delay));
+    len = length(data); % read file and get data length
+    time = data(1:len, 1); % extract time
+    pos = data(1:len, 2); % extract angle (rad)
+    target = data(1:len, 3); % extract target
+    error = data(1:len, 4); % extract error
+    control = data(1:len, 5); % extract control
+
+    plotter({{time, pos, "Angle"}, {time, target, "Target"}}, sprintf("plots/task4_delay_pos_%d.png", delay), "Time, s", "Value", "Frequency response");
+    plotter({{time, error, "Error"}}, sprintf("plots/task4_delay_error_%d.png", delay), "Time, s", "Value", "Frequency response");
+    plotter({{time, control, "Control"}}, sprintf("plots/task4_delay_control_%d.png", delay), "Time, s", "Value", "Frequency response");
+end
+
 kp = 0.2;
 p_controller_system = system * tf([kp], [1]);
 tau_critical = bode_plotter(p_controller_system, 3, "plots/task4_bode.png");
 fprintf("Critical time: %f\n", tau_critical);
 
+delay_arr = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6];
+
+for i = 1:length(delay_arr)
+    printusik(delay_arr(i));
+end
+
+
 
 %% ================== Task 5 ==================
 % format f"{timer} {pos} {control}\n"
-A1 = 1;
-omega1 = 1;
 
-y1 = @(t) A1 * k * omega1 * (-(T^2 * exp(-t / T) )/(T^2 * omega1^2 + 1) + (-T * omega1 * sin(t * omega1) - cos(t * omega1))/(omega1^2 * (T^2 * omega1 ^ 2 + 1)) + 1/omega1^2);
+
 
 function check_res(theory_function, data_path, n)
     data = readmatrix(data_path); 
@@ -160,8 +180,19 @@ function check_res(theory_function, data_path, n)
 
     theory = theory_function(time);
 
-    plotter({{time, pos, "Experimental"}, {time, theory, "Theory"}}, sprintf("plots/task5_hard_move_pos_%d.png", n), x_label, y_label, title);
-    plotter({{time, control, "Control"}}, sprintf("plots/task5_hard_move_control_%d.png", n), x_label, y_label, title);
+    plotter({{time, pos, "Experimental"}, {time, theory, "Theory"}}, sprintf("plots/task5_hard_move_pos_%d.png", n), "Time, s", "Angle", "Hard move pos");
+    plotter({{time, control, "Control"}}, sprintf("plots/task5_hard_move_control_%d.png", n), "Time, s", "Control", "Hard move control");
 end
 
+A1 = 0.2;
+omega1 = 0.4;
+y1 = @(t) A1 * k * omega1 * (-(T^2 * exp(-t / T) )/(T^2 * omega1^2 + 1) + (-T * omega1 * sin(t * omega1) - cos(t * omega1))/(omega1^2 * (T^2 * omega1 ^ 2 + 1)) + 1/omega1^2);
 check_res(y1, "hard_moving_1.txt", 1);
+
+A1 = 0.1;
+A2 = 0.8;
+omega1 = 0.5;
+omega2 = 0.4;
+
+y2 = @(t) k * ((A1 * (sin(t * omega1) / omega1 - T * cos(t * omega1)) / (T^2 * omega1^2 + 1)) - (A2 * (T * omega2 * sin(t * omega2) + cos(t * omega2)) / (omega2 * (T^2 * omega2^2 + 1))) + exp(-t/T) * (-A2 * T^5 * omega1^2 * omega2 + A1 * T^4 * omega2^2 - A2 * T^3 * omega2 + A1 * T^2) / (T * (T^2 * omega1^2 + 1) * (T^2 * omega2^2 + 1)) + A2 / omega2);
+check_res(y2, "hard_moving_2.txt", 2);
