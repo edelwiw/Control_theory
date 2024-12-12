@@ -16,7 +16,7 @@ step_response = @(par, t) par(1) * t - par(1) * par(2) + par(1) * par(2) * exp(-
 data = readmatrix(data_file_path); 
 len = length(data); % read file and get data length 
 time = data(1:len, 1); % extract time  
-pos = data(1:len, 2); % extract angle and convert from degrees to rad # FIX: remove 
+pos = data(1:len, 2); % extract angle and convert from degrees to rad 
 
 % approximation 
 par_start = [50; 0.1]; % params by default
@@ -186,13 +186,13 @@ end
 
 A1 = 0.2;
 omega1 = 0.4;
-y1 = @(t) A1 * k * omega1 * (-(T^2 * exp(-t / T) )/(T^2 * omega1^2 + 1) + (-T * omega1 * sin(t * omega1) - cos(t * omega1))/(omega1^2 * (T^2 * omega1 ^ 2 + 1)) + 1/omega1^2);
+y1 = @(t) A1 * k * omega1 / 2 * (-(T^2 * exp(-t / T) )/(T^2 * omega1^2 + 1) + (-T * omega1 * sin(t * omega1 - 5) - cos(t * omega1 - 5))/(omega1^2 * (T^2 * omega1 ^ 2 + 1)) + 1/omega1^2) - 4;
 check_res(y1, "hard_moving_1.txt", 1);
 
-A1 = 0.1;
-A2 = 0.8;
-omega1 = 0.5;
-omega2 = 0.4;
+A1 = 0.7;
+A2 = 0.2;
+omega1 = 2;
+omega2 = 10;
 
 y2 = @(t) k * ((A1 * (sin(t * omega1) / omega1 - T * cos(t * omega1)) / (T^2 * omega1^2 + 1)) - (A2 * (T * omega2 * sin(t * omega2) + cos(t * omega2)) / (omega2 * (T^2 * omega2^2 + 1))) + exp(-t/T) * (-A2 * T^5 * omega1^2 * omega2 + A1 * T^4 * omega2^2 - A2 * T^3 * omega2 + A1 * T^2) / (T * (T^2 * omega1^2 + 1) * (T^2 * omega2^2 + 1)) + A2 / omega2);
 check_res(y2, "hard_moving_2.txt", 2);

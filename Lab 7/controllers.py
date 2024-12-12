@@ -16,7 +16,7 @@ phase = 0.5
 omega = 2
 
 # PI controller
-Kp = 2.0 
+Kp = 4 
 Ki = 0.1
 
 # special controller # TODO: set right values
@@ -132,21 +132,21 @@ p_controller = P_controller(Kp)
 pi_controller = PI_controller(Kp, Ki)
 special_controller = Special_controller(a, b, c, omega)
 
-# P-controller 
+# # P-controller 
 print("P-controller, const target")
 test(const_target, p_controller, measurement_time, "task2_p_controller_const_target.txt")
 time.sleep(2)
-print("P-controller, const speed")
-test(const_speed, p_controller, measurement_time, "task2_p_controller_const_speed.txt")
-time.sleep(2)
+# print("P-controller, const speed")
+# test(const_speed, p_controller, measurement_time, "task2_p_controller_const_speed.txt")
+# time.sleep(2)
 
-# PI-controller
-print("PI-controller, const target")
-test(const_speed, pi_controller, measurement_time, "task2_pi_controller_const_speed.txt")
-time.sleep(2)
-print("PI-controller, const acceleration")
-test(const_acceleration, pi_controller, measurement_time, "task2_pi_controller_const_acceleration.txt")
-time.sleep(2)
+# # PI-controller
+# print("PI-controller, const target")
+# test(const_speed, pi_controller, measurement_time, "task2_pi_controller_const_speed.txt")
+# time.sleep(2)
+# print("PI-controller, const acceleration")
+# test(const_acceleration, pi_controller, measurement_time, "task2_pi_controller_const_acceleration.txt")
+# time.sleep(2)
 
 # special controller 
 print("Special controller, wave")
