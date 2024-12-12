@@ -16,7 +16,7 @@ step_response = @(par, t) par(1) * t - par(1) * par(2) + par(1) * par(2) * exp(-
 data = readmatrix(data_file_path); 
 len = length(data); % read file and get data length 
 time = data(1:len, 1); % extract time  
-pos = data(1:len, 2) * pi / 180; % extract angle and convert from degrees to rad # FIX: remove 
+pos = data(1:len, 2); % extract angle and convert from degrees to rad # FIX: remove 
 
 % approximation 
 par_start = [50; 0.1]; % params by default
@@ -47,23 +47,24 @@ function read_results(data_path, plot_path, title)
 
     set_error = error(len); % set error
     fprintf("Set error: %f\n", set_error);
-
-    plotter({{time, pos, "Angle"}, {time, target, "Target"}}, sprintf("%s_pos.png", plot_path), x_label, y_label, title);
+    x_label = "Time, s";
+    y_label = "Value";
+    plotter({{time, angle, "Angle"}, {time, target, "Target"}}, sprintf("%s_pos.png", plot_path), x_label, y_label, title);
     plotter({{time, error, "Error"}}, sprintf("%s_error.png", plot_path), x_label, y_label, title);
     plotter({{time, control, "Control"}}, sprintf("%s_control.png", plot_path), x_label, y_label, title);
 end
 
 
 % P-controller
-read_results("p_controller_const_target.txt", "plots/task2_p_controller_const_target", "P-controller, constant target");
-read_results("p_controller_const_speed.txt", "plots/task2_p_controller_const_speed", "P-controller, constant speed");
+read_results("task2_p_controller_const_target.txt", "plots/task2_p_controller_const_target", "P-controller, constant target");
+read_results("task2_p_controller_const_speed.txt", "plots/task2_p_controller_const_speed", "P-controller, constant speed");
 
 % PI-controller
-read_results("pi_controller_const_speed.txt", "plots/task2_pi_controller_const_speed", "PI-controller, constant speed");
-read_results("pi_controller_const_acceleration.txt", "plots/task2_pi_controller_const_acceleration", "PI-controller, constant acceleration");
+read_results("task2_pi_controller_const_speed.txt", "plots/task2_pi_controller_const_speed", "PI-controller, constant speed");
+read_results("task2_pi_controller_const_acceleration.txt", "plots/task2_pi_controller_const_acceleration", "PI-controller, constant acceleration");
 
 % Special controller
-read_results("special_controller_wave.txt", "plots/task2_special_controller_wave", "Special controller, sin");
+read_results("task2_special_controller_wave.txt", "plots/task2_special_controller_wave", "Special controller, sin");
 
 
 
@@ -96,7 +97,7 @@ omega_arr = [0.1, 0.3, 0.5, 0.7, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]; % frequenci
 freq_response_results = zeros(length(omega_arr), 2); % store results
 
 for test_num = 1:length(omega_arr)
-    [amp, phase] = get_freq_response(sprintf("freq_responses/freq_response_%d.txt", test_num), omega_arr(test_num));
+    [amp, phase] = get_freq_response(sprintf("freq_response_%d.txt", test_num), omega_arr(test_num));
     freq_response_results(test_num, 1) = amp;
     freq_response_results(test_num, 2) = phase;
 end

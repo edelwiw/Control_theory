@@ -1,13 +1,14 @@
 from ev3dev.ev3 import LargeMotor 
 import time 
+from math import sin
 	 
 motorA = LargeMotor('outA') 
 measurement_time = 5
 
 # constants for targets 
 A = 10 # rad 
-V = 2.5 # rad/s 
-A = 0.5 # rad/s^2
+V = 0.4 # rad/s 
+accel = 0.2 # rad/s^2
 
 # sin wave
 Amp = 2
@@ -16,7 +17,7 @@ omega = 2
 
 # PI controller
 Kp = 2.0 
-Ki = 0.5 
+Ki = 0.1
 
 # special controller # TODO: set right values
 a = 5
@@ -25,6 +26,7 @@ c = 4
 
 
 class Controller (object):
+    
     def __init__(self):
         self.control_constrains = 1
     
@@ -32,7 +34,7 @@ class Controller (object):
         pass
     
     def constrain_control(self, control):
-        return max(-self.control_constrains, min(self.control_constrains, control))
+        return max(-1, min(1, control))
 
     
 class P_controller(Controller):
@@ -50,8 +52,9 @@ class PI_controller(Controller):
             self.first_error_int = 0
         
         def control_func(self, error, time_delta):
-            self.first_error_int += error
-            control =  self.Kp * error + self.Ki * self.first_error_int * time_delta
+            self.first_error_int += error * time_delta
+            # print(self.first_error_int, error, time_delta) 
+            control =  self.Kp * error + self.Ki * self.first_error_int
             return self.constrain_control(control)
         
         
@@ -61,6 +64,7 @@ class Special_controller(Controller):
         self.b = b
         self.c = c
         self.omega = omega
+        self.control = 0
         
         # derivatives
         self.err_first_derivate = 0
@@ -78,10 +82,10 @@ class Special_controller(Controller):
         
     
     def __calc__(self, error, time_delta):
-        self.err_first_derivate = (error - self.prev_error) / time_delta
-        self.err_second_derivate = (self.err_first_derivate - self.prev_error_first_derivate) / time_delta
-        self.control_first_derivate = (self.control - self.prev_control) / time_delta
-        self.control_second_derivate = (self.control_first_derivate - self.prev_control_first_derivate) / time_delta
+        self.err_first_derivate = (error - self.prev_error) / time_delta if time_delta != 0 else 0
+        self.err_second_derivate = (self.err_first_derivate - self.prev_error_first_derivate) / time_delta if time_delta != 0 else 0
+        self.control_first_derivate = (self.control - self.prev_control) / time_delta if time_delta != 0 else 0
+        self.control_second_derivate = (self.control_first_derivate - self.prev_control_first_derivate) / time_delta if time_delta != 0 else 0
         
         
         self.prev_error = error
@@ -92,8 +96,8 @@ class Special_controller(Controller):
         
     def control_func(self, error, time_delta):
         self.__calc__(error, time_delta) 
-        control = (self.a * err_second_derivate + self.b * err_first_derivate + self.c * error - self.control_second_derivate) / self.omega ** 2
-        return self.constrain_control(control)
+        self.control = (self.a * self.err_second_derivate + self.b * self.err_first_derivate + self.c * error - self.control_second_derivate) / self.omega ** 2
+        return self.constrain_control(self.control)
 
 
 
@@ -111,34 +115,40 @@ def test(target_func, controller, measurement_time, file_path):
         control = controller.control_func(error, time_delta) * 100 # percentage 
         motorA.run_direct(duty_cycle_sp=control)  
         
-        time_delta = time.time() - timer
+        time_delta = time.time() - time_start - timer
         timer = time.time() - time_start
-        file.write(f"{timer} {pos} {target_func(timer)} {error} {control}\n")
+        file.write(str(timer) + " " + str(pos) + " " + str(target_func(timer)) + " " + str(error)  + " " + str(control) + "\n")
     file.close()
     motorA.stop(stop_action='brake')
+    print("Test finished")
     
 
 const_target = lambda time: A 
 const_speed = lambda time: V * time
-const_acceleration = lambda time: (A * time ** 2) / 2
+const_acceleration = lambda time: (accel * time ** 2) / 2
 wave = lambda time: Amp * sin(omega * time + phase)
 
 p_controller = P_controller(Kp)
-PI_controller = PI_controller(Kp, Ki)
+pi_controller = PI_controller(Kp, Ki)
 special_controller = Special_controller(a, b, c, omega)
 
 # P-controller 
-test(const_target, p_controller, measurement_time, "p_controller_const_target.txt")
+print("P-controller, const target")
+test(const_target, p_controller, measurement_time, "task2_p_controller_const_target.txt")
 time.sleep(2)
-test(const_speed, p_controller, measurement_time, "p_controller_const_speed.txt")
+print("P-controller, const speed")
+test(const_speed, p_controller, measurement_time, "task2_p_controller_const_speed.txt")
 time.sleep(2)
 
 # PI-controller
-test(const_speed, pi_controller, measurement_time, "pi_controller_const_speed.txt")
+print("PI-controller, const target")
+test(const_speed, pi_controller, measurement_time, "task2_pi_controller_const_speed.txt")
 time.sleep(2)
-test(const_acceleration, pi_controller, measurement_time, "pi_controller_const_acceleration.txt")
+print("PI-controller, const acceleration")
+test(const_acceleration, pi_controller, measurement_time, "task2_pi_controller_const_acceleration.txt")
 time.sleep(2)
 
 # special controller 
-test(wave, special_controller, measurement_time, "special_controller_wave.txt")
+print("Special controller, wave")
+test(wave, special_controller, measurement_time, "task2_special_controller_wave.txt")
 time.sleep(2)

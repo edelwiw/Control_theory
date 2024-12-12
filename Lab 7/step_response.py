@@ -12,7 +12,7 @@ startPos = motorA.position
 motorA.run_direct(duty_cycle_sp=100) # 100% duty cycle
 while time.time() - timeStart < measurement_time:
     pos = (motorA.position - startPos) / 180 * 3.14159 # rad 
-    file.write(f"{time.time() - timeStart} {pos}\n")
+    file.write(str(time.time() - timeStart) + " " + str(pos) + "\n")
 
 motorA.stop(stop_action='brake') 
 file.close()
