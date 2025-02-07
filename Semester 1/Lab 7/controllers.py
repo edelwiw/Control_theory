@@ -19,7 +19,7 @@ omega = 2
 Kp = 4 
 Ki = 0.1
 
-# special controller # TODO: set right values
+# special controller 
 a = 5
 b = 4
 c = 4
