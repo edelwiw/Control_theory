@@ -2,21 +2,34 @@ function U = get_control_matrix(A, B)
     U = [B, A * B, A^2 * B];
 end
 
+function W = get_observability_matrix(A, C)
+    W = [C; C * A; C * A^2];
+end
+
 function s = check_state_controllability(A, B, x1)
     U = get_control_matrix(A, B);
     U_hat = [U, x1];
     s = rank(U) == rank(U_hat);
 end
 
-function P = get_gramian(A, B, mode, t1)
-    sys = ss(A, B, [], []);
+function P = get_gramian(A, B, C, D, mode, t1)
+    sys = ss(A, B, C, D);
     opt = gramOptions('TimeIntervals', [0, t1]);
     P = gram(sys, mode, opt);
 end
 
+function P = get_gramian_manual(A, B, C, D, mode, t1)
+    if mode == 'c'
+        P = integral(@(tau) expm(A * tau) * B * B' * expm(A' * tau), 0, t1, 'ArrayValued', true);
+    end
+    if mode == 'o'
+        P = integral(@(tau) expm(A' * tau) * C' * C * expm(A * tau), 0, t1, 'ArrayValued', true);
+    end
+end
+
 function [t, u] = get_control(A, B, x1, t1, num_points)
     U = get_control_matrix(A, B);
-    P = get_gramian(A, B, 'c', t1);
+    P = get_gramian(A, B, [], [], 'c', t1);
     if check_state_controllability(A, B, x1) == 0
         fprintf(2, "System is not state controllable\n");
         return;
@@ -27,6 +40,11 @@ function [t, u] = get_control(A, B, x1, t1, num_points)
     for i = 1:length(t)
         u(i) = u_func(t(i));
     end
+end
+
+function x0 = get_initial_state(A, C, y, t1)
+    Q = get_gramian_manual(A, [], C, [], 'o', t1);
+    x0 = pinv(Q) * integral(@(tau) expm(A' * tau) * C' * y(tau), 0, t1, 'ArrayValued', true);
 end
 
 %% TASK 1 
@@ -43,8 +61,13 @@ fprintf("\nControl matrix \nU = ");
 print_matrix(U, 0); 
 fprintf("\nRank of control matrix: %d\n\n", rank(U));
 
-P = get_gramian(A, B, 'c', t1);
+P = get_gramian(A, B, [], [], 'c', t1);
 fprintf("\nGramian matrix \nP(%d) = ", t1);
+print_matrix(P, 2);
+fprintf("\n");
+
+P = get_gramian_manual(A, B, [], [], 'c', t1);
+fprintf("\nGramian matrix (manual) \nP(%d) = ", t1);
 print_matrix(P, 2);
 fprintf("\n");
 
@@ -85,3 +108,32 @@ sys = ss(A, B, [], []);
 
 plotter({{t, x(:, 1), "x_1"}, {t, x(:, 2), "x_2"}, {t, x(:, 3), "x_3"}}, "media/plots/task2_states.png", "t", "x", "");
 fprintf("final state: %.2f %.2f %.2f\n", x(end, 1), x(end, 2), x(end, 3));
+
+%% TASK 3
+A = [-10, -7, -18;
+    -3, -4, -8; 
+    8, 2, 11];
+C = [2, -3, 1];
+
+W = get_observability_matrix(A, C);
+fprintf("\nObservability matrix \nW = ");
+print_matrix(W, 0);
+fprintf("\nRank of observability matrix: %d\n\n", rank(W));
+
+Q = get_gramian_manual(A, [], C, [], 'o', 3);
+fprintf("\nGramian matrix \nQ(3) = ");
+print_matrix(Q, 2);
+
+y = @(t) exp(-2 .* t) .* cos(5 .* t) - exp(-2 .* t) .* sin(5 .* t);
+x0 = get_initial_state(A, C, y, 3);
+fprintf("\nInitial state: %.2f %.2f %.2f\n", x0(1), x0(2), x0(3));
+
+sys = ss(A, [0; 0; 0], C, []);
+% initial state is x0
+t = linspace(0, 3, 1000);
+u = zeros(1, length(t));
+[y_hat, t, x] = lsim(sys, u, t, x0);
+
+plotter({{t, x(:, 1), "x_1"}, {t, x(:, 2), "x_2"}, {t, x(:, 3), "x_3"}}, "media/plots/task3_states.png", "t", "x", "");
+plotter({{t, y_hat, "y_{real}"}, {t, y(t), "y_{expected}"}}, "media/plots/task3_output.png", "t", "y", "");
+plotter({{t, y_hat - y(t), "y_{error}"}}, "media/plots/task3_error.png", "t", "y", "");
