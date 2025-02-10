@@ -47,6 +47,37 @@ function x0 = get_initial_state(A, C, y, t1)
     x0 = pinv(Q) * integral(@(tau) expm(A' * tau) * C' * y(tau), 0, t1, 'ArrayValued', true);
 end
 
+function H = get_hautus_matrix(A, B, C, lambda, mode)
+    if mode == 'c'
+        H = [A - lambda * eye(size(A)), B];
+    end
+    if mode == 'o'
+        H = [A - lambda * eye(size(A)); C];
+    end
+end
+
+function spectral(A, B, C, mode)
+    [V, D] = eig(A);
+    fprintf("Eigenvalues: \n");
+    for i = 1:size(D, 1)
+        if imag(D(i, i)) == 0
+            fprintf("\\lambda_%d = %.2f", i, D(i, i));
+        else
+            if imag(D(i, i)) > 0
+                fprintf("\\lambda_%d = %.2f + %.2fj", i, real(D(i, i)), imag(D(i, i)));
+            else
+                fprintf("\\lambda_%d = %.2f - %.2fj", i, real(D(i, i)), -imag(D(i, i)));
+            end
+        end
+
+        H = get_hautus_matrix(A, B, C, D(i, i), mode);
+        print_matrix(H, 0);
+        fprintf("\n\\text{rank}(H_%d) = %d\n\n", i, rank(H));
+    end
+
+
+end
+
 %% TASK 1 
 
 A = [5, -2, 8; 
@@ -137,3 +168,59 @@ u = zeros(1, length(t));
 plotter({{t, x(:, 1), "x_1"}, {t, x(:, 2), "x_2"}, {t, x(:, 3), "x_3"}}, "media/plots/task3_states.png", "t", "x", "");
 plotter({{t, y_hat, "y_{real}"}, {t, y(t), "y_{expected}"}}, "media/plots/task3_output.png", "t", "y", "");
 plotter({{t, y_hat - y(t), "y_{error}"}}, "media/plots/task3_error.png", "t", "y", "");
+
+%% TASK 4 
+A = [-10, -7, -18;
+    -3, -4, -8; 
+    8, 2, 11];
+C = [0, -1, -1];
+
+W = get_observability_matrix(A, C);
+fprintf("\nObservability matrix \nW = ");
+print_matrix(W, 0);
+fprintf("\nRank of observability matrix: %d\n\n", rank(W));
+
+spectral(A, [], C, "o");
+
+Q = get_gramian_manual(A, [], C, [], 'o', 3);
+fprintf("\nGramian matrix \nQ(3) = ");
+print_matrix(Q, 2);
+
+y = @(t) exp(-2 .* t) .* cos(5 .* t) - exp(-2 .* t) .* sin(5 .* t);
+x0 = get_initial_state(A, C, y, 3);
+fprintf("\nInitial state: %.2f %.2f %.2f\n", x0(1), x0(2), x0(3));
+
+sys = ss(A, [0; 0; 0], C, []);
+% initial state is x0
+t = linspace(0, 3, 1000);
+u = zeros(1, length(t));
+[y_hat, t, x] = lsim(sys, u, t, x0);
+
+plotter({{t, x(:, 1), "x_1"}, {t, x(:, 2), "x_2"}, {t, x(:, 3), "x_3"}}, "media/plots/task4_states.png", "t", "x", "");
+plotter({{t, y_hat, "y_{real}"}, {t, y(t), "y_{expected}"}}, "media/plots/task4_output.png", "t", "y", "");
+plotter({{t, y_hat - y(t), "y_{error}"}}, "media/plots/task4_error.png", "t", "y", "");
+
+%% 
+function sym_hat(A, C, x0, y, n)
+    x0_hat = x0 + [0; 0; 0];
+    fprintf("\nInitial state: %.2f %.2f %.2f\n", x0_hat(1), x0_hat(2), x0_hat(3));
+
+    sys = ss(A, [0; 0; 0], C, []);
+    % initial state is x0
+    t = linspace(0, 3, 1000);
+    u = zeros(1, length(t));
+    [y_hat, t, x] = lsim(sys, u, t, x0_hat);
+
+    plotter({{t, x(:, 1), "x_1"}, {t, x(:, 2), "x_2"}, {t, x(:, 3), "x_3"}}, sprintf("media/plots/task4_states_hat_%d.png", n), "t", "x", "");  
+    plotter({{t, y_hat, "y_{real}"}, {t, y(t), "y_{expected}"}}, sprintf("media/plots/task4_output_hat_%d.png", n), "t", "y", "");
+    plotter({{t, y_hat - y(t), "y_{error}"}}, sprintf("media/plots/task4_error_hat_%d.png", n), "t", "y", "");
+end 
+
+x0 = get_initial_state(A, C, y, 3);
+t = linspace(0, 3, 1000);
+y = @(t) exp(-2 .* t) .* cos(5 .* t) - exp(-2 .* t) .* sin(5 .* t);
+
+sym_hat(A, C, x0 + [-1; -1; 1], y, 1);
+sym_hat(A, C, x0 + [-1; -1; 1] * 20, y, 2);
+sym_hat(A, C, x0 + [-1; -1; 1] * 300, y, 3);
+
