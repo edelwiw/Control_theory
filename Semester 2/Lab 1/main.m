@@ -224,3 +224,21 @@ sym_hat(A, C, x0 + [-1; -1; 1], y, 1);
 sym_hat(A, C, x0 + [-1; -1; 1] * 20, y, 2);
 sym_hat(A, C, x0 + [-1; -1; 1] * 300, y, 3);
 
+%% TASK 5 
+
+A = [5, -2, 8; 
+    4, -3, 4; 
+    -4, 0, -7];
+B = [-1; -3; 3];
+C = [0, 3, 5; 0, 14, 9];
+D = [1, 0; 0, 1];
+
+U = get_control_matrix(A, B);
+fprintf("\nControl matrix \nU = ");
+print_matrix(U, 0);
+fprintf("\nRank of control matrix: %d\n\n", rank(U));
+
+U_y = [C * U, D];
+fprintf("\nControl matrix with output \nU_y = ");
+print_matrix(U_y, 0);
+fprintf("\nRank of control matrix with output: %d\n\n", rank(U_y));
