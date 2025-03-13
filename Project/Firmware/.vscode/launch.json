@@ -1,0 +1,27 @@
+{
+    "version": "1.2.0",
+    "configurations": [
+        {
+            "device" : "STM32F411RE",
+            "name": "ST-Link-OCD",
+            "cwd": "${workspaceFolder}",
+            "executable": "build/app.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "interface": "swd",
+            "runToEntryPoint": "main",
+            "servertype": "openocd",
+            "liveWatch": {
+                "enabled": true,
+                "samplesPerSecond": 10
+            },
+            "preLaunchTask": "Flash",
+            "svdPath": "/Users/alexivanov/STM32/drivers/STM32F4/STM32F4_svd_V2.0/STM32F411.svd", 
+            // https://www.st.com/en/microcontrollers-microprocessors/stm32-32-bit-arm-cortex-mcus.html#cad-resources
+            "configFiles": [
+                "/opt/homebrew/opt/openocd/share/openocd/scripts/interface/stlink-v2-1.cfg",
+                "/opt/homebrew/opt/openocd/share/openocd/scripts/target/stm32f4x.cfg" 
+            ],
+        },
+    ]
+}

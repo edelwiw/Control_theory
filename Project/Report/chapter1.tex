@@ -1,0 +1,144 @@
+\section{Физическая модель маятника}
+
+Рассмотрим систему, состоящую из тележки массой $M$, движущейся по горизонтальной оси, и маятника с равномерно распределенной массой $m$ и длиной $l_{\text{pend}}$,
+закрепленного на шарнире на тележке. Примем за $x$ координату тележки, а за $\theta$ угол отклонения маятника от вертикали. 
+
+\subsection{Уравнения движения}
+Используем законы Лагранжа для записи уравнений движения системы. 
+
+Так как кинетическая и потенциальная зависят от центра масс тележки и маятника, введем в рассмотрение расстояние $l$ 
+от точки подвеса маятника до его центра масс. При этом $l = l_{\text{pend}}/2$ для равномерно распределенной массы маятника.
+
+Напишем уравнения для координат центра масс маятника $x_m$ и $y_m$ и продифференцировав их по времени, получим скорости центра масс маятника:
+\begin{equation}
+    \begin{cases}
+        x_m = x + l\sin\theta, \\
+        y_m = l\cos\theta
+    \end{cases} \Rightarrow
+    \begin{cases}
+        v_x = \dot{x} + l\dot{\theta}\cos\theta, \\
+        v_y = -l\dot{\theta}\sin\theta
+    \end{cases}
+\end{equation}
+Общая энергия системы складывается из кинетической и потенциальной энергии маятника и кинетической энергии тележки:
+
+Кинетическая энергия системы равна:
+\begin{equation}
+    T = \frac{1}{2} (M + m)\dot{x}^2 + m\dot{x}l\dot{\theta}\cos\theta + \frac{1}{2}ml^2\dot{\theta}^2
+\end{equation}
+Потенциальная энергия системы равна:
+\begin{equation}
+    U = mgl\cos\theta
+\end{equation}
+Записывая функция Лагранжа $L = T - U$, получаем: 
+\begin{equation}
+    L = \frac{1}{2} (M + m)\dot{x}^2 + m\dot{x}l\dot{\theta}\cos\theta + \frac{1}{2}ml^2\dot{\theta}^2 - mgl\cos\theta
+\end{equation}
+Уравнения Лагранжа примут вид:
+\begin{equation}
+    \begin{array}{cc}
+        \frac{d}{dt} \left( \frac{\partial L}{\partial \dot{x}} \right) - \frac{\partial L}{\partial x} = Q_x, \\
+        \frac{d}{dt} \left( \frac{\partial L}{\partial \dot{\theta}} \right) - \frac{\partial L}{\partial \theta} = Q_{\theta}
+    \end{array}
+\end{equation}
+где $Q_x$ и $Q_{\theta}$ -- обобщенные силы, действующие на тележку и маятник соответственно. В итоге получаем систему уравнений:
+\begin{equation}
+    \begin{cases}
+        (M + m)\ddot{x} + ml\ddot{\theta}\cos\theta - ml\dot{\theta}^2\sin\theta = Q_x, \\
+        ml^2\ddot{\theta} + ml\ddot{x}\cos\theta - mgl\sin\theta = Q_{\theta}.
+    \end{cases}
+    \label{eq:forces_balance}
+\end{equation}
+Система уравнений \eqref{eq:forces_balance} представляет собой уравнения баланса сил, 
+приложенных к тележке и моментов, действующих на маятник.
+
+Запишем этм уравнения разрешив их относительно высших производных. Заметим, что вторые производные 
+входят в эти уравнения линейно. С учетом этого приведем уравнения к матричному виду:  % # TODO: analiz_ustoychivosti_perevernutogo_mayatnika_v_srede_matlab_control
+\begin{equation}
+    \begin{bmatrix}
+        ml^2 & ml\cos\theta \\
+        ml\cos\theta & M + m \\
+    \end{bmatrix} \times
+    \begin{bmatrix}
+        \ddot{\theta} \\
+        \ddot{x} \\
+    \end{bmatrix} =
+    \begin{bmatrix}
+        -mgl\sin\theta + Q_{\theta} \\
+        ml\dot{\theta}^2\sin\theta + Q_x
+    \end{bmatrix}
+\end{equation}
+Убедимся в существовании и единственности решения системы:
+\begin{equation}
+    D = ml^2(M + m) - m^2l^2\cos^2\theta = ml^2(M + m - m\cos^2\theta) > 0
+\end{equation}
+Решая систему уравнений методом Крамера, получаем:
+\begin{multline}
+    \Delta_{\ddot{x}} = \begin{vmatrix}
+        -mgl\sin\theta + Q_{\theta} & ml\cos\theta \\
+        ml\dot{\theta}^2\sin\theta + Q_x & M + m \\
+    \end{vmatrix} = (-mgl\sin\theta + Q_{\theta})(M + m) - ml\cos\theta(ml\dot{\theta}^2\sin\theta + Q_x) = \\
+    = -mgl\sin\theta M - m^2gl\sin\theta + (M + m)Q_{\theta} - m^2l^2\dot{\theta}^2\sin\theta\cos\theta - mlQ_x\cos\theta
+\end{multline}
+\begin{multline}
+    \Delta_{\ddot{\theta}} = \begin{vmatrix}
+        ml^2 & -mgl\sin\theta + Q_{\theta} \\
+        ml\cos\theta & ml\dot{\theta}^2\sin\theta + Q_x \\
+    \end{vmatrix} = ml^2(ml\dot{\theta}^2\sin\theta + Q_x) - ml\cos\theta(-mgl\sin\theta + Q_{\theta})
+\end{multline}
+
+
+\begin{equation}
+    \begin{cases}
+        \ddot{x} = \frac{Q_x - \frac{Q_{\theta}\cos\theta}{l} - mg\sin\theta\cos\theta + ml\dot{\theta}^2\sin\theta}{M + m\sin^2\theta}, \\
+        \ddot{\theta} = \frac{-Q_x \cos\theta + (M + m)g\sin\theta - ml\dot{\theta}^2\sin\theta\cos\theta}{l(M + m\sin^2\theta)}
+    \end{cases}
+\end{equation}
+% \begin{equation}
+%         \begin{cases}
+%             \ddot{x} = \frac{Q_x - \frac{Q_{\theta}\cos\theta}{l} - mg\sin\theta\cos\theta + ml\dot{\theta}^2\sin\theta}{M + m\sin^2\theta}, \\
+%             \ddot{\theta} = \frac{Q_{\theta}}{ml^2} + \frac{-Q_x \cos\theta + \frac{Q_{\theta}\cos^2\theta}{l} + (M + m)g\sin\theta - ml\dot{\theta}^2\sin\theta\cos\theta}{l(M + m\sin^2\theta)}
+%         \end{cases}
+% \end{equation}
+
+
+% % % вывод 
+% \begin{equation}
+%     \ddot{\theta} = \frac{Q_{\theta} - ml\ddot{x} \cos\theta +  mgl\sin\theta}{ml^2}
+% \end{equation}
+% \begin{equation}
+%     (M + m)\ddot{x} + ml\frac{Q_{\theta} - ml\ddot{x} \cos\theta + mgl\sin\theta}{ml^2}\cos\theta - ml\dot{\theta}^2\sin\theta = Q_x
+% \end{equation}
+% \begin{equation}
+%     (M + m)\ddot{x} + \frac{Q_{\theta} - ml\ddot{x} \cos\theta +  mgl\sin\theta}{l}\cos\theta - ml\dot{\theta}^2\sin\theta = Q_x
+% \end{equation}
+% \begin{equation}
+%     (M + m - m\cos^2\theta)\ddot{x} + \frac{Q_{\theta} + mgl\sin\theta}{l}\cos\theta - ml\dot{\theta}^2\sin\theta = Q_x
+% \end{equation}
+% \begin{equation}
+%     (M + m - m\cos^2\theta)\ddot{x} + (\frac{Q_{\theta}}{l}  + mg\sin\theta)\cos\theta - ml\dot{\theta}^2\sin\theta = Q_x
+% \end{equation}
+% \begin{equation}
+%     (M + m - m\cos^2\theta)\ddot{x} + \frac{Q_{\theta}\cos\theta}{l} + mg\sin\theta\cos\theta - ml\dot{\theta}^2\sin\theta = Q_x
+% \end{equation}
+% % % 
+
+% \begin{equation}
+%     \ddot{x} = \frac{\frac{Q_x}{m} - \frac{Q_{\theta}\cos\theta}{lm} - g\sin\theta\cos\theta + l\dot{\theta}^2\sin\theta}{M/m + \sin^2\theta}
+% \end{equation}
+
+% \begin{equation}
+%     \ddot{\theta} = \frac{Q_{\theta} - ml \frac{Q_x - \frac{Q_{\theta}\cos\theta}{l} - mg\sin\theta\cos\theta + ml\dot{\theta}^2\sin\theta}{M + m\sin^2\theta} \cos\theta +  mgl\sin\theta}{ml^2}
+% \end{equation}
+% \begin{equation}
+%     \ddot{\theta} = \frac{Q_{\theta}}{ml^2} - \frac{Q_x - \frac{Q_{\theta}\cos\theta}{l} - mg\sin\theta\cos\theta + ml\dot{\theta}^2\sin\theta}{M + m\sin^2\theta} \frac{\cos\theta}{l} +  \frac{g\sin\theta}{l}
+% \end{equation}
+% \begin{equation}
+%     \ddot{\theta} = \frac{Q_{\theta}}{ml^2} - \frac{Q_x\cos\theta - \frac{Q_{\theta}\cos^2\theta}{l} - mg\sin\theta\cos^2\theta + ml\dot{\theta}^2\sin\theta\cos\theta}{l(M + m\sin^2\theta)} +  \frac{g\sin\theta(M + m + \cos^2\theta)}{l(M + m\sin^2\theta)}
+% \end{equation}
+% \begin{equation}
+%     \ddot{\theta} = \frac{Q_{\theta}}{ml^2} - \frac{Q_x\cos\theta - \frac{Q_{\theta}\cos^2\theta}{l} - mg\sin\theta\cos^2\theta + ml\dot{\theta}^2\sin\theta\cos\theta + g\sin\theta(M + m) + g\sin\theta\cos^2\theta}{l(M + m\sin^2\theta)} 
+% \end{equation}
+
+
+

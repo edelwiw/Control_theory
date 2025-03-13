@@ -1,0 +1,52 @@
+{
+    "cmake.configureOnOpen": false,
+    "cmake.configureSettings": {
+		"project_name": "${workspaceFolderBasename}",
+	},
+
+    "cortex-debug.armToolchainPath": "/opt/homebrew/bin",
+    "cortex-debug.stlinkPath": "/opt/homebrew/bin/", 
+    "cortex-debug.openocdPath": "/opt/homebrew/bin/openocd",
+    "cortex-debug.gdbPath": "/opt/homebrew/bin/arm-none-eabi-gdb",
+
+    "VsCodeTaskButtons.tasks": [
+        {
+            "label": "$(checklist) Build",
+            "task": "Build",
+            "tooltip": "Start the \"build\" task"
+        },
+		{
+            "label": "$(run) Flash",
+            "task": "Flash",
+            "tooltip": "Build, flash and run"
+        },
+        {
+            "label": "$(clear-all) Clean",
+            "task": "Clean",
+            "tooltip": "Start a \"clean\" task"
+        },
+		{
+            "label": "$(close) Erase",
+            "task": "Erase",
+            "tooltip": "Full chip erase"
+        },
+    ],
+    "files.associations": {
+        "math.h": "c",
+        "cdefs.h": "c",
+        "string.h": "c",
+        "reent.h": "c",
+        "ieeefp.h": "c",
+        "*.tcc": "c",
+        "chrono": "c",
+        "cmath": "c",
+        "complex": "c",
+        "format": "c",
+        "numeric": "c",
+        "ratio": "c",
+        "cinttypes": "c",
+        "cstdlib": "c",
+        "cstdint": "c",
+        "stm32f411xe.h": "c"
+    },
+}
