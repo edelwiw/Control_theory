@@ -10,7 +10,7 @@ function W = get_observability_matrix(A, C)
         if i == 1
             W = C;
         else
-            W = [W; C * A^i];
+            W = [W; C * A^(i - 1)];
         end
     end
     % W = [C; C * A; C * A^2];
@@ -144,4 +144,17 @@ print_matrix(system_matrix, 2);
 
 plotter({{t_arr, x_arr(:, 1), "x_1"}, {t_arr, x_arr(:, 2), "x_2"}, {t_arr, x_arr(:, 3), "x_3"}}, "media/plots/task1_x_6.png", "t", "x", "");
 plotter({{t_arr, u_arr(:, 1), "u_1"}, {t_arr, u_arr(:, 2), "u_2"}, {t_arr, u_arr(:, 3), "u_3"}}, "media/plots/task1_u_6.png", "t", "u", "");
+
+%% TASK 2 
+A = [-40, 16, 9, 7; -64, 25, 14 ,12; -26, 11, 7, 3; -48, 18, 14, 8];
+C = [-3, 2, -2, 1]; 
+
+[Aj, P] = get_jordan_form(A);
+fprintf("Jordan form of A: \n");
+print_matrix(Aj, 2);
+fprintf("P matrix: \n");
+print_matrix(P, 2);
+Cj = C * P; 
+fprintf("Cj matrix: \n");
+print_matrix(Cj, 2);
 

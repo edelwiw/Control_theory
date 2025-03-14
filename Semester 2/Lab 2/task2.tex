@@ -1,1 +1,71 @@
 \section{Наблюдатель полного порядка}
+Рассмотрим систему:
+\begin{equation}
+    \begin{array}{ll}
+        \dot{x} = Ax\\
+        y = Cx
+    \end{array}
+\end{equation}
+где
+\begin{equation}
+    \begin{array}{ccc}
+        A = \begin{bmatrix}
+            -40 & 16 & 9 & 7 \\ 
+            -64 & 25 & 14 & 12 \\ 
+            -26 & 11 & 7 & 3 \\ 
+            -48 & 18 & 14 & 8
+        \end{bmatrix}, & 
+        C = \begin{bmatrix}
+            -3 \\ 2 \\ -2 \\ 1
+        \end{bmatrix}^T
+    \end{array}
+\end{equation}
+\subsection{Наблюдаемость собственных чисел}
+Для определения наблюдаемости собственных чисел рассмотрим вещественную Жорданову форму системы:
+\begin{equation}
+    \begin{array}{ll}
+        \dot{\hat{x}} = P^{-1}AP\hat{x}\\
+        \hat{y} = C\hat{x}
+    \end{array}
+\end{equation}
+Где $P$ -- матрица собственных векторов матрицы $A$, а $\hat{x} = P^{-1}x$.
+\begin{equation}
+    \begin{array}{ccc}
+        \begin{bmatrix}
+            -0.00  & -2.00  & 0.00  & 0.00 \\ 
+            2.00  & 0.00  & 0.00  & 0.00 \\ 
+            0.00  & 0.00  & -0.00  & -3.00 \\ 
+            0.00  & 0.00  & 3.00  & 0.00 \\ 
+        \end{bmatrix}, &
+        P = \begin{bmatrix}
+            1.14  & -0.05  & 1.13  & 0.14 \\ 
+            1.74  & -0.22  & 1.84  & 0.14 \\ 
+            0.87  & -0.11  & 0.71  & 0.00 \\ 
+            1.41  & 0.00  & 1.41  & 0.00 \\ 
+        \end{bmatrix}, & 
+        C_j =\begin{bmatrix}
+            -0.27 \\ -0.05  \\ 0.28  \\ -0.14 \\ 
+        \end{bmatrix}^T
+    \end{array}
+\end{equation}
+Таким образом, система является полностью наблюдаемой. 
+
+\subsection{Наблюдатель полного порядка}
+Рассмотрим наблюдатель полного порядка:
+\begin{equation}
+    \begin{array}{ll}
+        \dot{\hat{x}} = A\hat{x} + L(C\hat{x} - y)\\
+    \end{array}
+\end{equation}
+
+\subsubsection{Подбор спектра нааблюдателя}
+Рассмотрим следующие варианты спектра наблюдателя:
+\begin{enumerate}
+    \item  $\sigma_1 = \{-1, -1, -1, -1\}$
+    \item $\sigma_2 = \{-1, -10, -100, -100\}$
+    \item $\sigma_3 = \{-1\pm2j, -1\pm3j\}$
+\end{enumerate}
+Для каждого из спектров найдем матрицу $L$ такую, чтобы спектр наблюдателя $\sigma(A - LC) = \sigma_i$. Для этого 
+воспользуемся методом Аккермана. 
+
+
