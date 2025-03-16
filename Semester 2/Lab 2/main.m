@@ -1,5 +1,9 @@
+% cvx setup
+cvx_setup
 
- 
+%%
+
+
 function U = get_control_matrix(A, B) 
     U = [B, A * B, A^2 * B];
 end
@@ -157,4 +161,101 @@ print_matrix(P, 2);
 Cj = C * P; 
 fprintf("Cj matrix: \n");
 print_matrix(Cj, 2);
+
+%% 
+% find observer
+G1 = [-1, 1, 0, 0;
+    0, -1, 1, 0;
+    0, 0, -1, 1;
+    0, 0, 0, -1];
+
+Y = [1; 1; 1; 1];
+cvx_begin sdp
+    variable Q(4, 4);
+    G1 * Q - Q * A == Y * C;
+cvx_end
+L1 = Q \ Y;
+
+fprintf("L1 matrix: \n");
+print_matrix(L1, 2);
+
+print_matrix(A + L1 * C, 5);
+
+disp(eig(A + L1 * C));
+
+G2 = [-1, 1, 0, 0;
+    0, -10, 1, 0;
+    0, 0, -100, 1;
+    0, 0, 0, -100];
+
+Y = [1; 1; 1; 1];
+cvx_begin sdp
+    variable Q(4, 4);
+    G2 * Q - Q * A == Y * C;
+cvx_end
+L2 = Q \ Y;
+
+fprintf("L2 matrix: \n");
+print_matrix(L2, 2);
+
+print_matrix(A + L2 * C, 5);
+
+disp(eig(A + L2 * C));
+
+G3 = [-1, -2, 0, 0;
+    2, -1, 1, 0;
+    0, 0, -1, -3;
+    0, 0, 3, -1];
+
+Y = [1; 1; 1; 1];
+cvx_begin sdp
+    variable Q(4, 4);
+    G3 * Q - Q * A == Y * C;
+cvx_end
+L3 = Q \ Y;
+
+fprintf("L2 matrix: \n");
+print_matrix(L3, 2);
+
+print_matrix(A + L3 * C, 5);
+
+disp(eig(A + L3 * C));
+
+
+%% 
+
+L = L1;
+res = sim("task2", 10);
+x_arr = res.x;
+xhat_arr = res.hatx;
+t_arr = res.tout;
+
+plotter({{t_arr, x_arr(:, 1), "x_1"}, {t_arr, x_arr(:, 2), "x_2"}, {t_arr, x_arr(:, 3), "x_3"}, {t_arr, x_arr(:, 4), "x_4"}}, "media/plots/task2_x_1.png", "t", "x", "");
+plotter({{t_arr, xhat_arr(:, 1), "xhat_1"}, {t_arr, xhat_arr(:, 2), "xhat_2"}, {t_arr, xhat_arr(:, 3), "xhat_3"}, {t_arr, xhat_arr(:, 4), "xhat_4"}}, "media/plots/task2_xhat_1.png", "t", "xhat", "");
+diffx = x_arr - xhat_arr;
+plotter({{t_arr, diffx(:, 1), "diffx_1"}, {t_arr, diffx(:, 2), "diffx_2"}, {t_arr, diffx(:, 3), "diffx_3"}, {t_arr, diffx(:, 4), "diffx_4"}}, "media/plots/task2_diffx_1.png", "t", "diffx", "");
+
+%%
+L = L2;
+res = sim("task2", 10);
+x_arr = res.x;
+xhat_arr = res.hatx;
+t_arr = res.tout;
+
+plotter({{t_arr, x_arr(:, 1), "x_1"}, {t_arr, x_arr(:, 2), "x_2"}, {t_arr, x_arr(:, 3), "x_3"}, {t_arr, x_arr(:, 4), "x_4"}}, "media/plots/task2_x_2.png", "t", "x", "");
+plotter({{t_arr, xhat_arr(:, 1), "xhat_1"}, {t_arr, xhat_arr(:, 2), "xhat_2"}, {t_arr, xhat_arr(:, 3), "xhat_3"}, {t_arr, xhat_arr(:, 4), "xhat_4"}}, "media/plots/task2_xhat_2.png", "t", "xhat", "");
+diffx = x_arr - xhat_arr;
+plotter({{t_arr, diffx(:, 1), "diffx_1"}, {t_arr, diffx(:, 2), "diffx_2"}, {t_arr, diffx(:, 3), "diffx_3"}, {t_arr, diffx(:, 4), "diffx_4"}}, "media/plots/task2_diffx_2.png", "t", "diffx", "");
+
+%%
+L = L3;
+res = sim("task2", 10);
+x_arr = res.x;
+xhat_arr = res.hatx;
+t_arr = res.tout;
+
+plotter({{t_arr, x_arr(:, 1), "x_1"}, {t_arr, x_arr(:, 2), "x_2"}, {t_arr, x_arr(:, 3), "x_3"}, {t_arr, x_arr(:, 4), "x_4"}}, "media/plots/task2_x_3.png", "t", "x", "");
+plotter({{t_arr, xhat_arr(:, 1), "xhat_1"}, {t_arr, xhat_arr(:, 2), "xhat_2"}, {t_arr, xhat_arr(:, 3), "xhat_3"}, {t_arr, xhat_arr(:, 4), "xhat_4"}}, "media/plots/task2_xhat_3.png", "t", "xhat", "");
+diffx = x_arr - xhat_arr;
+plotter({{t_arr, diffx(:, 1), "diffx_1"}, {t_arr, diffx(:, 2), "diffx_2"}, {t_arr, diffx(:, 3), "diffx_3"}, {t_arr, diffx(:, 4), "diffx_4"}}, "media/plots/task2_diffx_3.png", "t", "diffx", "");
 

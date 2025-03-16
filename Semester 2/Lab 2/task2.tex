@@ -54,9 +54,17 @@
 Рассмотрим наблюдатель полного порядка:
 \begin{equation}
     \begin{array}{ll}
-        \dot{\hat{x}} = A\hat{x} + L(C\hat{x} - y)\\
+        \dot{\hat{x}} = A\hat{x} + L(\hat{y} - y) \\
+        \hat{y} = C\hat{x}
     \end{array}
 \end{equation}
+И схему его моделирования в среде Simulink. Схема моделирования представлена на рисунке \ref{fig:scheme2}.
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.6\textwidth]{media/scheme2.png}
+    \caption{Схема моделирования системы с наблюдателем полного порядка}
+    \label{fig:scheme2}
+\end{figure}
 
 \subsubsection{Подбор спектра нааблюдателя}
 Рассмотрим следующие варианты спектра наблюдателя:
@@ -65,7 +73,135 @@
     \item $\sigma_2 = \{-1, -10, -100, -100\}$
     \item $\sigma_3 = \{-1\pm2j, -1\pm3j\}$
 \end{enumerate}
-Для каждого из спектров найдем матрицу $L$ такую, чтобы спектр наблюдателя $\sigma(A - LC) = \sigma_i$. Для этого 
-воспользуемся методом Аккермана. 
+Для каждого из спектров найдем вектор $L_i$ такой, чтобы спектр наблюдателя $\sigma(A + L_iC) = \sigma_i$. 
+Если такой вектор существует, то существует и матрица перехода $V$ такая, что $A + L_iC = V^{-1}\Gamma_iV$, где 
+$\Gamma_i$ -- матрица с нужным спектром. 
+Зададимся матрицей $\Gamma_1$ со спектром $\sigma_1$: 
+\begin{equation}
+    \Gamma_1 = \begin{bmatrix}
+        -1 & 1 & 0 & 0\\
+        0 & -1 & 1 & 0\\
+        0 & 0 & -1 & 1\\
+        0 & 0 & 0 & -1
+    \end{bmatrix}\quad \sigma(\Gamma_1) = \{-1, -1, -1, -1\}
+\end{equation}
+Запишем и решим уравнение Сильвестра с помощью покета \texttt{cvx}: 
+\begin{equation}
+    \begin{array}{ll}
+        \Gamma_1 V - VA = YC\\
+        Y = VL_1
+    \end{array}
+\end{equation}
+где $Y$ -- такая матрица, чтобы пара $(\Gamma_1, Y)$ была наблюдаемой. Решив, получим матрицу $L$:
+\begin{equation}
+    L_1 = \begin{bmatrix}
+        -33.23 \\ 
+        -53.40 \\ 
+        -22.57 \\ 
+        -42.03 \\ 
+    \end{bmatrix}
+\end{equation}
+Спектр системы $A + L_1C$ при этом оказывается $\{-1.023, -1\pm0.0023j, -0.997\}$, что практически 
+полностью совпадает с требуемым спектром. 
+
+Те же самые вычисления проведем для спектра $\sigma_2$:
+\begin{equation}
+    L_2 = \begin{bmatrix}
+        161410.88 \\ 
+        255685.22 \\ 
+        116505.54 \\ 
+        205662.28 \\ 
+    \end{bmatrix}
+\end{equation}
+Спектр системы $A + L_2C$ при этом оказывается $\{-1, -10, -99.99, -100.0057\}$, что практически
+полностью совпадает с требуемым спектром.
+
+И для спектра $\sigma_3$:
+\begin{equation}
+    L_3 = \begin{bmatrix}
+        11.93 \\ 
+        16.80 \\ 
+        7.67 \\ 
+        13.53 \\ 
+    \end{bmatrix}
+\end{equation}
+Спектр системы $A + L_3C$ при этом оказывается полностью равен требуемому спектру $\sigma_3$. 
+
+Таким образом, для всех трех спектров существует такая матрица $L$, что спектр системы $A + LC$ совпадает с требуемым. 
+
+\subsection{Моделирование}
+Проведем моделирование каждой из систем с наблюдателем полного порядка с начальными условиями $x(0) = \begin{bmatrix} 1 & 1 & 1 & 1 \end{bmatrix}^T$ 
+для самой системы и $\hat{x}(0) = \begin{bmatrix} 2 & 0 & 0 & -1 \end{bmatrix}^T$ для наблюдателя.
+
+Результаты моделирования для первого спектра $\sigma_1$ представлены на рисунке \ref{fig:task2_x_1} (состояние системы), \ref{fig:task2_xhat_1} (состояние наблюдателя) и \ref{fig:task2_diff_1} (ошибка наблюдателя).
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{media/plots/task2_x_1.png}
+    \caption{Состояние системы с наблюдателем полного порядка для спектра $\sigma_1$}
+    \label{fig:task2_x_1}
+\end{figure}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{media/plots/task2_xhat_1.png}
+    \caption{Состояние наблюдателя полного порядка для спектра $\sigma_1$}
+    \label{fig:task2_xhat_1}
+\end{figure}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{media/plots/task2_diffx_1.png}
+    \caption{Ошибка наблюдателя полного порядка для спектра $\sigma_1$}
+    \label{fig:task2_diff_1}
+\end{figure}
 
 
+Результаты моделирования для второго спектра $\sigma_2$ представлены на рисунке \ref{fig:task2_x_2} (состояние системы), \ref{fig:task2_xhat_2} (состояние наблюдателя) и \ref{fig:task2_diff_2} (ошибка наблюдателя).
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{media/plots/task2_x_2.png}
+    \caption{Состояние системы с наблюдателем полного порядка для спектра $\sigma_2$}
+    \label{fig:task2_x_2}
+\end{figure}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{media/plots/task2_xhat_2.png}
+    \caption{Состояние наблюдателя полного порядка для спектра $\sigma_2$}
+    \label{fig:task2_xhat_2}
+\end{figure}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{media/plots/task2_diffx_2.png}
+    \caption{Ошибка наблюдателя полного порядка для спектра $\sigma_2$}
+    \label{fig:task2_diff_2}
+\end{figure}
+
+Результаты моделирования для третьего спектра $\sigma_3$ представлены на рисунке \ref{fig:task2_x_3} (состояние системы), \ref{fig:task2_xhat_3} (состояние наблюдателя) и \ref{fig:task2_diff_3} (ошибка наблюдателя).
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{media/plots/task2_x_3.png}
+    \caption{Состояние системы с наблюдателем полного порядка для спектра $\sigma_3$}
+    \label{fig:task2_x_3}
+\end{figure}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{media/plots/task2_xhat_3.png}
+    \caption{Состояние наблюдателя полного порядка для спектра $\sigma_3$}
+    \label{fig:task2_xhat_3}
+\end{figure}
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{media/plots/task2_diffx_3.png}
+    \caption{Ошибка наблюдателя полного порядка для спектра $\sigma_3$}
+    \label{fig:task2_diff_3}
+\end{figure}
+
+\FloatBarrier
+\section{Выводы}
+Во всех случаях коррекция наблюдателя помогла устремить ошибку к нулю. При этом, как и в прошлом задании, 
+можно заметить закономерность. При больших значениях спектра наблюдателя ошибка устремляется к нулю быстрее, чем при малых, 
+а при наличии комплексных собственных чисел ошибка наблюдателя приобретает колебательный характер.
