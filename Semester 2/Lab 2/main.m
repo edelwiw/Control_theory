@@ -259,3 +259,63 @@ plotter({{t_arr, xhat_arr(:, 1), "xhat_1"}, {t_arr, xhat_arr(:, 2), "xhat_2"}, {
 diffx = x_arr - xhat_arr;
 plotter({{t_arr, diffx(:, 1), "diffx_1"}, {t_arr, diffx(:, 2), "diffx_2"}, {t_arr, diffx(:, 3), "diffx_3"}, {t_arr, diffx(:, 4), "diffx_4"}}, "media/plots/task2_diffx_3.png", "t", "diffx", "");
 
+
+%% TASK 3 
+
+A = [6, 0, -12, 6; 0, 6, -6, 12; -12, -6, 6, 0; 6, 12, 0, 6];
+B = [6; 12; 6; 4];
+C = [-6, 6, 6, 6; 3, 0, 0, 3];
+D = [2; 2];
+
+[Aj, P] = get_jordan_form(A);
+fprintf("Jordan form of A: \n");
+print_matrix(Aj, 2);
+fprintf("P matrix: \n");
+print_matrix(P, 2);
+Bj = inv(P) * B;
+fprintf("Bj matrix: \n");
+print_matrix(Bj, 2);
+Cj = C * P;
+fprintf("Cj matrix: \n");
+print_matrix(Cj, 2);
+
+%%
+K = -acker(A, B, [0, -1, -2, -3]);
+fprintf("K matrix: \n");
+print_matrix(K, 2);
+
+disp(eig(A + B * K));
+
+%% 
+
+G = [-1, 0, 0, 0;
+    0, -2, 0, 0;
+    0, 0, -3, 0;
+    0, 0, 0, -12];
+
+Y = [1, 1; 1, 1; 1, 1; 1, 1];
+cvx_begin sdp
+    variable Q(4, 4);
+    G * Q - Q * A == Y * C;
+cvx_end
+L = Q \ Y;
+
+fprintf("L matrix: \n");
+print_matrix(L, 2);
+
+print_matrix(A + L * C, 5);
+
+disp(eig(A + L * C));
+
+%% 
+res = sim("task3", 10);
+x = res.x;
+xhat = res.hatx;
+t = res.tout;
+u = res.u;
+
+plotter({{t, x(:, 1), "x_1"}, {t, x(:, 2), "x_2"}, {t, x(:, 3), "x_3"}, {t, x(:, 4), "x_4"}}, "media/plots/task3_x_1.png", "t", "x", "");
+plotter({{t, xhat(:, 1), "xhat_1"}, {t, xhat(:, 2), "xhat_2"}, {t, xhat(:, 3), "xhat_3"}, {t, xhat(:, 4), "xhat_4"}}, "media/plots/task3_xhat_1.png", "t", "xhat", "");
+diffx = x - xhat;
+plotter({{t, diffx(:, 1), "diffx_1"}, {t, diffx(:, 2), "diffx_2"}, {t, diffx(:, 3), "diffx_3"}, {t, diffx(:, 4), "diffx_4"}}, "media/plots/task3_diffx_1.png", "t", "diffx", "");
+plotter({{t, u(:, 1), "u"}}, "media/plots/task3_u_1.png", "t", "u", "");
