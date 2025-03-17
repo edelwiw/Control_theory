@@ -5,14 +5,7 @@ cvx_setup
 
 
 function U = get_control_matrix(A, B) 
-    dim = size(A, 1);
-    for i = 1:dim
-        if i == 1
-            U = B;
-        else
-            U = [U, A^(i - 1) * B];
-        end
-    end
+    U = [B, A * B, A^2 * B];
 end
 
 function W = get_observability_matrix(A, C)
@@ -299,7 +292,7 @@ fprintf("Cj matrix: \n");
 print_matrix(Cj, 2);
 
 %%
-K = -acker(A, B, [-4, -1, -2, -3]);
+K = -acker(A, B, [0, -1, -2, -3]);
 fprintf("K matrix: \n");
 print_matrix(K, 2);
 
@@ -327,7 +320,7 @@ print_matrix(A + L * C, 5);
 disp(eig(A + L * C));
 
 %% 
-res = sim("task3", 15);
+res = sim("task3", 10);
 x = res.x;
 xhat = res.hatx;
 t = res.tout;
