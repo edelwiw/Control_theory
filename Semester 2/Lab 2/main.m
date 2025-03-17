@@ -338,3 +338,66 @@ plotter({{t, xhat(:, 1), "xhat_1"}, {t, xhat(:, 2), "xhat_2"}, {t, xhat(:, 3), "
 diffx = x - xhat;
 plotter({{t, diffx(:, 1), "diffx_1"}, {t, diffx(:, 2), "diffx_2"}, {t, diffx(:, 3), "diffx_3"}, {t, diffx(:, 4), "diffx_4"}}, "media/plots/task3_diffx_1.png", "t", "diffx", "");
 plotter({{t, u(:, 1), "u"}}, "media/plots/task3_u_1.png", "t", "u", "");
+
+
+%% TASK 4 
+A = [6, 0, -12, 6; 0, 6, -6, 12; -12, -6, 6, 0; 6, 12, 0, 6];
+B = [6; 12; 6; 4];
+C = [0, 0, 1, 0; 0, 0, 0, 1];
+D = [2; 2]; 
+
+disp(rank(get_control_matrix(A, B)));
+disp(rank(get_observability_matrix(A, C)));
+
+[Aj, P] = get_jordan_form(A);
+fprintf("Jordan form of A: \n");
+print_matrix(Aj, 2);
+fprintf("P matrix: \n");
+print_matrix(P, 2);
+Bj = inv(P) * B;
+fprintf("Bj matrix: \n");
+print_matrix(Bj, 2);
+Cj = C * P;
+fprintf("Cj matrix: \n");
+print_matrix(Cj, 2);
+
+%%
+K = -acker(A, B, [-4, -1, -2, -3]);
+fprintf("K matrix: \n");
+print_matrix(K, 2);
+
+disp(eig(A + B * K));
+
+%% 
+Y = [1, 0; 1, 0];
+G = [-3, 0; 0, -6];
+
+cvx_begin sdp
+    variable Q(2, 4);
+    G * Q - Q * A == Y * C;
+cvx_end
+
+% 2x2 * 2x4 - 2x4 * 4x4 = 2x2 * 2x4 
+
+fprintf("Q matrix: \n");
+print_matrix(Q, 2);
+
+CQi = inv([C; Q]);
+print_matrix(CQi, 2);
+
+%% 
+res = sim("task4", 5);
+x_arr = res.x;
+xhat_arr = res.xhat;
+t_arr = res.tout;
+zhat_arr = res.zhat;
+u_arr = res.u;
+
+xdiff = x_arr - xhat_arr;
+plotter({{t_arr, xdiff(:, 1), "xdiff_1"}, {t_arr, xdiff(:, 2), "xdiff_2"}, {t_arr, xdiff(:, 3), "xdiff_3"}, {t_arr, xdiff(:, 4), "xdiff_4"}}, "media/plots/task4_xdiff_1.png", "t", "xdiff", "");
+plotter({{t_arr, x_arr(:, 1), "x_1"}, {t_arr, xhat_arr(:, 1), "xhat_1"}}, "media/plots/task4_x1_1.png", "t", "x", "");
+plotter({{t_arr, x_arr(:, 2), "x_2"}, {t_arr, xhat_arr(:, 2), "xhat_2"}}, "media/plots/task4_x2_1.png", "t", "x", "");
+plotter({{t_arr, x_arr(:, 3), "x_3"}, {t_arr, xhat_arr(:, 3), "xhat_3"}}, "media/plots/task4_x3_1.png", "t", "x", "");
+plotter({{t_arr, x_arr(:, 4), "x_4"}, {t_arr, xhat_arr(:, 4), "xhat_4"}}, "media/plots/task4_x4_1.png", "t", "x", "");
+plotter({{t_arr, zhat_arr(:, 1), "zhat_1"}, {t_arr, zhat_arr(:, 2), "zhat_2"}}, "media/plots/task4_zhat_1.png", "t", "zhat", "");
+plotter({{t_arr, u_arr(:, 1), "u"}}, "media/plots/task4_u_1.png", "t", "u", "");
