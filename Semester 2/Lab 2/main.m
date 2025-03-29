@@ -118,7 +118,7 @@ fprintf("System matrix: \n");
 print_matrix(system_matrix, 2);
 
 plotter({{t_arr, x_arr(:, 1), "x_1"}, {t_arr, x_arr(:, 2), "x_2"}, {t_arr, x_arr(:, 3), "x_3"}}, "media/plots/task1_x_2.png", "t", "x", "");
-plotter({{t_arr, u_arr(:, 1), "u_1"}, {t_arr, u_arr(:, 2), "u_2"}, {t_arr, u_arr(:, 3), "u_3"}}, "media/plots/task1_u_2.png", "t", "u", "");
+plotter({{t_arr, u_arr(:, 1), "u"}}, "media/plots/task1_u_2.png", "t", "u", "");
 
 %% 
 fprintf("TASK 2\n");
@@ -126,7 +126,7 @@ sigma = [-30, -300];
 K = find_controller(A, B, sigma);
 fprintf("K matrix: \n");
 print_matrix(K, 2);
-res = sim("task1", 5);
+res = sim("task1", 2);
 u_arr = res.u;
 x_arr = res.x;
 t_arr = res.tout;
@@ -136,7 +136,7 @@ fprintf("System matrix: \n");
 print_matrix(system_matrix, 2);
 
 plotter({{t_arr, x_arr(:, 1), "x_1"}, {t_arr, x_arr(:, 2), "x_2"}, {t_arr, x_arr(:, 3), "x_3"}}, "media/plots/task1_x_4.png", "t", "x", "");
-plotter({{t_arr, u_arr(:, 1), "u_1"}, {t_arr, u_arr(:, 2), "u_2"}, {t_arr, u_arr(:, 3), "u_3"}}, "media/plots/task1_u_4.png", "t", "u", "");
+plotter({{t_arr, u_arr(:, 1), "u"}}, "media/plots/task1_u_4.png", "t", "u", "");
 
 %%
 fprintf("TASK 3\n");
@@ -154,7 +154,7 @@ fprintf("System matrix: \n");
 print_matrix(system_matrix, 2);
 
 plotter({{t_arr, x_arr(:, 1), "x_1"}, {t_arr, x_arr(:, 2), "x_2"}, {t_arr, x_arr(:, 3), "x_3"}}, "media/plots/task1_x_6.png", "t", "x", "");
-plotter({{t_arr, u_arr(:, 1), "u_1"}, {t_arr, u_arr(:, 2), "u_2"}, {t_arr, u_arr(:, 3), "u_3"}}, "media/plots/task1_u_6.png", "t", "u", "");
+plotter({{t_arr, u_arr(:, 1), "u"}}, "media/plots/task1_u_6.png", "t", "u", "");
 
 %% TASK 2 
 A = [-40, 16, 9, 7; -64, 25, 14 ,12; -26, 11, 7, 3; -48, 18, 14, 8];
@@ -341,11 +341,6 @@ plotter({{t, u(:, 1), "u"}}, "media/plots/task3_u_1.png", "t", "u", "");
 
 
 %% TASK 4 
-A = [6, 0, -12, 6; 0, 6, -6, 12; -12, -6, 6, 0; 6, 12, 0, 6];
-B = [6; 12; 6; 4];
-C = [0, 0, 1, 0; 0, 0, 0, 1];
-D = [2; 2]; 
-
 disp(rank(get_control_matrix(A, B)));
 disp(rank(get_observability_matrix(A, C)));
 
@@ -362,15 +357,18 @@ fprintf("Cj matrix: \n");
 print_matrix(Cj, 2);
 
 %%
-K = -acker(A, B, [-4, -1, -2, -3]);
+K = -acker(A, B, [-15, -14, -10, -2]);
 fprintf("K matrix: \n");
 print_matrix(K, 2);
 
 disp(eig(A + B * K));
 
+
 %% 
-Y = [1, 0; 1, 0];
-G = [-3, 0; 0, -6];
+Y = [1, 0;
+    1, 0];
+G = [-3, 0;
+    0, -6];
 
 cvx_begin sdp
     variable Q(2, 4);
