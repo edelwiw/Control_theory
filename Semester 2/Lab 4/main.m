@@ -155,3 +155,54 @@ plotter({{full_t_arr, full_u_arr(:, 1), 'u'}}, 'media/plots/full_u.png', 't', 'u
 
 plotter({{K1_t_arr, K1_u_arr(:, 1), 'u_1'}, {K1wf_t_arr, K1wf_u_arr(:, 1), 'u_2'}, {full_t_arr, full_u_arr(:, 1), 'u_3'}}, 'media/plots/u_cmp.png', 't', 'u(t)', '');
 plotter({{K1wf_t_arr, K1wf_z_arr, 'z_1'}, {full_t_arr, full_z_arr, 'z_2'}}, 'media/plots/z_cmp.png', 't', 'z(t)', '');
+
+%% TASK 2
+Dz = [8, -8, 12, -3];
+wgen  = 1;
+x0 = [1; 1; 1];
+K1 = [0, 0, 0];
+K2 = [0, 0, 0, 0];
+
+res = sim("scheme2", 5);
+t_arr = res.tout;
+wg_arr = res.wg;
+z_arr = res.z;
+u_arr = res.u;
+x_arr = res.x;
+
+plotter({{t_arr, x_arr(:, 1), 'x_1'}, {t_arr, x_arr(:, 2), 'x_2'}, {t_arr, x_arr(:, 3), 'x_3'}}, 'media/plots/task2_open_x.png', 't', 'x(t)', '');
+plotter({{t_arr, z_arr, 'z'}}, 'media/plots/task2_open_z.png', 't', 'z(t)', '');
+
+[K1, mu] = FindControllerLyapMin(A, B, x0, alpha);
+
+res = sim("scheme2", 5);
+K1_t_arr = res.tout;
+K1_wg_arr = res.wg;
+K1_z_arr = res.z;
+K1_u_arr = res.u;
+K1_x_arr = res.x;
+
+plotter({{K1_t_arr, K1_x_arr(:, 1), 'x_1'}, {K1_t_arr, K1_x_arr(:, 2), 'x_2'}, {K1_t_arr, K1_x_arr(:, 3), 'x_3'}}, 'media/plots/task2_K1_x.png', 't', 'x(t)', '');
+plotter({{K1_t_arr, K1_z_arr, 'z'}}, 'media/plots/task2_K1_z.png', 't', 'z(t)', '');
+plotter({{K1_t_arr, K1_u_arr(:, 1), 'u'}}, 'media/plots/task2_K1_u.png', 't', 'u(t)', '');
+
+%% 
+K2 = FindFeedforwardController(A, B, Gamma, Cz, Dz, zeros(3, 4), K1);
+fprintf('K_2 = ');
+print_matrix(K2, 2);
+
+res = sim("scheme2", 5);
+full_t_arr = res.tout;
+full_wg_arr = res.wg;
+full_z_arr = res.z;
+full_u_arr = res.u;
+full_x_arr = res.x;
+
+plotter({{full_t_arr, full_x_arr(:, 1), 'x_1'}, {full_t_arr, full_x_arr(:, 2), 'x_2'}, {full_t_arr, full_x_arr(:, 3), 'x_3'}}, 'media/plots/task2_full_x.png', 't', 'x(t)', '');
+plotter({{full_t_arr, full_z_arr, 'z'}}, 'media/plots/task2_full_z.png', 't', 'z(t)', '');
+plotter({{full_t_arr, full_u_arr(:, 1), 'u'}}, 'media/plots/task2_full_u.png', 't', 'u(t)', '');
+
+%% comparing
+plotter({{K1_t_arr, K1_u_arr(:, 1), 'u_1'}, {full_t_arr, full_u_arr(:, 1), 'u_2'}}, 'media/plots/task2_u_cmp.png', 't', 'u(t)', '');
+plotter({{K1_t_arr, K1_z_arr, 'z_1'}, {full_t_arr, full_z_arr, 'z_2'}}, 'media/plots/task2_z_cmp.png', 't', 'z(t)', '');
+
