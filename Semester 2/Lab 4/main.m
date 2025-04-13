@@ -45,6 +45,39 @@ function [Aj, Bj] = getJordanForm(A, B)
     Bj = V \ B;
 end
 
+function W = get_observability_matrix(A, C)
+    dim = size(A, 1);
+    for i = 1:dim
+        if i == 1
+            W = C;
+        else
+            W = [W; C * A^(i - 1)];
+        end
+    end
+    % W = [C; C * A; C * A^2];
+end
+
+function [L, mu] = FindObserverMin(A, C, e0, alpha) 
+    [Am, An] = size(A);
+    [Cm, Cn] = size(C);
+
+    cvx_begin sdp
+        variable Q(Am, An)
+        variable Y(Cn, Cm)
+        variable mumu;
+        minimize mumu;
+        Q > 0.0001 * eye(Am);
+        A' * Q + Q * A + 2 * alpha * Q + C' * Y' + Y * C <= 0;        
+        [Q e0;
+         e0' 1] > 0;
+        [Q Y;
+         Y' mumu * eye(Cm)] > 0;
+    cvx_end
+
+    L = Q \ Y;
+    mu = sqrt(mumu);
+end
+
 %% TASK 1 
 A = [8, 1, 11; 4, 0, 4; -4, -3, -7]; 
 B = [-1; -3; 3];
@@ -206,3 +239,116 @@ plotter({{full_t_arr, full_u_arr(:, 1), 'u'}}, 'media/plots/task2_full_u.png', '
 plotter({{K1_t_arr, K1_u_arr(:, 1), 'u_1'}, {full_t_arr, full_u_arr(:, 1), 'u_2'}}, 'media/plots/task2_u_cmp.png', 't', 'u(t)', '');
 plotter({{K1_t_arr, K1_z_arr, 'z_1'}, {full_t_arr, full_z_arr, 'z_2'}}, 'media/plots/task2_z_cmp.png', 't', 'z(t)', '');
 
+%% TASK 3 
+
+A = [8, 1, 11; 4, 0, 4; -4, -3, -7]; 
+B = [-1; -3; 3];
+C = [-2, -3, -1];
+Bf = [0, 1, -1, -1; 0, 0, 0, 0; 0, -1, 0, 0];
+Cz = [-2, -3, -1];
+Gamma = [-40, 16, 9, 7; -64, 25, 14, 12; -26, 11, 7, 3; -48, 18, 14, 8];
+D = [-12, 2, 2, 6];
+Dz = [8, -8, 12, -3];
+
+x0 = [0; 0; 0];
+alpha = 3;
+[K1, mu] = FindControllerLyapMin(A, B, x0, alpha);
+
+ABFG = [A, Bf; zeros(4, 3), Gamma];
+CD = [C, D];
+W = get_observability_matrix(CD, ABFG);
+fprintf('W = ');
+print_matrix(W, 2);
+fprintf('rank(W) = %d\n', rank(W));
+
+%% 
+e0 = [0; 0; 0; 0; 0; 0; 0];
+L = FindObserverMin(ABFG, CD, e0, 3);
+fprintf('L = ');
+print_matrix(L, 2);
+
+L1 = L(1:3);
+L2 = L(4:7);
+fprintf('L1 = ');
+print_matrix(L1, 2);
+fprintf('L2 = ');
+print_matrix(L2, 2);
+
+
+K21 = FindFeedforwardController(A, B, Gamma, Cz, Dz, Bf, K1);
+fprintf('K_{21} = ');
+print_matrix(K21, 2);
+
+K22 = FindFeedforwardController(A, B, Gamma, C, D, Bf, K1);
+fprintf('K_{22} = ');
+print_matrix(K22, 2);
+
+%% 
+wfen = 1;
+K2 = K21; 
+Abebra = [A + B * K1 + L1 * C, B * K2 + Bf + L1 * D; L2 * C, Gamma + L2 * D];
+fprintf('\\overline{A} = ');
+print_matrix(Abebra, 2);
+fprintf('\\sigma(\\overline{A}) = ')
+abebra_eig = eig(Abebra);
+print_matrix(abebra_eig, 2);
+
+%% 
+res = sim("scheme3", 5);
+t_arr = res.tout;
+z1_arr = res.z1;
+z2_arr = res.z2;
+u_arr = res.u;
+x_arr = res.x;
+w_arr = res.w;
+xhat_arr = res.xhat;
+what_arr = res.what;
+
+plotter({{t_arr, u_arr, 'u'}}, 'media/plots/task3_z1_u.png', 't', 'u(t)', '');
+plotter({{t_arr, x_arr(:, 1), 'x_1', "style", "-", "color", "#0072BD"}, {t_arr, xhat_arr(:, 1), 'hx_1', "style", "--", "color", "#0072BD"}, {t_arr, x_arr(:, 2), 'x_2', "style", "-", "color", "#D95319"}, {t_arr, xhat_arr(:, 2), 'hx_2', "style", "--", "color", "#D95319"}, {t_arr, x_arr(:, 3), 'x_3', "style", "-", "color", "#EDB120"}, {t_arr, xhat_arr(:, 3), 'hx_3', "style", "--", "color", "#EDB120"}}, 'media/plots/task3_z1_x_cmp.png', 't', 'x(t)', '');
+plotter({{t_arr, w_arr(:, 1), 'w_1', "style", "-", "color", "#0072BD"}, {t_arr, what_arr(:, 1), 'hw_1', "style", "--", "color", "#0072BD"}, {t_arr, w_arr(:, 2), 'w_2', "style", "-", "color", "#D95319"}, {t_arr, what_arr(:, 2), 'hw_2', "style", "--", "color", "#D95319"}, {t_arr, w_arr(:, 3), 'w_3', "style", "-", "color", "#EDB120"}, {t_arr, what_arr(:, 3), 'hw_3', "style", "--", "color", "#EDB120"}}, 'media/plots/task3_z1_w_cmp.png', 't', 'w(t)', '');
+
+xerr = x_arr - xhat_arr;
+werr = w_arr - what_arr;
+plotter({{t_arr, xerr(:, 1), 'xe_1', "style", "-", "color", "#0072BD"}, {t_arr, xerr(:, 2), 'xe_2', "style", "-", "color", "#D95319"}, {t_arr, xerr(:, 3), 'xe_3', "style", "-", "color", "#EDB120"}}, 'media/plots/task3_z1_xerr_cmp.png', 't', 'x(t)', '');
+plotter({{t_arr, werr(:, 1), 'we_1', "style", "-", "color", "#0072BD"}, {t_arr, werr(:, 2), 'we_2', "style", "-", "color", "#D95319"}, {t_arr, werr(:, 3), 'we_3', "style", "-", "color", "#EDB120"}}, 'media/plots/task3_z1_werr_cmp.png', 't', 'w(t)', '');
+
+plotter({{t_arr, z1_arr, 'z_1'}}, 'media/plots/task3_z1_z1.png', 't', 'z_1(t)', '');
+plotter({{t_arr, z2_arr, 'z_2'}}, 'media/plots/task3_z1_z2.png', 't', 'z_2(t)', '');
+
+plotter({{t_arr, z1_arr, 'z_1'}, {t_arr, z2_arr, 'y'}}, 'media/plots/task3_z1_cmp.png', 't', 'z(t)', '');
+
+%% 
+wfen = 1;
+K2 = K22; 
+Abebra = [A + B * K1 + L1 * C, B * K2 + Bf + L1 * D; L2 * C, Gamma + L2 * D];
+fprintf('\\overline{A} = ');
+print_matrix(Abebra, 2);
+fprintf('\\sigma(\\overline{A}) = ')
+abebra_eig = eig(Abebra);
+print_matrix(abebra_eig, 2);
+%% 
+
+res = sim("scheme3", 5);
+t_arr = res.tout;
+z1_arr = res.z1;
+z2_arr = res.z2;
+u_arr = res.u;
+x_arr = res.x;
+w_arr = res.w;
+xhat_arr = res.xhat;
+what_arr = res.what;
+
+plotter({{t_arr, u_arr, 'u'}}, 'media/plots/task3_z2_u.png', 't', 'u(t)', '');
+plotter({{t_arr, x_arr(:, 1), 'x_1', "style", "-", "color", "#0072BD"}, {t_arr, xhat_arr(:, 1), 'hx_1', "style", "--", "color", "#0072BD"}, {t_arr, x_arr(:, 2), 'x_2', "style", "-", "color", "#D95319"}, {t_arr, xhat_arr(:, 2), 'hx_2', "style", "--", "color", "#D95319"}, {t_arr, x_arr(:, 3), 'x_3', "style", "-", "color", "#EDB120"}, {t_arr, xhat_arr(:, 3), 'hx_3', "style", "--", "color", "#EDB120"}}, 'media/plots/task3_z2_x_cmp.png', 't', 'x(t)', '');
+plotter({{t_arr, w_arr(:, 1), 'w_1', "style", "-", "color", "#0072BD"}, {t_arr, what_arr(:, 1), 'hw_1', "style", "--", "color", "#0072BD"}, {t_arr, w_arr(:, 2), 'w_2', "style", "-", "color", "#D95319"}, {t_arr, what_arr(:, 2), 'hw_2', "style", "--", "color", "#D95319"}, {t_arr, w_arr(:, 3), 'w_3', "style", "-", "color", "#EDB120"}, {t_arr, what_arr(:, 3), 'hw_3', "style", "--", "color", "#EDB120"}}, 'media/plots/task3_z2_w_cmp.png', 't', 'w(t)', '');
+
+xerr = x_arr - xhat_arr;
+werr = w_arr - what_arr;
+plotter({{t_arr, xerr(:, 1), 'xe_1', "style", "-", "color", "#0072BD"}, {t_arr, xerr(:, 2), 'xe_2', "style", "-", "color", "#D95319"}, {t_arr, xerr(:, 3), 'xe_3', "style", "-", "color", "#EDB120"}}, 'media/plots/task3_z2_xerr_cmp.png', 't', 'x(t)', '');
+plotter({{t_arr, werr(:, 1), 'we_1', "style", "-", "color", "#0072BD"}, {t_arr, werr(:, 2), 'we_2', "style", "-", "color", "#D95319"}, {t_arr, werr(:, 3), 'we_3', "style", "-", "color", "#EDB120"}}, 'media/plots/task3_z2_werr_cmp.png', 't', 'w(t)', '');
+
+plotter({{t_arr, z1_arr, 'z_1'}}, 'media/plots/task3_z2_z1.png', 't', 'z_1(t)', '');
+plotter({{t_arr, z2_arr, 'z_2'}}, 'media/plots/task3_z2_z2.png', 't', 'z_2(t)', '');
+
+plotter({{t_arr, z2_arr, 'z_2'}, {t_arr, z2_arr, 'y'}}, 'media/plots/task3_z2_cmp.png', 't', 'z(t)', '');
