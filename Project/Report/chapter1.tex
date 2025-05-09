@@ -64,7 +64,7 @@
         \ddot{x} \\
     \end{bmatrix} =
     \begin{bmatrix}
-        -mgl\sin\theta + Q_{\theta} \\
+        mgl\sin\theta + Q_{\theta} \\
         ml\dot{\theta}^2\sin\theta + Q_x
     \end{bmatrix}
 \end{equation}
@@ -75,70 +75,89 @@
 Решая систему уравнений методом Крамера, получаем:
 \begin{multline}
     \Delta_{\ddot{x}} = \begin{vmatrix}
-        -mgl\sin\theta + Q_{\theta} & ml\cos\theta \\
+        mgl\sin\theta + Q_{\theta} & ml\cos\theta \\
         ml\dot{\theta}^2\sin\theta + Q_x & M + m \\
-    \end{vmatrix} = (-mgl\sin\theta + Q_{\theta})(M + m) - ml\cos\theta(ml\dot{\theta}^2\sin\theta + Q_x) = \\
-    = -mgl\sin\theta M - m^2gl\sin\theta + (M + m)Q_{\theta} - m^2l^2\dot{\theta}^2\sin\theta\cos\theta - mlQ_x\cos\theta
+    \end{vmatrix} = (mgl\sin\theta + Q_{\theta})(M + m) - ml\cos\theta(ml\dot{\theta}^2\sin\theta + Q_x) 
 \end{multline}
 \begin{multline}
     \Delta_{\ddot{\theta}} = \begin{vmatrix}
-        ml^2 & -mgl\sin\theta + Q_{\theta} \\
+        ml^2 & mgl\sin\theta + Q_{\theta} \\
         ml\cos\theta & ml\dot{\theta}^2\sin\theta + Q_x \\
-    \end{vmatrix} = ml^2(ml\dot{\theta}^2\sin\theta + Q_x) - ml\cos\theta(-mgl\sin\theta + Q_{\theta})
+    \end{vmatrix} = ml^2(ml\dot{\theta}^2\sin\theta + Q_x) - ml\cos\theta(mgl\sin\theta + Q_{\theta})
 \end{multline}
-
 
 \begin{equation}
     \begin{cases}
-        \ddot{x} = \frac{Q_x - \frac{Q_{\theta}\cos\theta}{l} - mg\sin\theta\cos\theta + ml\dot{\theta}^2\sin\theta}{M + m\sin^2\theta}, \\
-        \ddot{\theta} = \frac{-Q_x \cos\theta + (M + m)g\sin\theta - ml\dot{\theta}^2\sin\theta\cos\theta}{l(M + m\sin^2\theta)}
+        \ddot{x} = \frac{(mgl\sin\theta + Q_{\theta})(M + m) - ml\cos\theta(ml\dot{\theta}^2\sin\theta + Q_x)}{ml^2(M + m - m\cos^2\theta)} \\ 
+        \ddot{\theta} = \frac{ml^2(ml\dot{\theta}^2\sin\theta + Q_x) - ml\cos\theta(mgl\sin\theta + Q_{\theta})}{ml^2(M + m - m\cos^2\theta)}
     \end{cases}
 \end{equation}
-% \begin{equation}
-%         \begin{cases}
-%             \ddot{x} = \frac{Q_x - \frac{Q_{\theta}\cos\theta}{l} - mg\sin\theta\cos\theta + ml\dot{\theta}^2\sin\theta}{M + m\sin^2\theta}, \\
-%             \ddot{\theta} = \frac{Q_{\theta}}{ml^2} + \frac{-Q_x \cos\theta + \frac{Q_{\theta}\cos^2\theta}{l} + (M + m)g\sin\theta - ml\dot{\theta}^2\sin\theta\cos\theta}{l(M + m\sin^2\theta)}
-%         \end{cases}
-% \end{equation}
 
+Можно записать систему в пространстве состояний $X$ в форме Коши: 
+\begin{equation}
+    \begin{array}{cc}
+        X = \begin{bmatrix} 
+            x \\
+            \dot{x} \\
+            \theta \\
+            \dot{\theta}
+    \end{bmatrix} & 
+    \dot{X} = \begin{bmatrix}
+        \dot{x} \\
+        \frac{(mgl\sin\theta + Q_{\theta})(M + m) - ml\cos\theta(ml\dot{\theta}^2\sin\theta + Q_x)}{ml^2(M + m - m\cos^2\theta)} \\ 
+        \dot{\theta} \\
+        \frac{ml^2(ml\dot{\theta}^2\sin\theta + Q_x) - ml\cos\theta(mgl\sin\theta + Q_{\theta})}{ml^2(M + m - m\cos^2\theta)}
+    \end{bmatrix}
+    \end{array}
+\end{equation}
+Измеряемым выходом системы будет считать вектор $Y$, состоящий из координат тележки и угла отклонения маятника от вертикали:
+\begin{equation}
+    Y = \begin{bmatrix}
+        1 & 0 & 1 & 0 \\
+    \end{bmatrix} X
+\end{equation}
 
-% % % вывод 
-% \begin{equation}
-%     \ddot{\theta} = \frac{Q_{\theta} - ml\ddot{x} \cos\theta +  mgl\sin\theta}{ml^2}
-% \end{equation}
-% \begin{equation}
-%     (M + m)\ddot{x} + ml\frac{Q_{\theta} - ml\ddot{x} \cos\theta + mgl\sin\theta}{ml^2}\cos\theta - ml\dot{\theta}^2\sin\theta = Q_x
-% \end{equation}
-% \begin{equation}
-%     (M + m)\ddot{x} + \frac{Q_{\theta} - ml\ddot{x} \cos\theta +  mgl\sin\theta}{l}\cos\theta - ml\dot{\theta}^2\sin\theta = Q_x
-% \end{equation}
-% \begin{equation}
-%     (M + m - m\cos^2\theta)\ddot{x} + \frac{Q_{\theta} + mgl\sin\theta}{l}\cos\theta - ml\dot{\theta}^2\sin\theta = Q_x
-% \end{equation}
-% \begin{equation}
-%     (M + m - m\cos^2\theta)\ddot{x} + (\frac{Q_{\theta}}{l}  + mg\sin\theta)\cos\theta - ml\dot{\theta}^2\sin\theta = Q_x
-% \end{equation}
-% \begin{equation}
-%     (M + m - m\cos^2\theta)\ddot{x} + \frac{Q_{\theta}\cos\theta}{l} + mg\sin\theta\cos\theta - ml\dot{\theta}^2\sin\theta = Q_x
-% \end{equation}
-% % % 
+\subsection{Точки равновесия}
+Найдем точки равновесия системы в отсутствие внешних сил ($Q_x = Q_{\theta} = 0$). 
+Для этого приравняем к нулю правые части уравнений движения, решим систему уравнений:
+\begin{equation}
+    \dot{X} = 0 \Rightarrow 
+    \begin{cases}
+        \dot{x} = 0, \\
+        \dot{\theta} = 0, \\
+        \frac{(mgl\sin\theta + Q_{\theta})(M + m) - ml\cos\theta(ml\dot{\theta}^2\sin\theta + Q_x)}{ml^2(M + m - m\cos^2\theta)} = 0 \\ 
+        \frac{ml^2(ml\dot{\theta}^2\sin\theta + Q_x) - ml\cos\theta(mgl\sin\theta + Q_{\theta})}{ml^2(M + m - m\cos^2\theta)} = 0
+    \end{cases}
+\end{equation}
+Упростив, получаем: 
+\begin{equation}
+    \begin{cases}
+        \sin\theta(g(M + m) - \cos\theta(ml)) = 0 \\ 
+        \sin\theta(ml - \cos\theta g) = 0
+    \end{cases}
+\end{equation}
+Решая систему уравнений, получаем:
+\begin{equation}
+    \sin\theta = 0 \Rightarrow \theta = 0, \pi 
+\end{equation}
+Таким образом, точки равновесия системы определяются углом отклонения маятника от вертикали $\theta = 0$ и $\theta = \pi$, 
+что соответствует наивысшему и наинизшему положению маятника соответственно, что сходится с ожидаемым результатом. 
 
-% \begin{equation}
-%     \ddot{x} = \frac{\frac{Q_x}{m} - \frac{Q_{\theta}\cos\theta}{lm} - g\sin\theta\cos\theta + l\dot{\theta}^2\sin\theta}{M/m + \sin^2\theta}
-% \end{equation}
-
-% \begin{equation}
-%     \ddot{\theta} = \frac{Q_{\theta} - ml \frac{Q_x - \frac{Q_{\theta}\cos\theta}{l} - mg\sin\theta\cos\theta + ml\dot{\theta}^2\sin\theta}{M + m\sin^2\theta} \cos\theta +  mgl\sin\theta}{ml^2}
-% \end{equation}
-% \begin{equation}
-%     \ddot{\theta} = \frac{Q_{\theta}}{ml^2} - \frac{Q_x - \frac{Q_{\theta}\cos\theta}{l} - mg\sin\theta\cos\theta + ml\dot{\theta}^2\sin\theta}{M + m\sin^2\theta} \frac{\cos\theta}{l} +  \frac{g\sin\theta}{l}
-% \end{equation}
-% \begin{equation}
-%     \ddot{\theta} = \frac{Q_{\theta}}{ml^2} - \frac{Q_x\cos\theta - \frac{Q_{\theta}\cos^2\theta}{l} - mg\sin\theta\cos^2\theta + ml\dot{\theta}^2\sin\theta\cos\theta}{l(M + m\sin^2\theta)} +  \frac{g\sin\theta(M + m + \cos^2\theta)}{l(M + m\sin^2\theta)}
-% \end{equation}
-% \begin{equation}
-%     \ddot{\theta} = \frac{Q_{\theta}}{ml^2} - \frac{Q_x\cos\theta - \frac{Q_{\theta}\cos^2\theta}{l} - mg\sin\theta\cos^2\theta + ml\dot{\theta}^2\sin\theta\cos\theta + g\sin\theta(M + m) + g\sin\theta\cos^2\theta}{l(M + m\sin^2\theta)} 
-% \end{equation}
-
-
-
+\subsection{Линейная модель}
+Для дальнейшего анализа системы ее необходимо линеаризовать. Линеаризацию необходимо проводить в точках равновесия 
+системы, которые были найдены в предыдущем пункте, в противном случае отклонения линейной модели от реальной системы будут велики. 
+Линеаризуем систему в точке равновесия $\theta = 0$ и $x = 0$, используя то, что $\sin x \approx x$, $\cos x \approx 1$, $x^{n + 1} \approx 0, n \in N$ 
+при малых $x$. 
+\begin{equation}
+    \dot{X} = \begin{bmatrix}
+        \dot{x} \\
+        \frac{lQ_x - mgl\theta - Q_{\theta}}{lM} \\
+        \dot{\theta} \\
+        \frac{(g\theta + Q_{\theta})(M + m) -Q_x}{lM} \\ 
+    \end{bmatrix}
+\end{equation}
+Запишем систему в матричном виде: 
+\begin{equation}
+    \dot{x} = Ax + Bu + Df \\ 
+    y = Cx
+\end{equation}
