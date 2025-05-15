@@ -111,7 +111,7 @@
     \end{bmatrix} & 
     \dot{X} = \begin{bmatrix}
         \dot{x} \\
-        \frac{ml^2(ml\dot{\theta}^2\sin\theta + Q_x) - ml\cos\theta(mgl\sin\theta + Q_{\theta})}{ml^2(M + m - m\cos^2\theta)}
+        \frac{ml^2(ml\dot{\theta}^2\sin\theta + Q_x) - ml\cos\theta(mgl\sin\theta + Q_{\theta})}{ml^2(M + m - m\cos^2\theta)} \\ 
         \dot{\theta} \\
         \frac{(mgl\sin\theta + Q_{\theta})(M + m) - ml\cos\theta(ml\dot{\theta}^2\sin\theta + Q_x)}{ml^2(M + m - m\cos^2\theta)} \\ 
     \end{bmatrix}
@@ -161,9 +161,10 @@
         \dot{x} \\
         \frac{lQ_x - mgl\theta - Q_{\theta}}{lM} \\
         \dot{\theta} \\
-        \frac{(g\theta + Q_{\theta})(M + m) -Q_x}{lM} \\ 
+        \frac{(g\theta + \frac{Q_{\theta}}{ml})(M + m) -Q_x}{lM} \\ 
     \end{bmatrix}
 \end{equation}
+
 Запишем систему в матричном виде, принимая за управление обобщенную силу, приложенную на каретку, а за внешнее 
 внешнее возмущение обобщенную силу, приложенную на маятник $u = Q_x, f = Q_{\theta}$:
 \begin{equation}
@@ -199,7 +200,7 @@
         0 \\
         \frac{-1}{lM} \\
         0 \\
-        \frac{M + m}{lM} \\ 
+        \frac{M + m}{ml^2M} \\ 
     \end{bmatrix} \times Q_{\theta}  \\[4em]
     y = \begin{bmatrix}
         1 & 0 & 0 & 0 \\
@@ -228,7 +229,7 @@
         0 \\
         \frac{-1}{lM} \\
         0 \\
-        \frac{M + m}{lM} \\ 
+        \frac{M + m}{ml^2M} \\ 
     \end{bmatrix}, C = \begin{bmatrix}
         1 & 0 & 0 & 0 \\
         0 & 0 & 1 & 0 \\ 
