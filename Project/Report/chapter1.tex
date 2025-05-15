@@ -1,7 +1,13 @@
 \section{Физическая модель маятника}
 
 Рассмотрим систему, состоящую из тележки массой $M$, движущейся по горизонтальной оси, и маятника с равномерно распределенной массой $m$ и длиной $l_{\text{pend}}$,
-закрепленного на шарнире на тележке. Примем за $x$ координату тележки, а за $\theta$ угол отклонения маятника от вертикали. 
+закрепленного на шарнире на тележке. Примем за $x$ координату тележки, а за $\theta$ угол отклонения маятника от вертикали. Схема системы представлена на рисунке \ref{fig:pendulum}.
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.5\textwidth]{media/cart.png}
+    \caption{Схема маятника на тележке}
+    \label{fig:pendulum}
+\end{figure}
 
 \subsection{Уравнения движения}
 Используем законы Лагранжа для записи уравнений движения системы. 
@@ -74,13 +80,13 @@
 \end{equation}
 Решая систему уравнений методом Крамера, получаем:
 \begin{multline}
-    \Delta_{\ddot{x}} = \begin{vmatrix}
+    \Delta_{\ddot{\theta}} = \begin{vmatrix}
         mgl\sin\theta + Q_{\theta} & ml\cos\theta \\
         ml\dot{\theta}^2\sin\theta + Q_x & M + m \\
     \end{vmatrix} = (mgl\sin\theta + Q_{\theta})(M + m) - ml\cos\theta(ml\dot{\theta}^2\sin\theta + Q_x) 
 \end{multline}
 \begin{multline}
-    \Delta_{\ddot{\theta}} = \begin{vmatrix}
+    \Delta_{\ddot{x}} = \begin{vmatrix}
         ml^2 & mgl\sin\theta + Q_{\theta} \\
         ml\cos\theta & ml\dot{\theta}^2\sin\theta + Q_x \\
     \end{vmatrix} = ml^2(ml\dot{\theta}^2\sin\theta + Q_x) - ml\cos\theta(mgl\sin\theta + Q_{\theta})
@@ -88,9 +94,10 @@
 
 \begin{equation}
     \begin{cases}
-        \ddot{x} = \frac{(mgl\sin\theta + Q_{\theta})(M + m) - ml\cos\theta(ml\dot{\theta}^2\sin\theta + Q_x)}{ml^2(M + m - m\cos^2\theta)} \\ 
-        \ddot{\theta} = \frac{ml^2(ml\dot{\theta}^2\sin\theta + Q_x) - ml\cos\theta(mgl\sin\theta + Q_{\theta})}{ml^2(M + m - m\cos^2\theta)}
+        \ddot{x} = \frac{ml^2(ml\dot{\theta}^2\sin\theta + Q_x) - ml\cos\theta(mgl\sin\theta + Q_{\theta})}{ml^2(M + m - m\cos^2\theta)} \\ 
+        \ddot{\theta} = \frac{(mgl\sin\theta + Q_{\theta})(M + m) - ml\cos\theta(ml\dot{\theta}^2\sin\theta + Q_x)}{ml^2(M + m - m\cos^2\theta)} \\ 
     \end{cases}
+    \label{eq:nonlinear_model}
 \end{equation}
 
 Можно записать систему в пространстве состояний $X$ в форме Коши: 
@@ -104,16 +111,17 @@
     \end{bmatrix} & 
     \dot{X} = \begin{bmatrix}
         \dot{x} \\
-        \frac{(mgl\sin\theta + Q_{\theta})(M + m) - ml\cos\theta(ml\dot{\theta}^2\sin\theta + Q_x)}{ml^2(M + m - m\cos^2\theta)} \\ 
-        \dot{\theta} \\
         \frac{ml^2(ml\dot{\theta}^2\sin\theta + Q_x) - ml\cos\theta(mgl\sin\theta + Q_{\theta})}{ml^2(M + m - m\cos^2\theta)}
+        \dot{\theta} \\
+        \frac{(mgl\sin\theta + Q_{\theta})(M + m) - ml\cos\theta(ml\dot{\theta}^2\sin\theta + Q_x)}{ml^2(M + m - m\cos^2\theta)} \\ 
     \end{bmatrix}
     \end{array}
 \end{equation}
 Измеряемым выходом системы будет считать вектор $Y$, состоящий из координат тележки и угла отклонения маятника от вертикали:
 \begin{equation}
     Y = \begin{bmatrix}
-        1 & 0 & 1 & 0 \\
+        1 & 0 & 0 & 0 \\
+        0 & 0 & 1 & 0 \\ 
     \end{bmatrix} X
 \end{equation}
 
@@ -156,8 +164,73 @@
         \frac{(g\theta + Q_{\theta})(M + m) -Q_x}{lM} \\ 
     \end{bmatrix}
 \end{equation}
-Запишем систему в матричном виде: 
+Запишем систему в матричном виде, принимая за управление обобщенную силу, приложенную на каретку, а за внешнее 
+внешнее возмущение обобщенную силу, приложенную на маятник $u = Q_x, f = Q_{\theta}$:
 \begin{equation}
-    \dot{x} = Ax + Bu + Df \\ 
-    y = Cx
+    \begin{cases}
+        \dot{x} = Ax + Bu + Df \\ 
+        y = Cx
+    \end{cases}
+    \label{eq:linear_model}
+\end{equation}
+\begin{equation}
+    \begin{array}{cc}
+        \begin{bmatrix}
+        \dot{x} \\
+        \ddot{x} \\
+        \dot{\theta} \\
+        \ddot{\theta} \\
+    \end{bmatrix} = \begin{bmatrix}
+        0 & 1 & 0 & 0 \\
+        0 & 0 & \frac{-mg}{M} & 0 \\
+        0 & 0 & 0 & 1 \\
+        0 & 0 & \frac{g(M + m)}{lM} & 0 \\
+    \end{bmatrix} \times \begin{bmatrix}
+        x \\
+        \dot{x} \\
+        \theta \\
+        \dot{\theta} \\
+    \end{bmatrix} + \begin{bmatrix}
+        0 \\
+        \frac{1}{M} \\
+        0 \\
+        \frac{-1}{lM} \\
+    \end{bmatrix} \times Q_x + \begin{bmatrix}
+        0 \\
+        \frac{-1}{lM} \\
+        0 \\
+        \frac{M + m}{lM} \\ 
+    \end{bmatrix} \times Q_{\theta}  \\[4em]
+    y = \begin{bmatrix}
+        1 & 0 & 0 & 0 \\
+        0 & 0 & 1 & 0 \\ 
+    \end{bmatrix} \times \begin{bmatrix}
+        x \\
+        \dot{x} \\
+        \theta \\
+        \dot{\theta} \\
+    \end{bmatrix}
+    \end{array}
+\end{equation}
+Таким образом, матрицы системы примут вид: 
+\begin{equation}
+    A = \begin{bmatrix}
+        0 & 1 & 0 & 0 \\
+        0 & 0 & \frac{-mg}{M} & 0 \\
+        0 & 0 & 0 & 1 \\
+        0 & 0 & \frac{g(M + m)}{lM} & 0 \\
+    \end{bmatrix}, B = \begin{bmatrix}
+        0 \\
+        \frac{1}{M} \\
+        0 \\
+        \frac{-1}{lM} \\
+    \end{bmatrix}, D = \begin{bmatrix}
+        0 \\
+        \frac{-1}{lM} \\
+        0 \\
+        \frac{M + m}{lM} \\ 
+    \end{bmatrix}, C = \begin{bmatrix}
+        1 & 0 & 0 & 0 \\
+        0 & 0 & 1 & 0 \\ 
+    \end{bmatrix}
 \end{equation}
