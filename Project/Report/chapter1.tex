@@ -18,11 +18,11 @@
 Напишем уравнения для координат центра масс маятника $x_m$ и $y_m$ и продифференцировав их по времени, получим скорости центра масс маятника:
 \begin{equation}
     \begin{cases}
-        x_m = x + l\sin\theta, \\
+        x_m = x - l\sin\theta, \\
         y_m = l\cos\theta
     \end{cases} \Rightarrow
     \begin{cases}
-        v_x = \dot{x} + l\dot{\theta}\cos\theta, \\
+        v_x = \dot{x} - l\dot{\theta}\cos\theta, \\
         v_y = -l\dot{\theta}\sin\theta
     \end{cases}
 \end{equation}
@@ -30,7 +30,7 @@
 
 Кинетическая энергия системы равна:
 \begin{equation}
-    T = \frac{1}{2} (M + m)\dot{x}^2 + m\dot{x}l\dot{\theta}\cos\theta + \frac{1}{2}ml^2\dot{\theta}^2
+    T = \frac{1}{2} (M + m)\dot{x}^2 - m\dot{x}l\dot{\theta}\cos\theta + \frac{1}{2}ml^2\dot{\theta}^2
 \end{equation}
 Потенциальная энергия системы равна:
 \begin{equation}
@@ -38,7 +38,7 @@
 \end{equation}
 Записывая функция Лагранжа $L = T - U$, получаем: 
 \begin{equation}
-    L = \frac{1}{2} (M + m)\dot{x}^2 + m\dot{x}l\dot{\theta}\cos\theta + \frac{1}{2}ml^2\dot{\theta}^2 - mgl\cos\theta
+    L = \frac{1}{2} (M + m)\dot{x}^2 - m\dot{x}l\dot{\theta}\cos\theta + \frac{1}{2}ml^2\dot{\theta}^2 - mgl\cos\theta
 \end{equation}
 Уравнения Лагранжа примут вид:
 \begin{equation}
@@ -50,8 +50,8 @@
 где $Q_x$ и $Q_{\theta}$ -- обобщенные силы, действующие на тележку и маятник соответственно. В итоге получаем систему уравнений:
 \begin{equation}
     \begin{cases}
-        (M + m)\ddot{x} + ml\ddot{\theta}\cos\theta - ml\dot{\theta}^2\sin\theta = Q_x, \\
-        ml^2\ddot{\theta} + ml\ddot{x}\cos\theta - mgl\sin\theta = Q_{\theta}.
+        (M + m)\ddot{x} - ml\ddot{\theta}\cos\theta + ml\dot{\theta}^2\sin\theta = Q_x, \\
+        ml^2\ddot{\theta} - ml\ddot{x}\cos\theta - mgl\sin\theta = Q_{\theta}.
     \end{cases}
     \label{eq:forces_balance}
 \end{equation}
@@ -62,16 +62,16 @@
 входят в эти уравнения линейно. С учетом этого приведем уравнения к матричному виду:  % # TODO: analiz_ustoychivosti_perevernutogo_mayatnika_v_srede_matlab_control
 \begin{equation}
     \begin{bmatrix}
-        ml^2 & ml\cos\theta \\
-        ml\cos\theta & M + m \\
+        M + m &  -ml\cos\theta \\
+        -ml\cos\theta & ml^2 \\ 
     \end{bmatrix} \times
     \begin{bmatrix}
-        \ddot{\theta} \\
         \ddot{x} \\
+        \ddot{\theta} \\
     \end{bmatrix} =
     \begin{bmatrix}
+        -ml\dot{\theta}^2\sin\theta + Q_x \\ 
         mgl\sin\theta + Q_{\theta} \\
-        ml\dot{\theta}^2\sin\theta + Q_x
     \end{bmatrix}
 \end{equation}
 Убедимся в существовании и единственности решения системы:
@@ -80,22 +80,22 @@
 \end{equation}
 Решая систему уравнений методом Крамера, получаем:
 \begin{multline}
-    \Delta_{\ddot{\theta}} = \begin{vmatrix}
-        mgl\sin\theta + Q_{\theta} & ml\cos\theta \\
-        ml\dot{\theta}^2\sin\theta + Q_x & M + m \\
-    \end{vmatrix} = (mgl\sin\theta + Q_{\theta})(M + m) - ml\cos\theta(ml\dot{\theta}^2\sin\theta + Q_x) 
+    \Delta_{\ddot{x}} = \begin{vmatrix}
+        -ml\dot{\theta}^2\sin\theta + Q_x & -ml\cos\theta \\
+        mgl\sin\theta + Q_{\theta} & ml^2 \\
+    \end{vmatrix} = ml^2(-ml\dot{\theta}^2\sin\theta + Q_x) + ml\cos\theta(mgl\sin\theta + Q_{\theta}) 
 \end{multline}
 \begin{multline}
-    \Delta_{\ddot{x}} = \begin{vmatrix}
-        ml^2 & mgl\sin\theta + Q_{\theta} \\
-        ml\cos\theta & ml\dot{\theta}^2\sin\theta + Q_x \\
-    \end{vmatrix} = ml^2(ml\dot{\theta}^2\sin\theta + Q_x) - ml\cos\theta(mgl\sin\theta + Q_{\theta})
+    \Delta_{\ddot{\theta}} = \begin{vmatrix}
+        (M + m) & -ml\dot{\theta}^2\sin\theta + Q_x \\ 
+        -ml\cos\theta & mgl\sin\theta + Q_{\theta} 
+    \end{vmatrix} = (mgl\sin\theta + Q_{\theta})(M + m) + ml\cos\theta(-ml\dot{\theta}^2\sin\theta + Q_x) 
 \end{multline}
 
 \begin{equation}
     \begin{cases}
-        \ddot{x} = \frac{ml^2(ml\dot{\theta}^2\sin\theta + Q_x) - ml\cos\theta(mgl\sin\theta + Q_{\theta})}{ml^2(M + m - m\cos^2\theta)} \\ 
-        \ddot{\theta} = \frac{(mgl\sin\theta + Q_{\theta})(M + m) - ml\cos\theta(ml\dot{\theta}^2\sin\theta + Q_x)}{ml^2(M + m - m\cos^2\theta)} \\ 
+        \ddot{x} = \frac{ml^2(-ml\dot{\theta}^2\sin\theta + Q_x) + ml\cos\theta(mgl\sin\theta + Q_{\theta}) }{ml^2(M + m - m\cos^2\theta)} \\ 
+        \ddot{\theta} = \frac{(mgl\sin\theta + Q_{\theta})(M + m) + ml\cos\theta(-ml\dot{\theta}^2\sin\theta + Q_x) }{ml^2(M + m - m\cos^2\theta)} \\ 
     \end{cases}
     \label{eq:nonlinear_model}
 \end{equation}
@@ -111,9 +111,9 @@
     \end{bmatrix} & 
     \dot{X} = \begin{bmatrix}
         \dot{x} \\
-        \frac{ml^2(ml\dot{\theta}^2\sin\theta + Q_x) - ml\cos\theta(mgl\sin\theta + Q_{\theta})}{ml^2(M + m - m\cos^2\theta)} \\ 
+        \frac{ml^2(-ml\dot{\theta}^2\sin\theta + Q_x) + ml\cos\theta(mgl\sin\theta + Q_{\theta})}{ml^2(M + m - m\cos^2\theta)} \\ 
         \dot{\theta} \\
-        \frac{(mgl\sin\theta + Q_{\theta})(M + m) - ml\cos\theta(ml\dot{\theta}^2\sin\theta + Q_x)}{ml^2(M + m - m\cos^2\theta)} \\ 
+        \frac{(mgl\sin\theta + Q_{\theta})(M + m) + ml\cos\theta(-ml\dot{\theta}^2\sin\theta + Q_x) }{ml^2(M + m - m\cos^2\theta)} \\ 
     \end{bmatrix}
     \end{array}
 \end{equation}
@@ -133,15 +133,15 @@
     \begin{cases}
         \dot{x} = 0, \\
         \dot{\theta} = 0, \\
-        \frac{(mgl\sin\theta + Q_{\theta})(M + m) - ml\cos\theta(ml\dot{\theta}^2\sin\theta + Q_x)}{ml^2(M + m - m\cos^2\theta)} = 0 \\ 
-        \frac{ml^2(ml\dot{\theta}^2\sin\theta + Q_x) - ml\cos\theta(mgl\sin\theta + Q_{\theta})}{ml^2(M + m - m\cos^2\theta)} = 0
+        \frac{ml^2(-ml\dot{\theta}^2\sin\theta + Q_x) + ml\cos\theta(mgl\sin\theta + Q_{\theta}) }{ml^2(M + m - m\cos^2\theta)} = 0 \\
+        \frac{(mgl\sin\theta + Q_{\theta})(M + m) + ml\cos\theta(-ml\dot{\theta}^2\sin\theta + Q_x) }{ml^2(M + m - m\cos^2\theta)}  = 0 \\ 
     \end{cases}
 \end{equation}
 Упростив, получаем: 
 \begin{equation}
     \begin{cases}
-        \sin\theta(g(M + m) - \cos\theta(ml)) = 0 \\ 
-        \sin\theta(ml - \cos\theta g) = 0
+        \sin\theta(g(M + m) + ml\cos\theta) = 0 \\ 
+        \sin\theta(ml + g\cos\theta) = 0
     \end{cases}
 \end{equation}
 Решая систему уравнений, получаем:
@@ -159,9 +159,9 @@
 \begin{equation}
     \dot{X} = \begin{bmatrix}
         \dot{x} \\
-        \frac{lQ_x - mgl\theta - Q_{\theta}}{lM} \\
+        \frac{lQ_x + mgl\theta + Q_{\theta} }{lM} \\ 
         \dot{\theta} \\
-        \frac{(g\theta + \frac{Q_{\theta}}{ml})(M + m) -Q_x}{lM} \\ 
+        \frac{(g\theta + \frac{Q_{\theta}}{ml})(M + m) + Q_x}{lM} \\ 
     \end{bmatrix}
 \end{equation}
 
@@ -183,7 +183,7 @@
         \ddot{\theta} \\
     \end{bmatrix} = \begin{bmatrix}
         0 & 1 & 0 & 0 \\
-        0 & 0 & \frac{-mg}{M} & 0 \\
+        0 & 0 & \frac{mg}{M} & 0 \\
         0 & 0 & 0 & 1 \\
         0 & 0 & \frac{g(M + m)}{lM} & 0 \\
     \end{bmatrix} \times \begin{bmatrix}
@@ -195,10 +195,10 @@
         0 \\
         \frac{1}{M} \\
         0 \\
-        \frac{-1}{lM} \\
+        \frac{1}{lM} \\
     \end{bmatrix} \times Q_x + \begin{bmatrix}
         0 \\
-        \frac{-1}{lM} \\
+        \frac{1}{lM} \\
         0 \\
         \frac{M + m}{ml^2M} \\ 
     \end{bmatrix} \times Q_{\theta}  \\[4em]
@@ -217,17 +217,17 @@
 \begin{equation}
     A = \begin{bmatrix}
         0 & 1 & 0 & 0 \\
-        0 & 0 & \frac{-mg}{M} & 0 \\
+        0 & 0 & \frac{mg}{M} & 0 \\
         0 & 0 & 0 & 1 \\
         0 & 0 & \frac{g(M + m)}{lM} & 0 \\
     \end{bmatrix}, B = \begin{bmatrix}
         0 \\
         \frac{1}{M} \\
         0 \\
-        \frac{-1}{lM} \\
+        \frac{1}{lM} \\
     \end{bmatrix}, D = \begin{bmatrix}
         0 \\
-        \frac{-1}{lM} \\
+        \frac{1}{lM} \\
         0 \\
         \frac{M + m}{ml^2M} \\ 
     \end{bmatrix}, C = \begin{bmatrix}

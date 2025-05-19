@@ -1,7 +1,7 @@
 \section{Модальное управление}
 Рассмотрим модальный регулятор вида $u = Kx$. Согласно (\ref{eq:controlability_matrix}), система является 
 полностью управляемой. Таким образом, любой спектр замкнутой системы является достижимым. 
-Выберем желаемый спектр для замкнутой регулятор системы $\sigma_1 = \begin{bmatrix}-3 & -3 & -2 & -2\end{bmatrix}$. 
+Выберем желаемый спектр для замкнутой регулятор системы $\sigma_1 = \begin{bmatrix}-2 & -2 & -3 & -3\end{bmatrix}$. 
 Для реализации регулятора, обеспечивающего заданный спектр, воспользуемся уравнением Сильвестра: 
 \begin{equation}
     \begin{cases}
@@ -14,18 +14,18 @@
 
 Решим данное уравнение с помощью пакета \texttt{cvx} в MATLAB, в результате получаем матрицу регулятора $K$:
 \begin{equation}
-     K = \begin{bmatrix}
-    -11035.11  & -22635.99  & -6541.54  & -1534.51 \\ 
+    K = \begin{bmatrix}
+    360.14  & 600.24  & -6354.55  & -1212.24 \\ 
     \end{bmatrix}
 \end{equation} 
 
 Проверим правильность полученного результата, вычислив собственные числа замкнутой системы $A + BK$: 
 \begin{equation}
     \sigma(A + BK) = \begin{bmatrix}
-    -3.00 \\ 
-    -3.00 \\ 
     -2.00 \\ 
     -2.00 \\ 
+    -3.00 \\ 
+    -3.00 \\ 
     \end{bmatrix}
 \end{equation}
 Получены желаемые собственные числа, что подтверждает правильность полученного результата. 
@@ -36,7 +36,7 @@
 
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=\textwidth]{media/modal_control_linear.png}
+    \includegraphics[width=0.7\textwidth]{media/modal_control_linear_scheme.png}
     \caption{Схема моделирования линейной модели системы с модальным регулятором}
     \label{fig:modal_control_scheme_linear}
 \end{figure}
@@ -53,3 +53,15 @@
 рисунке \ref{fig:modal_control_nonlinear_out}.
 
 
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.7\textwidth]{media/modal_control_scheme.png}
+    \caption{Схема моделирования нелинейной модели системы с модальным регулятором}
+    \label{fig:modal_control_scheme_nonlinear}
+\end{figure}
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{media/plots/modal_control/modal_control_out.png}
+    \caption{Результаты моделирования нелинейной модели системы с модальным регулятором}
+    \label{fig:modal_control_nonlinear_out}
+\end{figure}

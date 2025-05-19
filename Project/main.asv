@@ -7,20 +7,20 @@ rng(30, "philox");
 M = randi([100000 1000000]) / 1000 / sqrt(2);
 m = randi([1000 10000]) / 1000 * sqrt(3);
 l = randi([100 1000]) / 100 / sqrt(5);
-g = 9.81;   
+g = 9.81;
 
 fprintf("M = %.3f, m = %.3f, l = %.3f\n", M, m, l);
 
 
-% (m * l * l * (-m * l * power(u[4], 2) * sin(u[3]) + u[1]) + m * l * cos(u[3]) * (m * g * l * sin(u[3]) + u[2])) / (m * l * l * (Mcart + m - m * power(cos(u[3]), 2)))
-% ((m * g * l * sin(u[3]) + u[2]) * (Mcart + m) + m * l * cos(u[3]) * (-m * l * power(u[4], 2) * sin(u[3]) + u[1])) / (m * l * l * (Mcart + m - m * power(cos(u[3]), 2)))
+% (m * l * l * (m * l * power(u[4], 2) * sin(u[3]) + u[1]) + m * l * cos(u[3]) * (m * g * l * sin(u[3]) + u[2])) / (m * l * l * (Mcart + m - m * power(cos(u[3]), 2)))
+% ((m * g * l * sin(u[3]) + u[2]) * (Mcart + m) + m * l * cos(u[3]) * (m * l * power(u[4], 2) * sin(u[3]) + u[1])) / (m * l * l * (Mcart + m - m * power(cos(u[3]), 2)))
 
 l = l / 2;
 A = [0, 1, 0, 0;
     0, 0, m * g / M, 0;
     0, 0, 0, 1;
     0, 0, g * (M + m) / (l * M), 0];
-B = [0; 1 / M; 0; 1 / (l * M)];
+B = [0; 0; 1 / M; 1 / (l * M)];
 D = [0; 1/(l * M); 0; (M + m) / (m * l * l * M)];
 C = [1, 0, 0, 0; 0, 0, 1, 0];
 
@@ -37,7 +37,6 @@ print_matrix(C, 0);
 [eivA, eigA] = eig(A);
 fprintf("Eigenvectors of A = ");
 print_matrix(eivA, 2);
-eigA = eig(A);
 fprintf("Eigenvalues of A = ");
 print_matrix(eigA, 2);
 
@@ -146,25 +145,10 @@ function K = FindControllerSylvester(A, B, Gamma)
     K = -Y * inv(P);
 end
 
-function K = FindControllerLyap(A, B, alpha)
-    [Am, An] = size(A);
-    [Bm, Bn] = size(B);
-
-    cvx_begin sdp
-        variable P(Am, An)
-        variable Y(Bn, Bm)
-        P > 0.0001 * eye(Am);
-        P * A' + A * P + 2 * alpha * P + Y' * B' + B * Y <= 0;
-    cvx_end
-
-    K = Y / P;
-end
-
-
-Gamma = [-2, 1, 0, 0;
-         0, -2, 0, 0;
-         0, 0, -3, 1;
-         0, 0, 0, -3];
+Gamma = [-20, 1, 0, 0;
+         0, -10, 1, 0;
+         0, 0, -20, 1;
+         0, 0, 0, -10];
 K = FindControllerSylvester(A, B, Gamma);
 fprintf("K = ");
 print_matrix(K, 2);
@@ -174,14 +158,18 @@ fprintf("Eigenvalues of A + B * K = ");
 print_matrix(eigK, 2);
 
 %% modelling 
-theta0 = 0.2;
-res = sim("modal_control.slx", 10);
+theta0 = 0.1;
+res = sim("modal_control.slx", 1);
 t = res.tout;
 xlin = res.xlin;
 anglin = res.anglin;
+statelin = res.statelin;
+controllin = res.controllin;
 
 x = res.x;
 ang = res.ang;
+control = res.control;
+state = res.state;
 
 path = "Report/media/plots/modal_control";
 if ~exist(path, "dir")
