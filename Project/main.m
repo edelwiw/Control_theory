@@ -1,3 +1,8 @@
+%% 
+cvx_setup;
+cvx_quiet true;  
+%% 
+
 rng(30, "philox");
 M = randi([100000 1000000]) / 1000 / sqrt(2);
 m = randi([1000 10000]) / 1000 * sqrt(3);
@@ -122,3 +127,49 @@ plotter({{t, x, "cart pos"}, {t, xlin, "cart pos (lin)"}}, sprintf("%s/long_pos_
 % ang cmp
 plotter({{t, ang, "angle"}, {t, anglin, "angle (lin)"}}, sprintf("%s/long_ang_cmp.png", path), "t (s)", "angle (rad)", "");
 
+
+
+%% MODAL CONTROL
+function K = FindControllerSylvester(A, B, Gamma)
+    [Am, An] = size(A);
+    [Bm, Bn] = size(B);
+    Y = [1, 1, 1, 1];
+    cvx_begin sdp 
+        variable P(Am, Am);
+        A * P - P * Gamma == B * Y;
+    cvx_end
+    K = -Y * inv(P);
+end
+
+Gamma = [-2, 1, 0, 0;
+         0, -2, 1, 0;
+         0, 0, -2, 1;
+         0, 0, 0, -2];
+K = FindControllerSylvester(A, B, Gamma);
+fprintf("K = ");
+print_matrix(K, 2);
+
+eigK = eig(A + B * K);
+fprintf("Eigenvalues of A + B * K = ");
+print_matrix(eigK, 2);
+
+%% modelling 
+theta0 = 0.1;
+res = sim("modal_control.slx", 5);
+t = res.tout;
+xlin = res.xlin;
+anglin = res.anglin;
+statelin = res.statelin;
+controllin = res.controllin;
+
+x = res.x;
+ang = res.ang;
+control = res.control;
+state = res.state;
+
+path = "Report/media/plots/modal_control";
+if ~exist(path, "dir")
+    mkdir(path);
+end
+plotter({{t, xlin, "cart pos"}, {t, anglin, "angle"}}, sprintf("%s/modal_control_linear_out.png", path), "t (s)", "position (m) / angle (rad)", "");
+plotter({{t, x, "cart pos"}, {t, ang, "angle"}}, sprintf("%s/modal_control_out.png", path), "t (s)", "position (m) / angle (rad)", "");
