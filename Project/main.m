@@ -389,3 +389,29 @@ Gl = [-1, 1; 0, -1];
 [Ql, Yl] = FindReducedOrderObserver(A, C, Gl);
 test_reduced_observer(K, Ql, time, theta0, path, 2);
 
+%% Observer + controller 
+GammaK = [-9, 1, 0, 0;
+         0, -9, 1, 0;
+         0, 0, -9, 1;
+         0, 0, 0, -9];
+Gl = [-5, 1; 0, -5];
+
+K = FindControllerSylvester(A, B, GammaK);
+[Ql, Yl] = FindReducedOrderObserver(A, C, Gl);
+
+path = "Report/media/plots/observer_controoler";
+if ~exist(path, "dir")
+    mkdir(path);
+end
+theta0 = 0.1;
+time = 3;
+res = sim("model_shok.slx", time);
+
+t = res.tout;
+x = res.x;
+ang = res.ang;
+state = res.state;
+u = res.u;
+
+plotter({{t, x, "cart pos"}, {t, ang, "angle"}}, sprintf("%s/observer_controller_out.png", path), "t (s)", "position (m) / angle (rad)", "");
+plotter({{t, u, "control"}}, sprintf("%s/observer_controller_u.png", path), "t (s)", "control", "");
