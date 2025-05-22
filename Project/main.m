@@ -326,3 +326,66 @@ path = "Report/media/plots/modal_observer";
 time = 3;
 theta0 = 0.3;
 test_observer(K, L, time, theta0, path, 2);
+
+
+%% Reduced order observer
+function [Q, Y] = FindReducedOrderObserver(A, C, Gamma)
+    [Am, An] = size(A);
+    [Cm, Cn] = size(C);
+    Y = [1, 0; 1, 0];
+    % 2x2 * 2x4 - 2x4 * 4x4 = 2x2 * 2x4 
+    cvx_begin sdp
+        variable Q(2, 4);
+        Gamma * Q - Q * A == Y * C;
+    cvx_end
+end
+
+G = [-4, 0; 0, -5];
+[Ql, Yl] = FindReducedOrderObserver(A, C, G);
+fprintf("Ql = ");
+print_matrix(Ql, 2);
+
+%%
+function test_reduced_observer(K, Q, time, theta, path, n)
+    if ~exist(path, "dir")
+        mkdir(path);
+    end
+    theta0 = theta;
+    res = sim("reduced_observer.slx", time);
+    t = res.tout;
+    state = res.x;
+    statehat = res.xhat;
+
+    x = state(:, 1);
+    dotx = state(:, 2);
+    theta = state(:, 3);
+    dottheta = state(:, 4);
+
+    xhat = statehat(:, 1);
+    dotxhat = statehat(:, 2);
+    thetahat = statehat(:, 3);
+    dotthetahat = statehat(:, 4);
+
+    % cmp 
+    plotter({{t, x, "cart pos"}, {t, xhat, "cart pos estimation"}}, sprintf("%s/reduced_observer_x_cmp_%d.png", path, n), "t (s)", "position (m)", "");
+    plotter({{t, dotx, "cart vel"}, {t, dotxhat, "cart vel estimation"}}, sprintf("%s/reduced_observer_dotx_cmp_%d.png", path, n), "t (s)", "velocity (m/s)", "");
+    plotter({{t, theta, "angle"}, {t, thetahat, "angle estimation"}}, sprintf("%s/reduced_observer_theta_cmp_%d.png", path, n), "t (s)", "angle (rad)", "");
+    plotter({{t, dottheta, "angle vel"}, {t, dotthetahat, "angle vel estimation"}}, sprintf("%s/reduced_observer_dottheta_cmp_%d.png", path, n), "t (s)", "angular velocity (rad/s)", "");
+    plotter({{t, x, "cart pos", "style", "-", "color", "#0072BD"}, {t, xhat, "cart pos estimation", "style", "--", "color", "#0072BD"}, {t, dotx, "cart vel", "style", "-", "color", "#D95319"}, {t, dotxhat, "cart vel estimation", "style", "--", "color", "#D95319"}, {t, theta, "angle", "style", "-", "color", "#EDB120"}, {t, thetahat, "angle estimation", "style", "--", "color", "#EDB120"}, {t, dottheta, "angle vel", "style", "-", "color", "#7E2F8E"}, {t, dotthetahat, "angle vel estimation", "style", "--", "color", "#7E2F8E"}}, sprintf("%s/reduced_observer_cmp_%d.png", path, n), "t (s)", "state", "");
+
+    % errors
+    plotter({{t, x - xhat, "cart pos est err"}, {t, dotx - dotxhat, "cart vel est err"}, {t, theta - thetahat, "angle est err"}, {t, dottheta - dotthetahat, "angle vel est err"}}, sprintf("%s/reduced_observer_err_%d.png", path, n), "t (s)", "state", "");
+end
+
+
+path = "Report/media/plots/reduced_observer";
+time = 5;
+theta0 = 0.3;
+Gl = [-4, 0; 0, -5];
+[Ql, Yl] = FindReducedOrderObserver(A, C, Gl);
+test_reduced_observer(K, Ql, time, theta0, path, 1);
+
+Gl = [-1, 1; 0, -1];
+[Ql, Yl] = FindReducedOrderObserver(A, C, Gl);
+test_reduced_observer(K, Ql, time, theta0, path, 2);
+

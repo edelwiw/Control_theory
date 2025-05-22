@@ -18,7 +18,6 @@
     360.14  & 600.24  & -6354.55  & -1212.24 \\ 
     \end{bmatrix}
 \end{equation} 
-
 Проверим правильность полученного результата, вычислив собственные числа замкнутой системы $A + BK$: 
 \begin{equation}
     \sigma(A + BK) = \begin{bmatrix}
@@ -47,7 +46,7 @@
     \label{fig:modal_control_linear_out}
 \end{figure}
 
-Можно заметить, что приходит в равновесное состояние. Теперь попробуем использовать этот же 
+Можно заметить, что система приходит в равновесное состояние. Теперь попробуем использовать этот же 
 модальный регулятор на нелинейной модели системы. Схема моделирования приведена на
 рисунке \ref{fig:modal_control_scheme_nonlinear}. Результаты моделирования приведены на
 рисунке \ref{fig:modal_control_nonlinear_out}.
@@ -275,7 +274,7 @@
 начальных условий возьмем $\theta_0 = 0.3$ для системы и $\hat{X}_0 = 0$ для наблюдателя.
 
 Схема наблюдателя приведена на рисунке \ref{fig:observer_scheme}. Схема включения наблюдателя в систему 
-показана на рисунке \ref{fig:observer_system} и рисунках \ref{fig:observer_x_cmp_1_sep}. 
+показана на рисунке \ref{fig:observer_system}. 
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=0.7\textwidth]{media/observer_scheme.png}
@@ -289,7 +288,7 @@
     \label{fig:observer_system}
 \end{figure}
 
-Результаты моделирования приведены на рисунке \ref{fig:observer_x_1}.
+Результаты моделирования приведены на рисунке \ref{fig:observer_x_1} и рисунках \ref{fig:observer_x_cmp_1_sep}. 
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=\textwidth]{media/plots/modal_observer/observer_cmp_1.png}
@@ -381,23 +380,140 @@ $\begin{bmatrix}-10 & -10 & -10 & -10\end{bmatrix}$. Результаты мод
 При этом можно заметить, что начальная ошибка оценки состояния системы увеличилась, особенно сильно это заметно
 для оценки угловой скорости маятника. Это может негативно сказаться на работе регулятора, замкнутого по наблюдаемому состоянию.
 
-% \subsection{Наблюдатель пониженного порядка}
-% Рассмотрим наблюдатель пониженного порядка:
-% \begin{equation}
-%     \begin{array}{ll}
-%         \dot{\hat{z}} = \Gamma\hat{z} - Yy + (QB + YD)u\\
-%         \hat{x} = \begin{bmatrix}
-%             C \\ Q
-%         \end{bmatrix}^{-1} \times \begin{bmatrix}
-%             y - Du \\ 
-%             \hat{z}
-%         \end{bmatrix}
-%     \end{array}
-% \end{equation}
-% Зададим желаемый спектр наблюдателя пониженного порядка $\{-1, -2\}$.
+\subsection{Наблюдатель пониженного порядка}
+Так как два значения из вектора состояния являются измеримыми, то можно использовать наблюдатель пониженного порядка, 
+который будет оценивать только два оставшихся, неизмеримых состояния системы, которыми являются скорость тележки и угловая скорость маятника.
 
-% Тогда матрица $Q$ находится из решения уравнения Сильвестра: 
-% \begin{equation}
-%    \Gamma Q - QA = YC 
-% \end{equation}
-% где $\Gamma$ -- матрица с желаемыми собственными числами. 
+Рассмотрим наблюдатель пониженного порядка:
+\begin{equation}
+    \begin{array}{ll}
+        \dot{\hat{z}} = \Gamma\hat{z} - Yy + QBu\\
+        \hat{x} = \begin{bmatrix}
+            C \\ Q
+        \end{bmatrix}^{-1} \times \begin{bmatrix}
+            y \\ 
+            \hat{z}
+        \end{bmatrix}
+    \end{array}
+\end{equation}
+Зададим желаемый спектр наблюдателя пониженного порядка $\{-4, -5\}$.
+
+Тогда матрица $Q$ находится из решения уравнения Сильвестра: 
+\begin{equation}
+   \Gamma Q - QA = YC 
+\end{equation}
+где $\Gamma$ -- матрица с желаемыми собственными числами. 
+Решим уравнение Сильвестра с помощью пакета \texttt{cvx} в MATLAB, в результате получаем матрицу наблюдателя $Q$:
+\begin{equation}
+    Q = \begin{bmatrix}
+    -0.25  & 0.06  & 0.01  & -0.00 \\ 
+    -0.20  & 0.04  & 0.05  & -0.01 \\ 
+    \end{bmatrix}
+\end{equation}
+
+Схема наблюдателя пониженного порядка приведена на рисунке \ref{fig:reduced_observer_scheme}.
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.7\textwidth]{media/reduced_observer_scheme.png}
+    \caption{Схема наблюдателя пониженного порядка}
+    \label{fig:reduced_observer_scheme}
+\end{figure}
+
+Схема включения наблюдателя в систему аналогичная схеме включения наблюдателя полного порядка, 
+которая приведена на рисунке \ref{fig:observer_system}. 
+
+Проверим работу наблюдателя пониженного порядка, сравнив его выход с реальным состоянием нелинейной системы.
+Результаты моделирования приведены на рисунке \ref{fig:reduced_observer_x_1} и рисунках \ref{fig:reduced_observer_x_cmp_1_sep}.
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{media/plots/reduced_observer/reduced_observer_cmp_1.png}
+    \caption{Результаты моделирования наблюдателя пониженного порядка}
+    \label{fig:reduced_observer_x_1}
+\end{figure}
+
+\begin{figure}[ht!]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{media/plots/reduced_observer/reduced_observer_x_cmp_1.png}
+        \caption{Оценка координаты тележки}
+        \label{fig:reduced_observer_x_cmp_1}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{media/plots/reduced_observer/reduced_observer_dotx_cmp_1.png}
+        \caption{Оценка скорости тележки}
+        \label{fig:reduced_observer_dotx_cmp_1}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{media/plots/reduced_observer/reduced_observer_theta_cmp_1.png}
+        \caption{Оценка угла отклонения маятника}
+        \label{fig:reduced_observer_theta_cmp_1}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{media/plots/reduced_observer/reduced_observer_dottheta_cmp_1.png}
+        \caption{Оценка угловой скорости маятника}
+        \label{fig:reduced_observer_dottheta_cmp_1}
+    \end{subfigure}
+    \caption{Сравнение оценок состояния системы с реальным состоянием наблюдателем пониженного порядка}
+    \label{fig:reduced_observer_x_cmp_1_sep}
+\end{figure}
+Ошибка оценки состояния системы приведена на рисунке \ref{fig:reduced_observer_err_1}.
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{media/plots/reduced_observer/reduced_observer_err_1.png}
+    \caption{Ошибка оценки состояния системы наблюдателем пониженного порядка}
+    \label{fig:reduced_observer_err_1}
+\end{figure}
+\FloatBarrier
+Видно, что оценка состояния нелинейной системы наблюдателем пониженного порядка 
+не отличается от реального состояния системы для координаты тележки и угла отклонения маятника,
+так как они являются напрямую измеримыми. При этом оценка скорости тележки и угловой скорости
+маятника тоже сходится к реальным значениям. Время переходного процесса составляет около 1 секунды.
+
+Рассмотрим наблюдатель пониженного порядка с желаемым спектром $\{-1, -1\}$.
+Результаты моделирования приведены на рисунке \ref{fig:reduced_observer_x_2} и рисунках \ref{fig:reduced_observer_x_cmp_2_sep}.
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{media/plots/reduced_observer/reduced_observer_cmp_2.png}
+    \caption{Результаты моделирования наблюдателя пониженного порядка}
+    \label{fig:reduced_observer_x_2}
+\end{figure}
+\begin{figure}[ht!]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{media/plots/reduced_observer/reduced_observer_x_cmp_2.png}
+        \caption{Оценка координаты тележки}
+        \label{fig:reduced_observer_x_cmp_2}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{media/plots/reduced_observer/reduced_observer_dotx_cmp_2.png}
+        \caption{Оценка скорости тележки}
+        \label{fig:reduced_observer_dotx_cmp_2}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{media/plots/reduced_observer/reduced_observer_theta_cmp_2.png}
+        \caption{Оценка угла отклонения маятника}
+        \label{fig:reduced_observer_theta_cmp_2}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{media/plots/reduced_observer/reduced_observer_dottheta_cmp_2.png}
+        \caption{Оценка угловой скорости маятника}
+        \label{fig:reduced_observer_dottheta_cmp_2}
+    \end{subfigure}
+    \caption{Сравнение оценок состояния системы с реальным состоянием наблюдателем пониженного порядка при $k = -1$}
+    \label{fig:reduced_observer_x_cmp_2_sep}
+\end{figure}
+График ошибки оценки состояния системы приведен на рисунке \ref{fig:reduced_observer_err_2}.
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{media/plots/reduced_observer/reduced_observer_err_2.png}
+    \caption{Ошибка оценки состояния системы наблюдателем пониженного порядка}
+    \label{fig:reduced_observer_err_2}
+\end{figure}
+\FloatBarrier
+Так же видно, что два измеримых состояния системы совпадают с реальными значениями, а два
+неизмеримых состояния системы тоже сходятся к реальным значениям, но с большим временем переходного процесса,
+которое составляет около 2.5 секунд.
+
+% Проведем сравнение наблюдателей полного и пониженного порядка со спектрами $\{-4, -4, -4, -4\}$ и $\{-4, -4\}$ соответственно.
+% TODO: compare observers
+
