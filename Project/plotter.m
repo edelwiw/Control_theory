@@ -38,7 +38,7 @@ function plotter(plots, path, x_label, y_label, label)
     for i = 1:length(plots)
         legendText_arr{end + 1} = plots{i}{3};
     end
-    leg = legend(legendText_arr);
+    leg = legend(legendText_arr, 'Interpreter', 'latex');
 
     fontsize(leg, 18, 'points');
     fontsize(gca, 14, 'points');

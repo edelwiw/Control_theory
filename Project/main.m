@@ -119,21 +119,22 @@ for i = 1:length(theta0_arr)
     anglin = res.anglin;
 
     % pos + ang 
-    plotter({{t, x, "cart pos"}, {t, ang, "angle"}}, sprintf("%s/nonlin_%d.png", path, i), "t (s)", "position (m) / angle (rad)", "");
-    plotter({{t, xlin, "cart pos"}, {t, anglin, "angle"}}, sprintf("%s/lin_%d.png", path, i), "t (s)", "position (m) / angle (rad)", "");
+    plotter({{t, x, "$x$"}, {t, ang, "$\theta$"}}, sprintf("%s/nonlin_%d.png", path, i), "t (s)", "position (m) / angle (rad)", "");
+    plotter({{t, xlin, "$x$"}, {t, anglin, "$\theta$"}}, sprintf("%s/lin_%d.png", path, i), "t (s)", "position (m) / angle (rad)", "");
 
-    % pos cmp 
-    plotter({{t, x, "cart pos"}, {t, xlin, "cart pos (lin)"}}, sprintf("%s/pos_cmp_%d.png", path, i), "t (s)", "position (m)", "");
+    pos cmp 
+    plotter({{t, x, "$x$"}, {t, xlin, "$x_l$"}}, sprintf("%s/pos_cmp_%d.png", path, i), "t (s)", "position (m)", "");
     % ang cmp
-    plotter({{t, ang, "angle"}, {t, anglin, "angle (lin)"}}, sprintf("%s/ang_cmp_%d.png", path, i), "t (s)", "angle (rad)", "");
+    plotter({{t, ang, "$\theta$"}, {t, anglin, "$\theta_l$"}}, sprintf("%s/ang_cmp_%d.png", path, i), "t (s)", "angle (rad)", "");
 
     % err 
-    plotter({{t, x - xlin, "cart pos diff"}, {t, ang - anglin, "angle diff"}}, sprintf("%s/err_%d.png", path, i), "t (s)", "error (m) / angle (rad)", "");
+    plotter({{t, x - xlin, "$x - x_l$"}, {t, ang - anglin, "$\theta - \theta_l$"}}, sprintf("%s/err_%d.png", path, i), "t (s)", "error (m) / angle (rad)", "");
 end
 
 %% Simulation of free motion with different initial conditions
 theta0 = 0.1; 
 res = sim("free_motion.slx", 5);
+path = "Report/media/plots/free_motion";
 t = res.tout;
 x = res.x;
 ang = res.ang;
@@ -141,13 +142,13 @@ xlin = res.xlin;
 anglin = res.anglin;
 
  % pos + ang 
-plotter({{t, x, "cart pos"}, {t, ang, "angle"}}, sprintf("%s/long.png", path), "t (s)", "position (m) / angle (rad)", "");
-plotter({{t, xlin, "cart pos"}, {t, anglin, "angle"}}, sprintf("%s/long_linear.png", path), "t (s)", "position (m) / angle (rad)", "");
+plotter({{t, x, "$x$"}, {t, ang, "$\theta$"}}, sprintf("%s/long.png", path), "t (s)", "position (m) / angle (rad)", "");
+plotter({{t, xlin, "$x$"}, {t, anglin, "$\theta$"}}, sprintf("%s/long_linear.png", path), "t (s)", "position (m) / angle (rad)", "");
 
 % pos cmp 
-plotter({{t, x, "cart pos"}, {t, xlin, "cart pos (lin)"}}, sprintf("%s/long_pos_cmp.png", path), "t (s)", "position (m)", "");
+plotter({{t, x, "$x$"}, {t, xlin, "$x_l$"}}, sprintf("%s/long_pos_cmp.png", path), "t (s)", "position (m)", "");
 % ang cmp
-plotter({{t, ang, "angle"}, {t, anglin, "angle (lin)"}}, sprintf("%s/long_ang_cmp.png", path), "t (s)", "angle (rad)", "");
+plotter({{t, ang, "$\theta$"}, {t, anglin, "$\theta_l$"}}, sprintf("%s/long_ang_cmp.png", path), "t (s)", "angle (rad)", "");
 
 
 %% MODAL CONTROL
@@ -177,10 +178,10 @@ function test_controller(K, time, theta, path, n)
     xlin = res.xlin;
     anglin = res.anglin;
 
-    plotter({{t, x, "cart pos"}, {t, ang, "angle"}}, sprintf("%s/modal_control_out_%d.png", path, n), "t (s)", "position (m) / angle (rad)", "");
-    plotter({{t, u, "control"}}, sprintf("%s/modal_control_u_%d.png", path, n), "t (s)", "control", "");
-    plotter({{t, x - xlin, "cart pos diff"}, {t, ang - anglin, "angle diff"}}, sprintf("%s/modal_control_cmp_%d.png", path, n), "t (s)", "position (m)", "");
-    plotter({{t, xlin, "cart pos"}, {t, anglin, "angle"}}, sprintf("%s/modal_control_linear_out_%d.png", path, n), "t (s)", "position (m) / angle (rad)", "");
+    plotter({{t, x, "$x$"}, {t, ang, "$\theta$"}}, sprintf("%s/modal_control_out_%d.png", path, n), "t (s)", "position (m) / angle (rad)", "");
+    plotter({{t, u, "$u$"}}, sprintf("%s/modal_control_u_%d.png", path, n), "t (s)", "control", "");
+    plotter({{t, x - xlin, "$x - x_l$"}, {t, ang - anglin, "$\theta - \theta_l$"}}, sprintf("%s/modal_control_cmp_%d.png", path, n), "t (s)", "position (m)", "");
+    plotter({{t, xlin, "$x$"}, {t, anglin, "$\theta$"}}, sprintf("%s/modal_control_linear_out_%d.png", path, n), "t (s)", "position (m) / angle (rad)", "");
 end
 
 theta0 = 0.2;
@@ -265,15 +266,15 @@ function test_observer(K, L, time, theta, path, n)
     dotthetahat = statehat(:, 4);
 
     % cmp 
-    plotter({{t, x, "cart pos"}, {t, xhat, "cart pos estimation"}}, sprintf("%s/observer_x_cmp_%d.png", path, n), "t (s)", "position (m)", "");
-    plotter({{t, dotx, "cart vel"}, {t, dotxhat, "cart vel estimation"}}, sprintf("%s/observer_dotx_cmp_%d.png", path, n), "t (s)", "velocity (m/s)", "");
-    plotter({{t, theta, "angle"}, {t, thetahat, "angle estimation"}}, sprintf("%s/observer_theta_cmp_%d.png", path, n), "t (s)", "angle (rad)", "");
-    plotter({{t, dottheta, "angle vel"}, {t, dotthetahat, "angle vel estimation"}}, sprintf("%s/observer_dottheta_cmp_%d.png", path, n), "t (s)", "angular velocity (rad/s)", "");
+    plotter({{t, x, "$x$"}, {t, xhat, "$\hat{x}$"}}, sprintf("%s/observer_x_cmp_%d.png", path, n), "t (s)", "position (m)", "");
+    plotter({{t, dotx, "$\dot{x}$"}, {t, dotxhat, "$\hat{\dot{x}}$"}}, sprintf("%s/observer_dotx_cmp_%d.png", path, n), "t (s)", "velocity (m/s)", "");
+    plotter({{t, theta, "$\theta$"}, {t, thetahat, "$\hat{\theta}$"}}, sprintf("%s/observer_theta_cmp_%d.png", path, n), "t (s)", "angle (rad)", "");
+    plotter({{t, dottheta, "$\dot{\theta}$"}, {t, dotthetahat, "$\hat{\dot{\theta}}$"}}, sprintf("%s/observer_dottheta_cmp_%d.png", path, n), "t (s)", "angular velocity (rad/s)", "");
 
-    plotter({{t, x, "cart pos", "style", "-", "color", "#0072BD"}, {t, xhat, "cart pos estimation", "style", "--", "color", "#0072BD"}, {t, dotx, "cart vel", "style", "-", "color", "#D95319"}, {t, dotxhat, "cart vel estimation", "style", "--", "color", "#D95319"}, {t, theta, "angle", "style", "-", "color", "#EDB120"}, {t, thetahat, "angle estimation", "style", "--", "color", "#EDB120"}, {t, dottheta, "angle vel", "style", "-", "color", "#7E2F8E"}, {t, dotthetahat, "angle vel estimation", "style", "--", "color", "#7E2F8E"}}, sprintf("%s/observer_cmp_%d.png", path, n), "t (s)", "state", "");
+    plotter({{t, x, "$x$", "style", "-", "color", "#0072BD"}, {t, xhat, "$\hat{x}$", "style", "--", "color", "#0072BD"}, {t, dotx, "$\dot{x}$", "style", "-", "color", "#D95319"}, {t, dotxhat, "$\hat{\dot{x}}$", "style", "--", "color", "#D95319"}, {t, theta, "$\theta$", "style", "-", "color", "#EDB120"}, {t, thetahat, "$\hat{\theta}$", "style", "--", "color", "#EDB120"}, {t, dottheta, "$\dot{\theta}$", "style", "-", "color", "#7E2F8E"}, {t, dotthetahat, "$\hat{\dot{\theta}}$", "style", "--", "color", "#7E2F8E"}}, sprintf("%s/observer_cmp_%d.png", path, n), "t (s)", "state", "");
 
     % errors 
-    plotter({{t, x - xhat, "cart pos est err"}, {t, dotx - dotxhat, "cart vel est err"}, {t, theta - thetahat, "angle est err"}, {t, dottheta - dotthetahat, "angle vel est err"}}, sprintf("%s/observer_err_%d.png", path, n), "t (s)", "state", "");
+    plotter({{t, x - xhat, "$x - \hat{x}$"}, {t, dotx - dotxhat, "$\dot{x} - \hat{\dot{x}}$"}, {t, theta - thetahat, "$\theta - \hat{\theta}$"}, {t, dottheta - dotthetahat, "$\dot{\theta} - \hat{\dot{\theta}}$"}}, sprintf("%s/observer_err_%d.png", path, n), "t (s)", "state", "");
 
 end
 
@@ -367,14 +368,14 @@ function test_reduced_observer(K, Q, time, theta, path, n)
     dotthetahat = statehat(:, 4);
 
     % cmp 
-    plotter({{t, x, "cart pos"}, {t, xhat, "cart pos estimation"}}, sprintf("%s/reduced_observer_x_cmp_%d.png", path, n), "t (s)", "position (m)", "");
-    plotter({{t, dotx, "cart vel"}, {t, dotxhat, "cart vel estimation"}}, sprintf("%s/reduced_observer_dotx_cmp_%d.png", path, n), "t (s)", "velocity (m/s)", "");
-    plotter({{t, theta, "angle"}, {t, thetahat, "angle estimation"}}, sprintf("%s/reduced_observer_theta_cmp_%d.png", path, n), "t (s)", "angle (rad)", "");
-    plotter({{t, dottheta, "angle vel"}, {t, dotthetahat, "angle vel estimation"}}, sprintf("%s/reduced_observer_dottheta_cmp_%d.png", path, n), "t (s)", "angular velocity (rad/s)", "");
-    plotter({{t, x, "cart pos", "style", "-", "color", "#0072BD"}, {t, xhat, "cart pos estimation", "style", "--", "color", "#0072BD"}, {t, dotx, "cart vel", "style", "-", "color", "#D95319"}, {t, dotxhat, "cart vel estimation", "style", "--", "color", "#D95319"}, {t, theta, "angle", "style", "-", "color", "#EDB120"}, {t, thetahat, "angle estimation", "style", "--", "color", "#EDB120"}, {t, dottheta, "angle vel", "style", "-", "color", "#7E2F8E"}, {t, dotthetahat, "angle vel estimation", "style", "--", "color", "#7E2F8E"}}, sprintf("%s/reduced_observer_cmp_%d.png", path, n), "t (s)", "state", "");
+    plotter({{t, x, "$x$"}, {t, xhat, "$\hat{x}$"}}, sprintf("%s/reduced_observer_x_cmp_%d.png", path, n), "t (s)", "position (m)", "");
+    plotter({{t, dotx, "$\dot{x}$"}, {t, dotxhat, "$\hat{\dot{x}}$"}}, sprintf("%s/reduced_observer_dotx_cmp_%d.png", path, n), "t (s)", "velocity (m/s)", "");
+    plotter({{t, theta, "$\theta$"}, {t, thetahat, "$\hat{\theta}$"}}, sprintf("%s/reduced_observer_theta_cmp_%d.png", path, n), "t (s)", "angle (rad)", "");
+    plotter({{t, dottheta, "$\dot{\theta}$"}, {t, dotthetahat, "$\hat{\dot{\theta}}$"}}, sprintf("%s/reduced_observer_dottheta_cmp_%d.png", path, n), "t (s)", "angular velocity (rad/s)", "");
+    plotter({{t, x, "$x$", "style", "-", "color", "#0072BD"}, {t, xhat, "$\hat{x}$", "style", "--", "color", "#0072BD"}, {t, dotx, "$\dot{x}$", "style", "-", "color", "#D95319"}, {t, dotxhat, "$\hat{\dot{x}}$", "style", "--", "color", "#D95319"}, {t, theta, "$\theta$", "style", "-", "color", "#EDB120"}, {t, thetahat, "$\hat{\theta}$", "style", "--", "color", "#EDB120"}, {t, dottheta, "$\dot{\theta}$", "style", "-", "color", "#7E2F8E"}, {t, dotthetahat, "$\hat{\dot{\theta}}$", "style", "--", "color", "#7E2F8E"}}, sprintf("%s/reduced_observer_cmp_%d.png", path, n), "t (s)", "state", "");
 
     % errors
-    plotter({{t, x - xhat, "cart pos est err"}, {t, dotx - dotxhat, "cart vel est err"}, {t, theta - thetahat, "angle est err"}, {t, dottheta - dotthetahat, "angle vel est err"}}, sprintf("%s/reduced_observer_err_%d.png", path, n), "t (s)", "state", "");
+    plotter({{t, x - xhat, "$x - \hat{x}$"}, {t, dotx - dotxhat, "$\dot{x} - \hat{\dot{x}}$"}, {t, theta - thetahat, "$\theta - \hat{\theta}$"}, {t, dottheta - dotthetahat, "$\dot{\theta} - \hat{\dot{\theta}}$"}}, sprintf("%s/reduced_observer_err_%d.png", path, n), "t (s)", "state", "");
 end
 
 
@@ -413,5 +414,5 @@ ang = res.ang;
 state = res.state;
 u = res.u;
 
-plotter({{t, x, "cart pos"}, {t, ang, "angle"}}, sprintf("%s/observer_controller_out.png", path), "t (s)", "position (m) / angle (rad)", "");
-plotter({{t, u, "control"}}, sprintf("%s/observer_controller_u.png", path), "t (s)", "control", "");
+plotter({{t, x, "$x$"}, {t, ang, "$\theta$"}}, sprintf("%s/observer_controller_out.png", path), "t (s)", "position (m) / angle (rad)", "");
+plotter({{t, u, "u"}}, sprintf("%s/observer_controller_u.png", path), "t (s)", "control", "");
