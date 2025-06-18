@@ -27,19 +27,36 @@
         v_y = -l\dot{\theta}\sin\theta
     \end{cases}
 \end{equation}
+Найдем квадрат скорости центра масс маятника $v_m$:
+\begin{multline}
+    v_m^2 = v_x^2 + v_y^2 = \left(\dot{x} - l\dot{\theta}\cos\theta\right)^2 + \left(-l\dot{\theta}\sin\theta\right)^2 \\
+    \dot{x}^2 - 2l\dot{x}\dot{\theta}\cos\theta + l^2\dot{\theta}^2\cos^2\theta + l^2\dot{\theta}^2\sin^2\theta = \dot{x}^2 - 2l\dot{x}\dot{\theta}\cos\theta + l^2\dot{\theta}^2
+\end{multline}
 Общая энергия системы складывается из кинетической и потенциальной энергии маятника и кинетической энергии тележки:
 
-Кинетическая энергия системы равна:
+Поступательная кинетическая энергия системы равна:
 \begin{equation}
-    T = \frac{1}{2} (M + m)\dot{x}^2 - m\dot{x}l\dot{\theta}\cos\theta + \frac{1}{2}ml^2\dot{\theta}^2
+    T_m = \frac{1}{2}M\dot{x}^2 + \frac{1}{2}m v_m^2 =  \frac{1}{2} (M + m)\dot{x}^2 - m\dot{x}l\dot{\theta}\cos\theta + \frac{1}{2}ml^2\dot{\theta}^2
 \end{equation}
+Поскольку маятник вращается вокруг точки подвеса, его потенциальная энергия будет содержать 
+вращательный компонент, который выражается через момент инерции маятника: 
+\begin{equation}
+    T_r = \frac{I\dot{\theta}^2}{2}
+\end{equation}
+\begin{equation}
+    I = \frac{ml_{com}^2}{12} = \frac{ml^2}{3}
+\end{equation}
+Итого, полная кинетическая энергия системы равна: 
+\begin{equation}
+    T = \frac{1}{2} (M + m)\dot{x}^2 - m\dot{x}l\dot{\theta}\cos\theta + \frac{ml^2\dot{\theta}^2}{2} + \frac{ml^2\dot{\theta}^2}{6} 
+\end{equation}  
 Потенциальная энергия системы равна:
 \begin{equation}
     U = mgl\cos\theta
 \end{equation}
 Записывая функция Лагранжа $L = T - U$, получаем: 
 \begin{equation}
-    L = \frac{1}{2} (M + m)\dot{x}^2 - m\dot{x}l\dot{\theta}\cos\theta + \frac{1}{2}ml^2\dot{\theta}^2 - mgl\cos\theta
+    L = \frac{1}{2} (M + m)\dot{x}^2 - m\dot{x}l\dot{\theta}\cos\theta + \frac{2ml^2\dot{\theta}^2}{3} - mgl\cos\theta
 \end{equation}
 Уравнения Лагранжа примут вид:
 \begin{equation}
@@ -52,7 +69,7 @@
 \begin{equation}
     \begin{cases}
         (M + m)\ddot{x} - ml\ddot{\theta}\cos\theta + ml\dot{\theta}^2\sin\theta = Q_x, \\
-        ml^2\ddot{\theta} - ml\ddot{x}\cos\theta - mgl\sin\theta = Q_{\theta}.
+        \frac{4}{3} ml^2\ddot{\theta} - ml\ddot{x}\cos\theta - mgl\sin\theta = Q_{\theta}.
     \end{cases}
     \label{eq:forces_balance}
 \end{equation}
@@ -64,7 +81,7 @@
 \begin{equation}
     \begin{bmatrix}
         M + m &  -ml\cos\theta \\
-        -ml\cos\theta & ml^2 \\ 
+        -ml\cos\theta & \frac{4}{3}ml^2 \\ 
     \end{bmatrix} \times
     \begin{bmatrix}
         \ddot{x} \\
@@ -77,14 +94,14 @@
 \end{equation}
 Убедимся в существовании и единственности решения системы:
 \begin{equation}
-    D = ml^2(M + m) - m^2l^2\cos^2\theta = ml^2(M + m - m\cos^2\theta) > 0
+    D = \frac{4}{3}ml^2(M + m) - m^2l^2\cos^2\theta = ml^2\left(\frac{4}{3}(M + m) - m\cos^2\theta\right) > 0
 \end{equation}
 Решая систему уравнений методом Крамера, получаем:
 \begin{multline}
     \Delta_{\ddot{x}} = \begin{vmatrix}
         -ml\dot{\theta}^2\sin\theta + Q_x & -ml\cos\theta \\
-        mgl\sin\theta + Q_{\theta} & ml^2 \\
-    \end{vmatrix} = ml^2(-ml\dot{\theta}^2\sin\theta + Q_x) + ml\cos\theta(mgl\sin\theta + Q_{\theta}) 
+        mgl\sin\theta + Q_{\theta} & \frac{4}{3}ml^2 \\
+    \end{vmatrix} = \frac{4}{3}ml^2(-ml\dot{\theta}^2\sin\theta + Q_x) + ml\cos\theta(mgl\sin\theta + Q_{\theta}) 
 \end{multline}
 \begin{multline}
     \Delta_{\ddot{\theta}} = \begin{vmatrix}
@@ -96,8 +113,8 @@
 В итоге получается систему дифференциальных уравнений, описывающих ускорение тележки и угловое ускорение маятника:
 \begin{equation}
     \begin{cases}
-        \ddot{x} = \frac{ml^2(-ml\dot{\theta}^2\sin\theta + Q_x) + ml\cos\theta(mgl\sin\theta + Q_{\theta}) }{ml^2(M + m - m\cos^2\theta)} \\ 
-        \ddot{\theta} = \frac{(mgl\sin\theta + Q_{\theta})(M + m) + ml\cos\theta(-ml\dot{\theta}^2\sin\theta + Q_x) }{ml^2(M + m - m\cos^2\theta)} \\ 
+        \ddot{x} = \frac{\frac{4}{3}ml^2(-ml\dot{\theta}^2\sin\theta + Q_x) + ml\cos\theta(mgl\sin\theta + Q_{\theta}) }{ml^2(\frac{4}{3}(M + m) - m\cos^2\theta)} \\ 
+        \ddot{\theta} = \frac{(mgl\sin\theta + Q_{\theta})(M + m) + ml\cos\theta(-ml\dot{\theta}^2\sin\theta + Q_x) }{ml^2(\frac{4}{3}(M + m) - m\cos^2\theta)} \\ 
     \end{cases}
     \label{eq:nonlinear_model}
 \end{equation}
@@ -113,9 +130,9 @@
     \end{bmatrix} & 
     \dot{X} = \begin{bmatrix}
         \dot{x} \\
-        \frac{ml^2(-ml\dot{\theta}^2\sin\theta + Q_x) + ml\cos\theta(mgl\sin\theta + Q_{\theta})}{ml^2(M + m - m\cos^2\theta)} \\ 
+        \frac{\frac{4}{3}ml^2(-ml\dot{\theta}^2\sin\theta + Q_x) + ml\cos\theta(mgl\sin\theta + Q_{\theta})}{ml^2(\frac{4}{3}(M + m) - m\cos^2\theta)} \\ 
         \dot{\theta} \\
-        \frac{(mgl\sin\theta + Q_{\theta})(M + m) + ml\cos\theta(-ml\dot{\theta}^2\sin\theta + Q_x) }{ml^2(M + m - m\cos^2\theta)} \\ 
+        \frac{(mgl\sin\theta + Q_{\theta})(M + m) + ml\cos\theta(-ml\dot{\theta}^2\sin\theta + Q_x) }{ml^2(\frac{4}{3}(M + m) - m\cos^2\theta)} \\ 
     \end{bmatrix}
     \end{array}
 \end{equation}
@@ -137,8 +154,8 @@
     \begin{cases}
         \dot{x} = 0, \\
         \dot{\theta} = 0, \\
-        \frac{ml^2(-ml\dot{\theta}^2\sin\theta + Q_x) + ml\cos\theta(mgl\sin\theta + Q_{\theta}) }{ml^2(M + m - m\cos^2\theta)} = 0 \\
-        \frac{(mgl\sin\theta + Q_{\theta})(M + m) + ml\cos\theta(-ml\dot{\theta}^2\sin\theta + Q_x) }{ml^2(M + m - m\cos^2\theta)}  = 0 \\ 
+        \frac{\frac{4}{3}ml^2(-ml\dot{\theta}^2\sin\theta + Q_x) + ml\cos\theta(mgl\sin\theta + Q_{\theta}) }{ml^2(\frac{4}{3}(M + m) - m\cos^2\theta)} = 0 \\
+        \frac{(mgl\sin\theta + Q_{\theta})(M + m) + ml\cos\theta(-ml\dot{\theta}^2\sin\theta + Q_x) }{ml^2(\frac{4}{3}(M + m) - m\cos^2\theta)}  = 0 \\ 
     \end{cases}
 \end{equation}
 Упростив, получаем: 
@@ -166,11 +183,19 @@
 \begin{equation}
     \dot{X} = \begin{bmatrix}
         \dot{x} \\
-        \frac{lQ_x + mgl\theta + Q_{\theta} }{lM} \\ 
+        \frac{4l Q_x + 3(mgl\theta + Q_{\theta})}{l(4M + m)} \\ 
         \dot{\theta} \\
-        \frac{(g\theta + \frac{Q_{\theta}}{ml})(M + m) + Q_x}{lM} \\ 
+        \frac{3(g\theta + \frac{Q_{\theta}}{ml})(M + m) + 3Q_x }{l(4M + m)} \\ 
     \end{bmatrix}
 \end{equation}
+% \begin{equation}
+%     \dot{X} = \begin{bmatrix}
+%         \dot{x} \\
+%         \frac{lQ_x + mgl\theta + Q_{\theta} }{lM} \\ 
+%         \dot{\theta} \\
+%         \frac{(g\theta + \frac{Q_{\theta}}{ml})(M + m) + Q_x}{lM} \\ 
+%     \end{bmatrix}
+% \end{equation}
 
 Запишем систему в матричном виде, принимая за управление обобщенную силу, приложенную на каретку, а за внешнее 
 внешнее возмущение обобщенную силу, приложенную на маятник $u = Q_x, f = Q_{\theta}$:
@@ -190,9 +215,9 @@
         \ddot{\theta} \\
     \end{bmatrix} = \begin{bmatrix}
         0 & 1 & 0 & 0 \\
-        0 & 0 & \frac{mg}{M} & 0 \\
+        0 & 0 & \frac{3mg}{4M + m} & 0 \\
         0 & 0 & 0 & 1 \\
-        0 & 0 & \frac{g(M + m)}{lM} & 0 \\
+        0 & 0 & \frac{3g(M + m)}{l(4M + m)} & 0 \\
     \end{bmatrix} \times \begin{bmatrix}
         x \\
         \dot{x} \\
@@ -200,14 +225,14 @@
         \dot{\theta} \\
     \end{bmatrix} + \begin{bmatrix}
         0 \\
-        \frac{1}{M} \\
+        \frac{4}{4M + m} \\
         0 \\
-        \frac{1}{lM} \\
+        \frac{3}{l(4M + m)} \\
     \end{bmatrix} \times Q_x + \begin{bmatrix}
         0 \\
-        \frac{1}{lM} \\
+        \frac{3}{l(4M + m)} \\
         0 \\
-        \frac{M + m}{ml^2M} \\ 
+        \frac{3(M + m)}{ml^2(4M + m)} \\ 
     \end{bmatrix} \times Q_{\theta}  \\[4em]
     y = \begin{bmatrix}
         1 & 0 & 0 & 0 \\
@@ -224,19 +249,19 @@
 \begin{equation}
     A = \begin{bmatrix}
         0 & 1 & 0 & 0 \\
-        0 & 0 & \frac{mg}{M} & 0 \\
+        0 & 0 & \frac{3mg}{4M + m} & 0 \\
         0 & 0 & 0 & 1 \\
-        0 & 0 & \frac{g(M + m)}{lM} & 0 \\
+        0 & 0 & \frac{3g(M + m)}{l(4M + m)} & 0 \\
     \end{bmatrix}, B = \begin{bmatrix}
         0 \\
-        \frac{1}{M} \\
+        \frac{4}{4M + m} \\
         0 \\
-        \frac{1}{lM} \\
+        \frac{3}{l(4M + m)} \\
     \end{bmatrix}, D = \begin{bmatrix}
         0 \\
-        \frac{1}{lM} \\
+        \frac{3}{l(4M + m)} \\
         0 \\
-        \frac{M + m}{ml^2M} \\ 
+        \frac{3(M + m)}{ml^2(4M + m)} \\
     \end{bmatrix}, C = \begin{bmatrix}
         1 & 0 & 0 & 0 \\
         0 & 0 & 1 & 0 \\ 
