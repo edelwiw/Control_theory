@@ -15,7 +15,7 @@
 Решим данное уравнение с помощью пакета \texttt{cvx} в MATLAB, в результате получаем матрицу регулятора $K$:
 \begin{equation}
     K = \begin{bmatrix}
-    360.14  & 600.24  & -6354.55  & -1212.24 \\ 
+    484.11  & 806.85  & -7714.17  & -1732.95 \\ 
     \end{bmatrix}
 \end{equation} 
 Проверим правильность полученного результата, вычислив собственные числа замкнутой системы $A + BK$: 
@@ -41,7 +41,7 @@
 \end{figure}
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.8\textwidth]{media/plots/modal_control/modal_control_linear_out_0.png}
+    \includegraphics[width=0.8\textwidth]{media/plots/modal_control/linear_out_0.png}
     \caption{Результаты моделирования линейной модели системы с модальным регулятором}
     \label{fig:modal_control_linear_out}
 \end{figure}
@@ -60,7 +60,7 @@
 \end{figure}
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.8\textwidth]{media/plots/modal_control/modal_control_out_0.png}
+    \includegraphics[width=0.8\textwidth]{media/plots/modal_control/out_0.png}
     \caption{Результаты моделирования нелинейной модели системы с модальным регулятором}
     \label{fig:modal_control_nonlinear_out}
 \end{figure}
@@ -69,12 +69,12 @@
 представлен на рисунке \ref{fig:modal_control_cmp}.
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.8\textwidth]{media/plots/modal_control/modal_control_cmp_0.png}
+    \includegraphics[width=0.8\textwidth]{media/plots/modal_control/cmp_0.png}
     \caption{Различия в движении линейной и нелинейной модели системы с модальным регулятором}
     \label{fig:modal_control_cmp}
 \end{figure}
-Видно, что различие между углом отклонения маятника не превышает $10^{-3}$ радиан, а различие между
-координатами тележки не превышает $8\cdot10^{-3}$ метра. Данный результат можно считать удовлетворительным, 
+Видно, что различие между углом отклонения маятника не превышает $2 \cdot 10^{-2}$ радиан, а различие между
+координатами тележки не превышает $4\cdot10^{-2}$ метра. Данный результат можно считать удовлетворительным, 
 регулятор, синтезированный для линейной модели системы, обеспечивает приемлемое качество управления 
 нелинейной модели системы. 
 
@@ -86,27 +86,27 @@
 \begin{figure}[ht!]
     \centering
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/modal_control/modal_control_out_1.png}
+        \includegraphics[width=\textwidth]{media/plots/modal_control/out_1.png}
         \caption{$\theta_0 = 0.3$}
     \end{subfigure}
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/modal_control/modal_control_out_2.png}
+        \includegraphics[width=\textwidth]{media/plots/modal_control/out_2.png}
         \caption{$\theta_0 = 0.7$}
     \end{subfigure}
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/modal_control/modal_control_out_3.png}
+        \includegraphics[width=\textwidth]{media/plots/modal_control/out_3.png}
         \caption{$\theta_0 = 0.9$}
     \end{subfigure}
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/modal_control/modal_control_out_4.png}
+        \includegraphics[width=\textwidth]{media/plots/modal_control/out_4.png}
         \caption{$\theta_0 = 1.0$}
     \end{subfigure}
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/modal_control/modal_control_out_5.png}
+        \includegraphics[width=\textwidth]{media/plots/modal_control/out_5.png}
         \caption{$\theta_0 = 1.1$}
     \end{subfigure}
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/modal_control/modal_control_out_6.png}
+        \includegraphics[width=\textwidth]{media/plots/modal_control/out_6.png}
         \caption{$\theta_0 = 1.2$}
     \end{subfigure}
     \caption{Модальное управление нелинейной модели системы}
@@ -120,10 +120,11 @@
 посмотрев на график поведения линейной модели системы при начальном угле отклонения $\theta_0 = 1.2$ (рисунок \ref{fig:modal_control_linear_out_6}).
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=\textwidth]{media/plots/modal_control/modal_control_linear_out_6.png}
+    \includegraphics[width=\textwidth]{media/plots/modal_control/linear_out_6.png}
     \caption{Результаты моделирования линейной модели системы с модальным регулятором при $\theta_0 = 1.2$}
     \label{fig:modal_control_linear_out_6}
 \end{figure}
+\FloatBarrier
 Видно, что линейная модель система приходит в равновесное состояния, в отличие от нелинейной модели.
 
 \subsection{Исследование переходного процесса}
@@ -134,49 +135,49 @@
 
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/modal_control_out_1.png}
+    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/out_1.png}
     \caption{Результаты моделирования нелинейной модели системы с модальным регулятором при $k = -4$}
     \label{fig:modal_controlers_1_out}
 \end{figure}
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/modal_control_u_1.png}
+    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/u_1.png}
     \caption{Управляющее воздействие нелинейной модели системы с модальным регулятором при $k = -4$}
     \label{fig:modal_controlers_1_u}
 \end{figure}
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/modal_control_out_2.png}
+    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/out_2.png}
     \caption{Результаты моделирования нелинейной модели системы с модальным регулятором при $k = -6$}
     \label{fig:modal_controlers_2_out}
 \end{figure}
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/modal_control_u_2.png}
+    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/u_2.png}
     \caption{Управляющее воздействие нелинейной модели системы с модальным регулятором при $k = -6$}
     \label{fig:modal_controlers_2_u}
 \end{figure}
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/modal_control_out_3.png}
+    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/out_3.png}
     \caption{Результаты моделирования нелинейной модели системы с модальным регулятором при $k = -8$}
     \label{fig:modal_controlers_3_out}
 \end{figure}
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/modal_control_u_3.png}
+    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/u_3.png}
     \caption{Управляющее воздействие нелинейной модели системы с модальным регулятором при $k = -8$}
     \label{fig:modal_controlers_3_u}
 \end{figure}
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/modal_control_out_4.png}
+    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/out_4.png}
     \caption{Результаты моделирования нелинейной модели системы с модальным регулятором при $k = -10$}
     \label{fig:modal_controlers_4_out}
 \end{figure}
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/modal_control_u_4.png}
+    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/u_4.png}
     \caption{Управляющее воздействие нелинейной модели системы с модальным регулятором при $k = -10$}
     \label{fig:modal_controlers_4_u}
 \end{figure}
@@ -190,13 +191,13 @@
         \hline
         $k$ & $t_{\text{set}}$, с & $M_{\theta}$ & $M_{x}$ & $\max{|u|}$ \\
         \hline
-        -4 & 3.1 & 0.15 & 0.32 & 3800 \\
+        -4 & 2.9 & 0.11 & 0.34 & 5100 \\
         \hline
-        -6 & 2.2 & 0.18 & 0.24 & 9100 \\
+        -6 & 2.7 & 0.16 & 0.26 & 12000 \\
         \hline
-        -8 & 1.6 & 0.23 & 0.24 & 17000 \\
+        -8 & 2.5 & 0.18 & 0.24 & 24000 \\
         \hline
-        -10 & 1.4 & 0.3 & 0.25 & 30000 \\
+        -10 & 1.4 & 0.2 & 0.23 & 44000 \\
         \hline
     \end{tabular}
     \caption{Сравнение регуляторов с различными собственными числами замкнутой системы}
@@ -212,16 +213,17 @@
 Графики результатов моделирования приведены на рисунке \ref{fig:modal_controlers_5_out} -- \ref{fig:modal_controlers_5_u}. 
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/modal_control_out_5.png}
+    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/out_5.png}
     \caption{Результаты моделирования нелинейной модели системы со спектром $\begin{bmatrix}-0.5 & -0.5 & -4 &- 4\end{bmatrix}$}
     \label{fig:modal_controlers_5_out}
 \end{figure}
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/modal_control_u_5.png}
+    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/u_5.png}
     \caption{Управляющее воздействие нелинейной модели системы со спектром $\begin{bmatrix}-0.5 & -0.5 & -4 &- 4\end{bmatrix}$}
     \label{fig:modal_controlers_5_u}
 \end{figure}
+\FloatBarrier
 Видно, что при уменьшении первых двух собственных чисел замкнутой системы, время переходного процесса для 
 координаты тележки сильно увеличивается, а для угла отклонения маятника практически не меняется, при этом 
 управление тоже становится меньше. При уменьшении первых двух собственных чисел произошло влияние на первые 
@@ -254,10 +256,10 @@
 Решим уравнение Сильвестра с помощью пакета \texttt{cvx} в MATLAB, в результате получаем матрицу наблюдателя $L$:
 \begin{equation}
     L = \begin{bmatrix}
-    3.91  & 3.91 \\ 
-    2.07  & 2.07 \\ 
-    -15.91  & -15.91 \\ 
-    -82.41  & -82.41 \\ 
+    5.30  & 5.30 \\ 
+    3.20  & 3.20 \\ 
+    -17.30  & -17.30 \\ 
+    -76.79  & -76.79 \\
     \end{bmatrix}
 \end{equation}
 Проверим правильность полученного результата, вычислив собственные числа замкнутой системы $A + LC$: 
@@ -406,8 +408,8 @@ $\begin{bmatrix}-10 & -10 & -10 & -10\end{bmatrix}$. Результаты мод
 Решим уравнение Сильвестра с помощью пакета \texttt{cvx} в MATLAB, в результате получаем матрицу наблюдателя $Q$:
 \begin{equation}
     Q = \begin{bmatrix}
-    -0.25  & 0.06  & 0.01  & -0.00 \\ 
-    -0.20  & 0.04  & 0.05  & -0.01 \\ 
+    -0.25  & 0.06  & 0.02  & -0.00 \\ 
+    -0.20  & 0.04  & -0.01  & 0.00 \\
     \end{bmatrix}
 \end{equation}
 
@@ -542,7 +544,7 @@ $\begin{bmatrix}-10 & -10 & -10 & -10\end{bmatrix}$. Результаты мод
 Выход системы, замкнутой регулятором по выходу, приведен на рисунке \ref{fig:modal_controller_obderver_out}.
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=\textwidth]{media/plots/observer_controoler/observer_controller_out.png}
+    \includegraphics[width=\textwidth]{media/plots/observer_controller/observer_controller_out.png}
     \caption{Результаты моделирования регулятора по выходу}
     \label{fig:modal_controller_obderver_out}
 \end{figure}
@@ -551,7 +553,7 @@ $\begin{bmatrix}-10 & -10 & -10 & -10\end{bmatrix}$. Результаты мод
 График управляющего воздействия приведен на рисунке \ref{fig:modal_controller_obderver_u}.
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=\textwidth]{media/plots/observer_controoler/observer_controller_u.png}
+    \includegraphics[width=\textwidth]{media/plots/observer_controller/observer_controller_u.png}
     \caption{Управляющее воздействие регулятора по выходу}
     \label{fig:modal_controller_obderver_u}
 \end{figure}
