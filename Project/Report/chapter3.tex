@@ -132,6 +132,7 @@
 В качестве начальных условий возьмем $\theta_0 = 0.3$. Для начала, рассмотрим регуляторы, обеспечивающие спектр 
 замкнутой системы вида $\sigma_k = \begin{bmatrix}k & k & k & k\end{bmatrix}$, где $k \in \begin{bmatrix}-4, -6, -8, -10\end{bmatrix}$. 
 Результаты моделирования приведены на рисунках \ref{fig:modal_controlers_1_out} -- \ref{fig:modal_controlers_4_u}.
+Сравнительные графики результатов моделирования приведены на рисунке \ref{fig:modal_controlers_x_cmp} и \ref{fig:modal_controlers_ang_cmp}.
 
 \begin{figure}[ht!]
     \centering
@@ -181,6 +182,18 @@
     \caption{Управляющее воздействие нелинейной модели системы с модальным регулятором при $k = -10$}
     \label{fig:modal_controlers_4_u}
 \end{figure}
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/x_cmp.png}
+    \caption{Сравнение координаты тележки при различных собственных числах замкнутой системы}
+    \label{fig:modal_controlers_x_cmp}
+\end{figure}
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/ang_cmp.png}
+    \caption{Сравнение угла отклонения маятника при различных собственных числах замкнутой системы}
+    \label{fig:modal_controlers_ang_cmp}
+\end{figure}
 Можно заметить, что при увеличении модуля собственных чисел замкнутой системы, время переходного процесса
 сокращается, а перегулирование отклонения маятника увеличивается, максимальный модуль управляющего воздействия 
 тоже увеличивается с увеличением модуля собственных чисел. Численные результаты сравнения приведены в таблице \ref{tab:modal_control_cmp}. 
@@ -210,23 +223,24 @@
 \FloatBarrier
 Дополнительно посмотрим на случай замкнутой системы, имеющий спектр $\begin{bmatrix}-0.5 & -0.5 & -4 &- 4\end{bmatrix}$
 и сравним ее с системой, имеющей спектр $\begin{bmatrix}-4 & -4 & -4 &- 4\end{bmatrix}$, рассмотренной на рисунке \ref{fig:modal_controlers_1_out}.
-Графики результатов моделирования приведены на рисунке \ref{fig:modal_controlers_5_out} -- \ref{fig:modal_controlers_5_u}. 
+Графики результатов моделирования приведены на рисунке \ref{fig:modal_controlers_ang_cmp_eig} и \ref{fig:modal_controlers_x_cmp_eig}.
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/out_5.png}
-    \caption{Результаты моделирования нелинейной модели системы со спектром $\begin{bmatrix}-0.5 & -0.5 & -4 &- 4\end{bmatrix}$}
-    \label{fig:modal_controlers_5_out}
+    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/ang_cmp_eig.png}
+    \caption{Сравнение угла отклонения маятника при различных собственных числах замкнутой системы}
+    \label{fig:modal_controlers_ang_cmp_eig}
 \end{figure}
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/u_5.png}
-    \caption{Управляющее воздействие нелинейной модели системы со спектром $\begin{bmatrix}-0.5 & -0.5 & -4 &- 4\end{bmatrix}$}
-    \label{fig:modal_controlers_5_u}
+    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/x_cmp_eig.png}
+    \caption{Сравнение координаты тележки при различных собственных числах замкнутой системы}
+    \label{fig:modal_controlers_x_cmp_eig}
 \end{figure}
+
 \FloatBarrier
 Видно, что при уменьшении первых двух собственных чисел замкнутой системы, время переходного процесса для 
-координаты тележки сильно увеличивается, а для угла отклонения маятника практически не меняется, при этом 
-управление тоже становится меньше. При уменьшении первых двух собственных чисел произошло влияние на первые 
+координаты тележки сильно увеличивается, а для угла отклонения маятника практически не меняется.
+При уменьшении первых двух собственных чисел произошло влияние на первые 
 два собственные вектора системы (\ref{eq:eigenvectors}), которые, в свою очередь, влияют на 
 линейное положение тележки, но не на угол отклонения маятника. Таким образом, можно сделать вывод, что 
 с использованием модального управления можно влиять на динамику системы \textit{по отдельности}, изменяя 
@@ -371,7 +385,7 @@ $\begin{bmatrix}-10 & -10 & -10 & -10\end{bmatrix}$. Результаты мод
 График ошибки оценки состояния системы приведен на рисунке \ref{fig:observer_err_2}.
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=\textwidth]{media/plots/modal_observer/observer_err_2.png}
+    \includegraphics[width=0.8\textwidth]{media/plots/modal_observer/observer_err_2.png}
     \caption{Ошибка оценки состояния системы наблюдателем полного порядка}
     \label{fig:observer_err_2}
 \end{figure}
@@ -416,7 +430,7 @@ $\begin{bmatrix}-10 & -10 & -10 & -10\end{bmatrix}$. Результаты мод
 Схема наблюдателя пониженного порядка приведена на рисунке \ref{fig:reduced_observer_scheme}.
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.7\textwidth]{media/reduced_observer_scheme.png}
+    \includegraphics[width=0.8\textwidth]{media/reduced_observer_scheme.png}
     \caption{Схема наблюдателя пониженного порядка}
     \label{fig:reduced_observer_scheme}
 \end{figure}
@@ -461,7 +475,7 @@ $\begin{bmatrix}-10 & -10 & -10 & -10\end{bmatrix}$. Результаты мод
 Ошибка оценки состояния системы приведена на рисунке \ref{fig:reduced_observer_err_1}.
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=\textwidth]{media/plots/reduced_observer/reduced_observer_err_1.png}
+    \includegraphics[width=0.8\textwidth]{media/plots/reduced_observer/reduced_observer_err_1.png}
     \caption{Ошибка оценки состояния системы наблюдателем пониженного порядка}
     \label{fig:reduced_observer_err_1}
 \end{figure}
@@ -475,7 +489,7 @@ $\begin{bmatrix}-10 & -10 & -10 & -10\end{bmatrix}$. Результаты мод
 Результаты моделирования приведены на рисунке \ref{fig:reduced_observer_x_2} и рисунках \ref{fig:reduced_observer_x_cmp_2_sep}.
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=\textwidth]{media/plots/reduced_observer/reduced_observer_cmp_2.png}
+    \includegraphics[width=0.8\textwidth]{media/plots/reduced_observer/reduced_observer_cmp_2.png}
     \caption{Результаты моделирования наблюдателя пониженного порядка}
     \label{fig:reduced_observer_x_2}
 \end{figure}
@@ -507,7 +521,7 @@ $\begin{bmatrix}-10 & -10 & -10 & -10\end{bmatrix}$. Результаты мод
 График ошибки оценки состояния системы приведен на рисунке \ref{fig:reduced_observer_err_2}.
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=\textwidth]{media/plots/reduced_observer/reduced_observer_err_2.png}
+    \includegraphics[width=0.8\textwidth]{media/plots/reduced_observer/reduced_observer_err_2.png}
     \caption{Ошибка оценки состояния системы наблюдателем пониженного порядка}
     \label{fig:reduced_observer_err_2}
 \end{figure}
@@ -544,7 +558,7 @@ $\begin{bmatrix}-10 & -10 & -10 & -10\end{bmatrix}$. Результаты мод
 Выход системы, замкнутой регулятором по выходу, приведен на рисунке \ref{fig:modal_controller_obderver_out}.
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=\textwidth]{media/plots/observer_controller/observer_controller_out.png}
+    \includegraphics[width=0.8\textwidth]{media/plots/observer_controller/observer_controller_out.png}
     \caption{Результаты моделирования регулятора по выходу}
     \label{fig:modal_controller_obderver_out}
 \end{figure}
@@ -553,7 +567,7 @@ $\begin{bmatrix}-10 & -10 & -10 & -10\end{bmatrix}$. Результаты мод
 График управляющего воздействия приведен на рисунке \ref{fig:modal_controller_obderver_u}.
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=\textwidth]{media/plots/observer_controller/observer_controller_u.png}
+    \includegraphics[width=0.8\textwidth]{media/plots/observer_controller/observer_controller_u.png}
     \caption{Управляющее воздействие регулятора по выходу}
     \label{fig:modal_controller_obderver_u}
 \end{figure}

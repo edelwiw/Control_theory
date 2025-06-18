@@ -7,64 +7,6 @@ cvx_quiet true;
 [A, B, D, C] = get_matrices(M, m, l, g); 
 %% 
 
-function test_controller(K, time, theta0, path, n)
-    if ~exist(path, "dir")
-        mkdir(path);
-    end
-    simIn = Simulink.SimulationInput('modal_control');
-    simIn = simIn.setVariable('K', K);
-    simIn = simIn.setVariable('theta0', theta0);
-    res = sim(simIn.setModelParameter('StopTime', num2str(time)));
-    
-    t = res.tout;
-    x = res.x;
-    ang = res.ang;
-    u = res.u;
-    xlin = res.xlin;
-    anglin = res.anglin;
-
-    plotter({{t, x, "$x$"}, {t, ang, "$\theta$"}}, sprintf("%s/out_%d.png", path, n), "t (s)", "position (m) / angle (rad)", "");
-    plotter({{t, u, "$u$"}}, sprintf("%s/u_%d.png", path, n), "t (s)", "control", "");
-    plotter({{t, x - xlin, "$x - x_l$"}, {t, ang - anglin, "$\theta - \theta_l$"}}, sprintf("%s/cmp_%d.png", path, n), "t (s)", "position (m)", "");
-    plotter({{t, xlin, "$x$"}, {t, anglin, "$\theta$"}}, sprintf("%s/linear_out_%d.png", path, n), "t (s)", "position (m) / angle (rad)", "");
-end
-
-function test_observer(K, L, time, theta, path, n)
-    if ~exist(path, "dir")
-        mkdir(path);
-    end
-    theta0 = theta;
-    simIn = Simulink.SimulationInput('observer');
-    simIn = simIn.setVariable('K', K);
-    simIn = simIn.setVariable('L', L);
-    simIn = simIn.setVariable('theta0', theta0);
-    res = sim(simIn.setModelParameter('StopTime', num2str(time)));
-
-    t = res.tout;
-    state = res.x;
-    statehat = res.xhat;
-
-    x = state(:, 1);
-    dotx = state(:, 2);
-    theta = state(:, 3);
-    dottheta = state(:, 4);
-
-    xhat = statehat(:, 1);
-    dotxhat = statehat(:, 2);
-    thetahat = statehat(:, 3);
-    dotthetahat = statehat(:, 4);
-
-    % cmp 
-    plotter({{t, x, "$x$"}, {t, xhat, "$\hat{x}$"}}, sprintf("%s/observer_x_cmp_%d.png", path, n), "t (s)", "position (m)", "");
-    plotter({{t, dotx, "$\dot{x}$"}, {t, dotxhat, "$\hat{\dot{x}}$"}}, sprintf("%s/observer_dotx_cmp_%d.png", path, n), "t (s)", "velocity (m/s)", "");
-    plotter({{t, theta, "$\theta$"}, {t, thetahat, "$\hat{\theta}$"}}, sprintf("%s/observer_theta_cmp_%d.png", path, n), "t (s)", "angle (rad)", "");
-    plotter({{t, dottheta, "$\dot{\theta}$"}, {t, dotthetahat, "$\hat{\dot{\theta}}$"}}, sprintf("%s/observer_dottheta_cmp_%d.png", path, n), "t (s)", "angular velocity (rad/s)", "");
-
-    plotter({{t, x, "$x$", "style", "-", "color", "#0072BD"}, {t, xhat, "$\hat{x}$", "style", "--", "color", "#0072BD"}, {t, dotx, "$\dot{x}$", "style", "-", "color", "#D95319"}, {t, dotxhat, "$\hat{\dot{x}}$", "style", "--", "color", "#D95319"}, {t, theta, "$\theta$", "style", "-", "color", "#EDB120"}, {t, thetahat, "$\hat{\theta}$", "style", "--", "color", "#EDB120"}, {t, dottheta, "$\dot{\theta}$", "style", "-", "color", "#7E2F8E"}, {t, dotthetahat, "$\hat{\dot{\theta}}$", "style", "--", "color", "#7E2F8E"}}, sprintf("%s/observer_cmp_%d.png", path, n), "t (s)", "state", "");
-
-    % errors 
-    plotter({{t, x - xhat, "$x - \hat{x}$"}, {t, dotx - dotxhat, "$\dot{x} - \hat{\dot{x}}$"}, {t, theta - thetahat, "$\theta - \hat{\theta}$"}, {t, dottheta - dotthetahat, "$\dot{\theta} - \hat{\dot{\theta}}$"}}, sprintf("%s/observer_err_%d.png", path, n), "t (s)", "state", "");
-end
 
 function test_reduced_observer(K, Q, time, theta, path, n)
     if ~exist(path, "dir")
@@ -137,6 +79,9 @@ path = "Report/media/plots/modal_controllers";
 k_arr = [-4, -6, -8, -10]; 
 theta0 = 0.3;
 time = 5;
+res_arr_t = {};
+res_arr_x = {};
+res_arr_ang = {};
 for i = 1:length(k_arr)
     k = k_arr(i);
     Gamma = [k, 1, 0, 0;
@@ -149,24 +94,73 @@ for i = 1:length(k_arr)
     eigK = eig(A + B * K);
     fprintf("Eigenvalues of A + B * K = ");
     print_matrix(eigK, 2);
-    test_controller(K, time, theta0, path, i);
+    [t, x, ang] = test_controller(K, time, theta0, path, i);
+    res_arr_t{end + 1} = t;
+    res_arr_x{end + 1} = x;
+    res_arr_ang{end + 1} = ang(:);
 end
+
+%% 
+to_plot_x = {};
+to_plot_ang = {};
+for i = 1:length(alpha_arr)
+    to_plot_x{end + 1} = {cell2mat(res_arr_t(i)), cell2mat(res_arr_x(i)), sprintf("$x$ $(\\alpha = %.2f)$", alpha_arr(i))};
+    to_plot_ang{end + 1} = {cell2mat(res_arr_t(i)), cell2mat(res_arr_ang(i)), sprintf("$\\theta$ $(\\alpha = %.2f)$", alpha_arr(i))};
+end
+
+plotter(to_plot_x, "Report/media/plots/modal_controllers/x_cmp.png", "t (s)", "position (m)", "");
+plotter(to_plot_ang, "Report/media/plots/modal_controllers/ang_cmp.png", "t (s)", "angle (rad)", "");
 
 %% 
 path = "Report/media/plots/modal_controllers";
 theta0 = 0.3;
-time = 5;
-Gamma = [-0.5, 1, 0, 0;
+time = 15;
+k = -4;
+Gamma1 = [k, 1, 0, 0;
+        0, k, 1, 0;
+        0, 0, k, 1;
+        0, 0, 0, k];
+
+Gamma2 = [-0.5, 1, 0, 0;
         0, -0.5, 0, 0;
         0, 0, -4, 1;
         0, 0, 0, -4];
-K = TAU.FindControllerSylvester(A, B, Gamma);
-fprintf("K = ");
-print_matrix(K, 2);
-eigK = eig(A + B * K);
-fprintf("Eigenvalues of A + B * K = ");
-print_matrix(eigK, 2);
-test_controller(K, time, theta0, path, 5);
+[K1, sigma1] = TAU.FindControllerSylvester(A, B, Gamma1);
+[K2, sigma2] = TAU.FindControllerSylvester(A, B, Gamma2);
+fprintf("K_1 = ");
+print_matrix(K1, 2);
+fprintf("K_2 = ");
+print_matrix(K2, 2);
+fprintf("Eigenvalues of A + B * K_1 = \n");
+fprintf("\\sigma(A + B * K_1) = ");
+print_matrix(sigma1, 2);
+fprintf("Eigenvalues of A + B * K_2 = \n");
+fprintf("\\sigma(A + B * K_2) = ");
+
+res_arr_t = {};
+res_arr_x = {};
+res_arr_ang = {};
+[t1, x1, ang1] = test_controller(K1, time, theta0, path, 5);
+[t2, x2, ang2] = test_controller(K2, time, theta0, path, 5);
+
+res_arr_t{end + 1} = t1;
+res_arr_x{end + 1} = x1;
+res_arr_ang{end + 1} = ang1;
+
+res_arr_t{end + 1} = t2;
+res_arr_x{end + 1} = x2;
+res_arr_ang{end + 1} = ang2;
+
+to_plot_x = {};
+to_plot_ang = {};
+for i = 1:2
+    to_plot_x{end + 1} = {cell2mat(res_arr_t(i)), cell2mat(res_arr_x(i)), sprintf("$x$ $(K_%d)$", i)};
+    to_plot_ang{end + 1} = {cell2mat(res_arr_t(i)), cell2mat(res_arr_ang(i)), sprintf("$\\theta$ $(K_%d)$", i)};
+end
+
+plotter(to_plot_x, "Report/media/plots/modal_controllers/x_cmp_eig.png", "t (s)", "position (m)", "");
+plotter(to_plot_ang, "Report/media/plots/modal_controllers/ang_cmp_eig.png", "t (s)", "angle (rad)", "");
+
 
 %% MODAL OBSERVER
 GammaK = [-6, 1, 0, 0;
