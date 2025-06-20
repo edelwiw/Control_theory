@@ -111,5 +111,16 @@ classdef TAU
             cvx_end
         end
 
+        function [K, J] = FindLQRController(A, B, Q, R, x0, v)
+            [P, ~, ~] = icare(A, B, Q, R / v);
+            K = -R \ B' * P;
+            J = x0' * P * x0;
+        end
+
+        function L = FindObserverKalman(A, C, Q, R)
+            [P, ~, ~] = icare(A', C', Q, R / 1);
+            L = -P * C' / R;
+        end
+
     end
 end
