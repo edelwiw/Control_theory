@@ -41,7 +41,9 @@
 \end{equation}
 В матрице системы есть два нулевых собственных числа, один отрицательный (устойчивый) и один положительный (неустойчивый). 
 Наличие хотя бы одного положительного собственного числа говорит о том, что система неустойчива. При этом 
-наличие двух нулевых собственных чисел свидетельствует о колебательной природе системы. 
+наличие двух нулевых собственных чисел свидетельствует о колебательной природе системы. Исходя из этого можно сделать вывод,
+что точки равновесия системы, рассмотренные ранее, не являются устойчивыми. Неустойчивость линейной системы также говорит 
+о неустойчивости исходной нелинейной системы вблизи верхней точки равновесия. 
 
 Найдем собственные векторы матрицы $A$:
 \begin{equation}
@@ -233,27 +235,27 @@ $[0, 0.1, -0.1, 0.3, \nicefrac{\pi}{2}, \pi]$. Результаты модели
 \begin{figure}[ht!]
     \centering
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/free_motion/nonlin_1.png}
+        \includegraphics[width=\textwidth]{media/plots/free_motion/state_1.png}
         \caption{$\theta_0 = 0$}
   \end{subfigure}
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/free_motion/nonlin_2.png}
+        \includegraphics[width=\textwidth]{media/plots/free_motion/state_2.png}
         \caption{$\theta_0 = 0.1$}
     \end{subfigure}
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/free_motion/nonlin_3.png}
+        \includegraphics[width=\textwidth]{media/plots/free_motion/state_3.png}
         \caption{$\theta_0 = -0.1$}
     \end{subfigure}
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/free_motion/nonlin_4.png}
+        \includegraphics[width=\textwidth]{media/plots/free_motion/state_4.png}
         \caption{$\theta_0 = 0.3$}
     \end{subfigure}
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/free_motion/nonlin_5.png}
+        \includegraphics[width=\textwidth]{media/plots/free_motion/state_5.png}
         \caption{$\theta_0 = \frac{\pi}{2}$}
     \end{subfigure}
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/free_motion/nonlin_6.png}
+        \includegraphics[width=\textwidth]{media/plots/free_motion/state_6.png}
         \caption{$\theta_0 = \pi$}
     \end{subfigure}
     \caption{Свободное движение маятника (нелинейная модель)}
@@ -263,27 +265,27 @@ $[0, 0.1, -0.1, 0.3, \nicefrac{\pi}{2}, \pi]$. Результаты модели
 \begin{figure}[ht!]
     \centering
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/free_motion/lin_1.png}
+        \includegraphics[width=\textwidth]{media/plots/free_motion/state_lin_1.png}
         \caption{$\theta_0 = 0$}
   \end{subfigure}
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/free_motion/lin_2.png}
+        \includegraphics[width=\textwidth]{media/plots/free_motion/state_lin_2.png}
         \caption{$\theta_0 = 0.1$}
     \end{subfigure}
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/free_motion/lin_3.png}
+        \includegraphics[width=\textwidth]{media/plots/free_motion/state_lin_3.png}
         \caption{$\theta_0 = -0.1$}
     \end{subfigure}
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/free_motion/lin_4.png}
+        \includegraphics[width=\textwidth]{media/plots/free_motion/state_lin_4.png}
         \caption{$\theta_0 = 0.3$}
     \end{subfigure}
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/free_motion/lin_5.png}
+        \includegraphics[width=\textwidth]{media/plots/free_motion/state_lin_5.png}
         \caption{$\theta_0 = \frac{\pi}{2}$}
     \end{subfigure}
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/free_motion/lin_6.png}
+        \includegraphics[width=\textwidth]{media/plots/free_motion/state_lin_6.png}
         \caption{$\theta_0 = \pi$}
     \end{subfigure}
     \caption{Свободное движение маятника (линеаризованная модель)}

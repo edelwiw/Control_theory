@@ -29,7 +29,7 @@ function plotter(plots, path, x_label, y_label, label)
                 color = plots{i}{7};
             end
         end
-        plot(plots{i}{1}, plots{i}{2}, 'LineWidth', 1.8, 'LineStyle', style, 'Color', color);
+        plot(plots{i}{1}, plots{i}{2}, 'LineStyle', style, 'Color', color, 'LineWidth', 1.8);
     end
     grid("on");
     grid("minor");
@@ -40,8 +40,8 @@ function plotter(plots, path, x_label, y_label, label)
     end
     leg = legend(legendText_arr, 'Interpreter', 'latex');
 
-    fontsize(leg, 18, 'points');
-    fontsize(gca, 14, 'points');
+    fontsize(leg, 35, 'points');
+    fontsize(gca, 20, 'points');
     xlabel(x_label);
     ylabel(y_label);
     label = strrep(label, "_", "\_");

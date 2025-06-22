@@ -27,13 +27,19 @@ J = \int_{0}^{\infty} \left( x^T Q x + u^T R u \right) dt
 \end{equation}
 
 Проверим работу полученного регулятора, проведя моделирование системы с начальным углом 
-отклонения маятника $\theta_0 = 0.2$. Результат моделирования представлен на рисунке \ref{fig:lqr_controller} и 
+отклонения маятника $\theta_0 = 0.2$. Результат моделирования представлен на рисунке \ref{fig:lqr_controller}, \ref{fig:lqr_controller_state} и 
 \ref{fig:lqr_controller_u} 
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=\textwidth]{media/plots/LQR/out_1.png}
     \caption{Результат моделирования системы}
     \label{fig:lqr_controller}
+\end{figure}
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{media/plots/LQR/state_1.png}
+    \caption{Состояние системы при моделировании}
+    \label{fig:lqr_controller_state}
 \end{figure}
 \begin{figure}[ht!]
     \centering
@@ -47,7 +53,7 @@ J = \int_{0}^{\infty} \left( x^T Q x + u^T R u \right) dt
 \subsection{Исследование устойчивости}
 Проверим работу регулятора при различных начальных условиях. Будем рассматривать начальное отклонение 
 маятника из множества $\theta_0 \in \begin{bmatrix}0.3 & 0.5 & 1.2 & 1.5\end{bmatrix}$. 
-Результаты моделирования представлены на рисунке \ref{fig:lqr_controller_2}.
+Результаты моделирования представлены на рисунке \ref{fig:lqr_controller_2} и рисунках \ref{fig:lqr_controller_2_state}.
 \begin{figure}[ht!]
     \centering
     \begin{subfigure}[b]{0.45\textwidth}
@@ -73,10 +79,91 @@ J = \int_{0}^{\infty} \left( x^T Q x + u^T R u \right) dt
     \caption{Результат моделирования системы при различных начальных условиях}
     \label{fig:lqr_controller_2}
 \end{figure}
+\begin{figure}[ht!]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{media/plots/LQR/state_2.png}
+        \caption{Состояние системы при $\theta_0 = 0.3$}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{media/plots/LQR/state_3.png}
+        \caption{Состояние системы при $\theta_0 = 0.5$}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{media/plots/LQR/state_4.png}
+        \caption{Состояние системы при $\theta_0 = 1.2$}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{media/plots/LQR/state_5.png}
+        \caption{Состояние системы при $\theta_0 = 1.5$}
+    \end{subfigure}
+    \caption{Состояние системы при различных начальных условиях}
+    \label{fig:lqr_controller_2_state}
+\end{figure}
+
 Видно, что выход системы сходится к нулю при начальных отклонениях маятника вплоть до $1.2$ радиан.
 При отклонении маятника в $1.5$ радиан система не может стабилизироваться, что, вероятнее всего, 
 связано с тем, что отклонения реального поведения системы от ее линейной модели становятся значительными. 
-    
+
+Также проведем исследование влияние начальной координаты тележки на устойчивость системы. 
+Будем рассматривать начальное положение тележки из множества $x_0 \in \begin{bmatrix}-2.5 & 0 & 2.5 & 6.0\end{bmatrix}$ 
+и начальное отклонение маятника $\theta_0 = 0.6$.
+Результаты моделирования представлены на рисунке \ref{fig:lqr_controller_3} и рисунках \ref{fig:lqr_controller_3_state}.
+\begin{figure}[ht!]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{media/plots/LQR/out_6.png}
+        \caption{Результат моделирования при $x_0 = -2.5$}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.45\textwidth}        
+        \centering
+        \includegraphics[width=\textwidth]{media/plots/LQR/out_7.png}
+        \caption{Результат моделирования при $x_0 = 0$}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.45\textwidth}    
+        \centering
+        \includegraphics[width=\textwidth]{media/plots/LQR/out_8.png}
+        \caption{Результат моделирования при $x_0 = 2.5$}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{media/plots/LQR/out_9.png}
+        \caption{Результат моделирования при $x_0 = 6.0$}
+    \end{subfigure}
+    \caption{Результат моделирования системы при различных начальных условиях}      
+    \label{fig:lqr_controller_3}
+\end{figure}
+\begin{figure}[ht!]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{media/plots/LQR/state_6.png}
+        \caption{Состояние системы при $x_0 = -2.5$}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.45\textwidth}        
+        \centering
+        \includegraphics[width=\textwidth]{media/plots/LQR/state_7.png}
+        \caption{Состояние системы при $x_0 = 0$}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.45\textwidth}    
+        \centering
+        \includegraphics[width=\textwidth]{media/plots/LQR/state_8.png}
+        \caption{Состояние системы при $x_0 = 2.5$}
+    \end{subfigure} 
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{media/plots/LQR/state_9.png}
+        \caption{Состояние системы при $x_0 = 6.0$}
+    \end{subfigure}
+    \caption{Состояние системы при различных начальных условиях}
+    \label{fig:lqr_controller_3_state}
+\end{figure}
+При изменении начального положения тележки система так же стабилизируется. 
 Также можно заметить, что \textit{форма} переходного процесса остается практически неизменной при различных начальных условиях.
 Это связано с тем, что синтез регулятора проводился по методу LQR, который обеспечивает оптимальное
 управление в смысле минимизации функционала качества. 
@@ -113,7 +200,7 @@ J = \int_{0}^{\infty} \left( x^T Q x + u^T R u \right) dt
 чем компоненты, отвечающие за положение тележки и ее скорость. Это связано с тем, что маятник вносит большее 
 влияние на устойчивость системы, так как является неустойчивым объектом. 
 
-Переходные процесса для приведенных регуляторов представлены на рисунке \ref{fig:lqr_controller_qr}.
+Переходные процесса для приведенных регуляторов представлены на рисунке \ref{fig:lqr_controller_qr} и \ref{fig:lqr_controller_qr_state}.
 \begin{figure}[ht!]
     \centering
     \begin{subfigure}[b]{0.45\textwidth}
@@ -139,6 +226,33 @@ J = \int_{0}^{\infty} \left( x^T Q x + u^T R u \right) dt
     \caption{Переходные процессы для различных весовых матриц $Q$ и $R$}
     \label{fig:lqr_controller_qr}
 \end{figure} 
+
+\begin{figure}[ht!]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{media/plots/LQR/state_6.png}
+        \caption{Состояние системы при $Q = 30 \cdot I_{4\times 4}, R = 1$}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{media/plots/LQR/state_7.png}
+        \caption{Состояние системы при $Q = 30 \cdot I_{4\times 4}, R = 10$}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{media/plots/LQR/state_8.png}
+        \caption{Состояние системы при $Q = 200 \cdot I_{4\times 4}, R = 1$}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{media/plots/LQR/state_9.png}
+        \caption{Состояние системы при $Q = 200 \cdot I_{4\times 4}, R = 10$}
+    \end{subfigure}
+    \caption{Состояние системы при различных весовых матрицах $Q$ и $R$}
+    \label{fig:lqr_controller_qr_state}
+\end{figure}    
+
 Видно, что при увеличении матрицы $Q$ переходный процесс становится более быстрым, матрица $Q$ отвечает 
 за штраф за отклонение состояния системы от нуля, поэтому при увеличении ее значений системы меньше 
 отклоняется от состояния равновесия. При увеличении матрицы $R$ переходный процесс становится более медленным,
@@ -149,7 +263,7 @@ J = \int_{0}^{\infty} \left( x^T Q x + u^T R u \right) dt
 \subsection{Фильтр Калмана}
 Синтезируем фильтр Калмана с матрицами
 \begin{equation}
-    Q = 30 \cdot \cdot I_{4\times 4}, \quad R = 1
+    Q = 30 \cdot I_{4\times 4}, \quad R = 1
 \end{equation}
 решая уравнение Риккати при $v = 1$:
 \begin{equation}
@@ -169,7 +283,8 @@ J = \int_{0}^{\infty} \left( x^T Q x + u^T R u \right) dt
     \end{bmatrix}
 \end{equation}
 Проверим работу полученного фильтра Калмана, проведя моделирование замкнутой системы, рассмотренной ранее 
-с нулевыми начальными условиями для фильтра Калмана. Результат моделирования представлен на рисунке \ref{fig:kalman_filter} и 
+с нулевыми начальными условиями для фильтра и наличием \textit{помех} в измеряемом векторе состояния системы,
+заданных как белый шум с дисперсией $var_\epsilon = 0.05$ Результат моделирования представлен на рисунке \ref{fig:kalman_filter} и 
 \ref{fig:kalman_filter_err}
 \begin{figure}[ht!]
     \centering
@@ -183,9 +298,11 @@ J = \int_{0}^{\infty} \left( x^T Q x + u^T R u \right) dt
     \caption{Оценка ошибки фильтра Калмана}
     \label{fig:kalman_filter_err}
 \end{figure}
-Видно, при оценка состояние системы фильтром Калмана достаточно близка к реальному состоянию системы. При этом 
-можно заметить более быструю сходимость компонент, связанных с тележкой, что может быть обусловлено тем, что 
-начально положение тележки было нулевым, как и начальное состояние фильтра Калмана. 
+
+Видно, что оценка состояния системы фильтром Калмана достаточно близка к реальному состоянию системы, особенно для 
+компонент, связанных с положением тележки и ее скоростью. Можно сделать вывод, что фильтр Калмана позволяет оценивать 
+состояние системы даже при наличии шума в измерениях. 
+
 
 \FloatBarrier
 \subsection{LQG для линейной модели}

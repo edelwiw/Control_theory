@@ -74,6 +74,29 @@ for i = 1:length(theta0_arr)
     test_controller(K, time, theta0, path, i);
 end
 
+%% Different x(0) values 
+theta0 = 0.3;
+dx0 = 0;
+dtheta0 = 0;
+x0_arr = [0.0, 0.2, 0.5, 1.0, 2.5, 6.0];
+time = 10;
+path = "Report/media/plots/modal_control_initials";
+if ~exist(path, "dir")
+    mkdir(path);
+end
+for i = 1:length(x0_arr)
+    x0 = x0_arr(i);
+    test_controller_initials(K, time, x0, dx0, theta0, dtheta0, path, i);
+end
+
+%% 
+x0 = 0.3;
+dx0 = -0.2;
+theta0 = 0.6;
+dtheta0 = -0.3;
+
+test_controller_initials(K, time, x0, dx0, theta0, dtheta0, path, 7);
+
 %% Different controllers 
 path = "Report/media/plots/modal_controllers";
 k_arr = [-4, -6, -8, -10]; 
@@ -256,3 +279,9 @@ u = res.u;
 
 plotter({{t, x, "$x$"}, {t, ang, "$\theta$"}}, sprintf("%s/observer_controller_out.png", path), "t (s)", "position (m) / angle (rad)", "");
 plotter({{t, u, "u"}}, sprintf("%s/observer_controller_u.png", path), "t (s)", "control", "");
+
+x = state(:, 1);
+dotx = state(:, 2);
+theta = state(:, 3);
+dottheta = state(:, 4);
+plotter({{t, x, "$x$"}, {t, dotx, "$\dot{x}$"}, {t, theta, "$\theta$"}, {t, dottheta, "$\dot{\theta}$"}}, sprintf("%s/observer_controller_state.png", path), "t (s)", "state", "");

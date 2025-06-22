@@ -79,6 +79,22 @@ for i = 1:length(theta0_arr)
 
     % err 
     plotter({{t, x - xlin, "$x - x_l$"}, {t, ang - anglin, "$\theta - \theta_l$"}}, sprintf("%s/err_%d.png", path, i), "t (s)", "error (m) / angle (rad)", "");
+
+    %% state 
+    state = res.state;
+    stalelin = res.statelin;
+    x = state(:, 1);
+    dotx = state(:, 2);
+    theta = state(:, 3);
+    dottheta = state(:, 4);
+
+    xlin = stalelin(:, 1);
+    dotxlin = stalelin(:, 2);
+    thetalin = stalelin(:, 3);
+    dotthetalin = stalelin(:, 4);
+    
+    plotter({{t, x, "$x$"}, {t, dotx, "$\dot{x}$"}, {t, theta, "$\theta$"}, {t, dottheta, "$\dot{\theta}$"}}, sprintf("%s/state_%d.png", path, i), "t (s)", "state", "");
+    plotter({{t, xlin, "$x_l$"}, {t, dotxlin, "$\dot{x}_l$"}, {t, thetalin, "$\theta_l$"}, {t, dotthetalin, "$\dot{\theta}_l$"}}, sprintf("%s/state_lin_%d.png", path, i), "t (s)", "state", "");
 end
 
 %% Simulation of free motion with different initial conditions
@@ -99,5 +115,20 @@ plotter({{t, x, "$x$"}, {t, xlin, "$x_l$"}}, sprintf("%s/long_pos_cmp.png", path
 % ang cmp
 plotter({{t, ang, "$\theta$"}, {t, anglin, "$\theta_l$"}}, sprintf("%s/long_ang_cmp.png", path), "t (s)", "angle (rad)", "");
 
+%% state 
+state = res.state;
+stalelin = res.statelin;
+x = state(:, 1);
+dotx = state(:, 2);
+theta = state(:, 3);
+dottheta = state(:, 4);
+
+xlin = stalelin(:, 1);
+dotxlin = stalelin(:, 2);
+thetalin = stalelin(:, 3);
+dotthetalin = stalelin(:, 4);
+
+plotter({{t, x, "$x$"}, {t, dotx, "$\dot{x}$"}, {t, theta, "$\theta$"}, {t, dottheta, "$\dot{\theta}$"}}, sprintf("%s/long_state_%d.png", path, i), "t (s)", "state", "");
+plotter({{t, xlin, "$x_l$"}, {t, dotxlin, "$\dot{x}_l$"}, {t, thetalin, "$\theta_l$"}, {t, dotthetalin, "$\dot{\theta}_l$"}}, sprintf("%s/long_state_lin_%d.png", path, i), "t (s)", "state", "");
 
 

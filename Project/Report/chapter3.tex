@@ -31,7 +31,7 @@
 Рассмотрим работу регулятора на линейной модели системы при отсутствии внешних возмущений и 
 небольшом начальном отклонении от равновесного состояния ($\theta_0 = 0.2$). Схема моделирования приведена на 
 рисунке \ref{fig:modal_control_scheme_linear}. Результаты моделирования приведены на 
-рисунке \ref{fig:modal_control_linear_out}.
+рисунке \ref{fig:modal_control_linear_out} и \ref{fig:modal_control_linear_state}.
 
 \begin{figure}[ht!]
     \centering
@@ -39,17 +39,24 @@
     \caption{Схема моделирования линейной модели системы с модальным регулятором}
     \label{fig:modal_control_scheme_linear}
 \end{figure}
+
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=0.8\textwidth]{media/plots/modal_control/linear_out_0.png}
     \caption{Результаты моделирования линейной модели системы с модальным регулятором}
     \label{fig:modal_control_linear_out}
 \end{figure}
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{media/plots/modal_control/state_lin_0.png}
+    \caption{Вектор состояния линейной модели системы с модальным регулятором}
+    \label{fig:modal_control_linear_state}
+\end{figure}
 
 Можно заметить, что система приходит в равновесное состояние. Теперь попробуем использовать этот же 
 модальный регулятор на нелинейной модели системы. Схема моделирования приведена на
 рисунке \ref{fig:modal_control_scheme_nonlinear}. Результаты моделирования приведены на
-рисунке \ref{fig:modal_control_nonlinear_out}.
+рисунке \ref{fig:modal_control_nonlinear_out} и \ref{fig:modal_control_nonlinear_state}.
 
 
 \begin{figure}[ht!]
@@ -63,6 +70,12 @@
     \includegraphics[width=0.8\textwidth]{media/plots/modal_control/out_0.png}
     \caption{Результаты моделирования нелинейной модели системы с модальным регулятором}
     \label{fig:modal_control_nonlinear_out}
+\end{figure}
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{media/plots/modal_control/state_0.png}
+    \caption{Вектор состояния нелинейной модели системы с модальным регулятором}
+    \label{fig:modal_control_nonlinear_state}
 \end{figure}
 
 Рассмотрим различия между движением линейной и нелинейной модели системы. График различий в движении
@@ -86,27 +99,27 @@
 \begin{figure}[ht!]
     \centering
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/modal_control/out_1.png}
+        \includegraphics[width=\textwidth]{media/plots/modal_control/state_1.png}
         \caption{$\theta_0 = 0.3$}
     \end{subfigure}
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/modal_control/out_2.png}
+        \includegraphics[width=\textwidth]{media/plots/modal_control/state_2.png}
         \caption{$\theta_0 = 0.7$}
     \end{subfigure}
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/modal_control/out_3.png}
+        \includegraphics[width=\textwidth]{media/plots/modal_control/state_3.png}
         \caption{$\theta_0 = 0.9$}
     \end{subfigure}
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/modal_control/out_4.png}
+        \includegraphics[width=\textwidth]{media/plots/modal_control/state_4.png}
         \caption{$\theta_0 = 1.0$}
     \end{subfigure}
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/modal_control/out_5.png}
+        \includegraphics[width=\textwidth]{media/plots/modal_control/state_5.png}
         \caption{$\theta_0 = 1.1$}
     \end{subfigure}
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/modal_control/out_6.png}
+        \includegraphics[width=\textwidth]{media/plots/modal_control/state_6.png}
         \caption{$\theta_0 = 1.2$}
     \end{subfigure}
     \caption{Модальное управление нелинейной модели системы}
@@ -120,13 +133,70 @@
 посмотрев на график поведения линейной модели системы при начальном угле отклонения $\theta_0 = 1.2$ (рисунок \ref{fig:modal_control_linear_out_6}).
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=\textwidth]{media/plots/modal_control/linear_out_6.png}
-    \caption{Результаты моделирования линейной модели системы с модальным регулятором при $\theta_0 = 1.2$}
+    \includegraphics[width=\textwidth]{media/plots/modal_control/state_lin_6.png}
+    \caption{Вектор состояния линейной модели системы с модальным регулятором при $\theta_0 = 1.2$}
     \label{fig:modal_control_linear_out_6}
 \end{figure}
 \FloatBarrier
 Видно, что линейная модель система приходит в равновесное состояния, в отличие от нелинейной модели.
 
+Теперь проведем исследование устойчивости системы при фиксированном начальном угле отклонения маятника $\theta_0 = 0.3$ и 
+изменяющихся начальных координатах тележки $x_0 \in \begin{bmatrix}0 & 0.2 & 0.5 & 1.0 & 2.5 & 6\end{bmatrix}$. Результаты 
+моделирования приведены на рисунке \ref{fig:modal_control_initials_x}.
+\begin{figure}[ht!]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{media/plots/modal_control_initials/state_1.png}
+        \caption{$x_0 = 0.0$}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{media/plots/modal_control_initials/state_2.png}
+        \caption{$x_0 = 0.2$}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{media/plots/modal_control_initials/state_3.png}
+        \caption{$x_0 = 0.5$}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{media/plots/modal_control_initials/state_4.png}
+        \caption{$x_0 = 1.0$}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{media/plots/modal_control_initials/state_5.png}
+        \caption{$x_0 = 2.5$}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{media/plots/modal_control_initials/state_6.png}
+        \caption{$x_0 = 6.0$}
+    \end{subfigure}
+    \caption{Модальное управление нелинейной модели системы при различных начальных координатах тележки}
+    \label{fig:modal_control_initials_x}
+\end{figure}
+
+Исходя из графиков можно сделать вывод, что система приходит в равновесное состояние при различных начальных координатах тележки, 
+при этом время переходного процесса остается приблизительно одинаковым при увеличении начальной координаты тележки. Максимальное 
+отклонение координаты тележки от равновесного состояния и поведение в целом при различных начальных координатах меняется. Например, 
+при начальном отклонении тележки $x_0 = 1.0$ практически отсутствует перегулирование, в то время как при $x_0 = 0.0$ тележка 
+достигает координаты $x = -0.6$ для стабилизации маятника в вертикальном положении. Сравнивания влияние начального угла отклонения маятника
+и начальной координаты тележки на поведение системы, можно сказать, что начальное отклонение маятника влияет на поведение системы
+сильнее, чем начальная координата тележки. Это объясняться тем, что угол отклонения маятника больше влияет на динамику системы, чем положение тележки,
+это же подтверждается собственными числами и векторами системы (\ref{eq:eigenvalues}) и (\ref{eq:eigenvectors}). 
+
+
+Дополнительно посмотрим на поведение системы при векторе начального состояния $x_0 = \begin{bmatrix}0.3 & -0.2 & 0.6 & -0.3\end{bmatrix}$. 
+Результаты моделирования приведены на рисунке \ref{fig:modal_control_initials_x_2}.
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{media/plots/modal_control_initials/state_7.png}
+    \caption{Вектор состояния системы при начальном состоянии $x_0 = \begin{bmatrix}0.3 & -0.2 & 0.6 & -0.3\end{bmatrix}$}
+    \label{fig:modal_control_initials_x_2}
+\end{figure}
+
+Система также приходит в равновесное состояние. Можно делать вывод, что начальные условия, не сильно отличающиеся от равновесного состояния, 
+все еще обеспечивают устойчивость системы при использовании модального регулятора, синтезированного для линейной модели системы. При больших отклонениях
+от равновесного состояния, линейная модель перестает адекватно описывать поведение системы, что приводит к неустойчивости системы, как это было показано ранее.
+
+\FloatBarrier
 \subsection{Исследование переходного процесса}
 Будем рассматривать переходный процесс и управляющее воздействие при различных собственных числах замкнутой регулятором системы. 
 В качестве начальных условий возьмем $\theta_0 = 0.3$. Для начала, рассмотрим регуляторы, обеспечивающие спектр 
@@ -136,7 +206,7 @@
 
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/out_1.png}
+    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/state_1.png}
     \caption{Результаты моделирования нелинейной модели системы с модальным регулятором при $k = -4$}
     \label{fig:modal_controlers_1_out}
 \end{figure}
@@ -148,7 +218,7 @@
 \end{figure}
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/out_2.png}
+    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/state_2.png}
     \caption{Результаты моделирования нелинейной модели системы с модальным регулятором при $k = -6$}
     \label{fig:modal_controlers_2_out}
 \end{figure}
@@ -160,7 +230,7 @@
 \end{figure}
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/out_3.png}
+    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/state_3.png}
     \caption{Результаты моделирования нелинейной модели системы с модальным регулятором при $k = -8$}
     \label{fig:modal_controlers_3_out}
 \end{figure}
@@ -172,7 +242,7 @@
 \end{figure}
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/out_4.png}
+    \includegraphics[width=0.8\textwidth]{media/plots/modal_controllers/state_4.png}
     \caption{Результаты моделирования нелинейной модели системы с модальным регулятором при $k = -10$}
     \label{fig:modal_controlers_4_out}
 \end{figure}
@@ -558,7 +628,7 @@ $\begin{bmatrix}-10 & -10 & -10 & -10\end{bmatrix}$. Результаты мод
 Выход системы, замкнутой регулятором по выходу, приведен на рисунке \ref{fig:modal_controller_obderver_out}.
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=0.8\textwidth]{media/plots/observer_controller/observer_controller_out.png}
+    \includegraphics[width=0.8\textwidth]{media/plots/observer_controller/observer_controller_state.png}
     \caption{Результаты моделирования регулятора по выходу}
     \label{fig:modal_controller_obderver_out}
 \end{figure}

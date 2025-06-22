@@ -29,31 +29,42 @@
 
 \subsection{Исследование устойчивости при различных начальных условиях}
 Проверим работу данного регулятора при различных начальных условиях. 
-В качестве начальных условий возьмем различные начальные углы отклонения маятника $\theta_0 \in \begin{bmatrix}0.3, 0.4, 0.6, 0.8\end{bmatrix}$. Результаты 
+В качестве начальных условий возьмем различные начальные углы отклонения маятника $\theta_0 \in \begin{bmatrix}0.3, 0.4, 0.6, 0.8\end{bmatrix}$, польку именно 
+угол отклонения маятника несет наибольшее влияние на поведение системы. Результаты 
 моделирования приведены на рисунке \ref{fig:nonmodal_control_initials}. 
 При большем начальном отклонении от положения равновесия моделирование провести не удалось. Это может быть связано с тем, 
 что система становится неустойчивой при больших отклонениях, и численное решение такой системы становится слишком долгим. 
 \begin{figure}[ht!]
     \centering
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/nonmodal_control/out_1.png}
+        \includegraphics[width=\textwidth]{media/plots/nonmodal_control/state_1.png}
         \caption{$\theta_0 = 0.3$}
     \end{subfigure}
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/nonmodal_control/out_2.png}
+        \includegraphics[width=\textwidth]{media/plots/nonmodal_control/state_2.png}
         \caption{$\theta_0 = 0.4$}
     \end{subfigure}
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/nonmodal_control/out_3.png}
+        \includegraphics[width=\textwidth]{media/plots/nonmodal_control/state_3.png}
         \caption{$\theta_0 = 0.6$}
     \end{subfigure}
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{media/plots/nonmodal_control/out_4.png}
+        \includegraphics[width=\textwidth]{media/plots/nonmodal_control/state_4.png}
         \caption{$\theta_0 = 0.8$}
     \end{subfigure}
     \caption{Модальное управление нелинейной модели системы}
     \label{fig:nonmodal_control_initials}
 \end{figure}
+
+Также проведем моделирование при начальных условиях $x_0 = \begin{bmatrix} 0.3 & -0.2 & 0.4 & 0.6 \end{bmatrix}^T$. Результаты
+моделирования приведены на рисунке \ref{fig:nonmodal_control_initials_2}.
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{media/plots/nonmodal_control/state_5.png}
+    \caption{$\theta_0 = 0.3$}
+    \label{fig:nonmodal_control_initials_2}
+\end{figure}
+\FloatBarrier
 
 На графиках видно, что система стабилизируется к положению равновесия при различных начальных условиях. При этом, 
 чем больше начальное отклонение, тем больше требуется времени для стабилизации системы и тем больше перерегулирование. 
@@ -80,8 +91,14 @@
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=\textwidth]{media/plots/nonmodal_controllers/out_1.png}
-    \caption{Переходный процесс при $\alpha = 1$}
+    \caption{Выход системы при $\alpha = 1$}
     \label{fig:nonmodal_control_alpha_1}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{media/plots/nonmodal_controllers/state_1.png}
+    \caption{Вектор состояния при $\alpha = 1$}
+    \label{fig:nonmodal_control_alpha_1_u}
 \end{figure}
 \begin{figure}[ht!]
     \centering
@@ -92,8 +109,14 @@
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=\textwidth]{media/plots/nonmodal_controllers/out_2.png}
-    \caption{Переходный процесс при $\alpha = 3$}
+    \caption{Выход системы при $\alpha = 3$}
     \label{fig:nonmodal_control_alpha_2}
+\end{figure}
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{media/plots/nonmodal_controllers/state_2.png}
+    \caption{Вектор состояния при $\alpha = 3$}
+    \label{fig:nonmodal_control_alpha_2_u}
 \end{figure}
 \begin{figure}[ht!]
     \centering
@@ -104,8 +127,14 @@
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=\textwidth]{media/plots/nonmodal_controllers/out_3.png}
-    \caption{Переходный процесс при $\alpha = 6$}
+    \caption{Выход системы при $\alpha = 6$}
     \label{fig:nonmodal_control_alpha_3}
+\end{figure}
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{media/plots/nonmodal_controllers/state_3.png}
+    \caption{Вектор состояния при $\alpha = 6$}
+    \label{fig:nonmodal_control_alpha_3_u}
 \end{figure}
 \begin{figure}[ht!]
     \centering
@@ -180,20 +209,38 @@ $0.4$ радиан, а при $\alpha = 6$ -- $0.4$ радиан.
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=\textwidth]{media/plots/nonmodal_controlers_min/out_1.png}
-    \caption{Переходный процесс при $\alpha = 0.1$ и $\theta_0 = 0.05$}
+    \caption{Выход системы при $\alpha = 0.1$ и $\theta_0 = 0.05$}
     \label{fig:nonmodal_control_alpha_1_1}
 \end{figure}
 \begin{figure}[ht!]
     \centering
+    \includegraphics[width=\textwidth]{media/plots/nonmodal_controlers_min/state_1.png}
+    \caption{Вектор состояния при $\alpha = 0.1$ и $\theta_0 = 0.05$}
+    \label{fig:nonmodal_control_alpha_1_1_state}
+\end{figure}
+\begin{figure}[ht!]
+    \centering
     \includegraphics[width=\textwidth]{media/plots/nonmodal_controlers_min/out_2.png}
-    \caption{Переходный процесс при $\alpha = 0.1$ и $\theta_0 = 0.3$}
+    \caption{Выход системы при $\alpha = 0.1$ и $\theta_0 = 0.3$}
     \label{fig:nonmodal_control_alpha_1_2}
 \end{figure}
 \begin{figure}[ht!]
     \centering
+    \includegraphics[width=\textwidth]{media/plots/nonmodal_controlers_min/state_2.png}
+    \caption{Вектор состояния при $\alpha = 0.1$ и $\theta_0 = 0.3$}
+    \label{fig:nonmodal_control_alpha_1_2_state}
+\end{figure}
+\begin{figure}[ht!]
+    \centering
     \includegraphics[width=\textwidth]{media/plots/nonmodal_controlers_min/out_3.png}
-    \caption{Переходный процесс при $\alpha = 0.1$ и $\theta_0 = 0.8$}
+    \caption{Выход системы при $\alpha = 0.1$ и $\theta_0 = 0.8$}
     \label{fig:nonmodal_control_alpha_1_3}
+\end{figure}
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{media/plots/nonmodal_controlers_min/state_3.png}
+    \caption{Вектор состояния при $\alpha = 0.1$ и $\theta_0 = 0.8$}
+    \label{fig:nonmodal_control_alpha_1_3_state}
 \end{figure}
 \FloatBarrier
 Видно, что при небольших начальных условиях система стабилизируется к положению равновесия,
@@ -220,6 +267,12 @@ $\theta_0 = 0.1$.
     \caption{Переходный процесс при $\alpha = 0.05$}
     \label{fig:nonmodal_control_alpha_2_1}
 \end{figure}
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{media/plots/nonmodal_controlers_min/state_4.png}
+    \caption{Вектор состояния при $\alpha = 0.05$}
+    \label{fig:nonmodal_control_alpha_2_1_state}
+\end{figure}
 
 \FloatBarrier
 При $\alpha = 0.5$ получены следующие результаты: 
@@ -235,6 +288,12 @@ $\theta_0 = 0.1$.
     \caption{Переходный процесс при $\alpha = 0.5$}
     \label{fig:nonmodal_control_alpha_2_2}
 \end{figure} 
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{media/plots/nonmodal_controlers_min/state_5.png}
+    \caption{Вектор состояния при $\alpha = 0.5$}
+    \label{fig:nonmodal_control_alpha_2_2_state}
+\end{figure}
 
 \FloatBarrier
 При $\alpha = 1.0$ получены следующие результаты: 
@@ -251,6 +310,12 @@ $\theta_0 = 0.1$.
     \caption{Переходный процесс при $\alpha = 1.0$}
     \label{fig:nonmodal_control_alpha_2_3}
 \end{figure} 
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{media/plots/nonmodal_controlers_min/state_6.png}
+    \caption{Вектор состояния при $\alpha = 1.0$}
+    \label{fig:nonmodal_control_alpha_2_3_state}
+\end{figure}
 \FloatBarrier 
 
 Видно, что при увеличении степени устойчивости система сходится быстрее, при этом 
@@ -357,6 +422,12 @@ $\theta_0 = 0.1$.
 \end{figure}
 \begin{figure}[ht!]
     \centering
+    \includegraphics[width=\textwidth]{media/plots/nonmodal_observer_controller/state_1.png}
+    \caption{Вектор состояния при $(K_1, L_1)$}
+    \label{fig:KL_1_state}
+\end{figure}
+\begin{figure}[ht!]
+    \centering
     \includegraphics[width=\textwidth]{media/plots/nonmodal_observer_controller/kl_err_1.png}
     \caption{Ошибка наблюдения при $(K_1, L_1)$}
     \label{fig:KL_1_err}
@@ -372,6 +443,12 @@ $\theta_0 = 0.1$.
 \end{figure}
 \begin{figure}[ht!]
     \centering
+    \includegraphics[width=\textwidth]{media/plots/nonmodal_observer_controller/state_2.png}
+    \caption{Вектор состояния при $(K_2, L_1)$}
+    \label{fig:KL_2_state}
+\end{figure}
+\begin{figure}[ht!]
+    \centering
     \includegraphics[width=\textwidth]{media/plots/nonmodal_observer_controller/kl_err_2.png}
     \caption{Ошибка наблюдения при $(K_2, L_1)$}
     \label{fig:KL_2_err}
@@ -384,6 +461,12 @@ $\theta_0 = 0.1$.
     \includegraphics[width=\textwidth]{media/plots/nonmodal_observer_controller/kl_3.png}
     \caption{Переходный процесс при $(K_1, L_2)$}
     \label{fig:KL_3_out}
+\end{figure}
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{media/plots/nonmodal_observer_controller/state_3.png}
+    \caption{Вектор состояния при $(K_1, L_2)$}
+    \label{fig:KL_3_state}
 \end{figure}
 \begin{figure}[ht!]
     \centering
